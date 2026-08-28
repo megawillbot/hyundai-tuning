@@ -1,0 +1,4 @@
+# ROM dumps and chip images are binary — never touch line endings
+*.bin binary
+*.sie binary
+*.xdf -text

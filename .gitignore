@@ -1,0 +1,10 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# External tool clones (tracked upstream, not here)
+tools/
+
+# GKFlasher default read output if accidentally dumped in root
+output_*.bin
