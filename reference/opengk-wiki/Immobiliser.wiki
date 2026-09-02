@@ -1,0 +1,19 @@
+Tiburons sold in the United States were not equipped with immobilisers by default. As for other markets, depending on the equipped engine, either [[SMARTRA]] was used (1.6 and 2.0 engines) or Hyundai's in-house solution (2.7). 
+
+The in-house solution is simply called "[[Standalone immobiliser|Standalone]]" in the workshop manuals, however it's actual name is "Shinchang".
+
+== 2.0L L4 - SMARTRA ==
+[[File:I4 immo marked.png|thumb]]
+'''Contained entirely within the ECU. BCM acts as an intermediate, but doesn't store any data.'''
+
+SMARTRA ('''SMAR'''t '''TR'''ansponder '''A'''ntenna) is a passive challenge-response immobiliser system developed for HMC (Hyundai Motor Company) by Bosch. On the GK platform, version 2 is used, called SMARTRA2. 
+
+System consists of a key transponder, [[Body Control Module|BCM unit]] and [[5WY ECM Identification|ECU/ECM]]. Smartra-wise, only transponders are paired to ECU but units originating from different vehicles could be adapted to each other. 
+
+For more information, see [[SMARTRA]].
+
+== 2.7L V6 - Standalone/Shinchang ==
+
+'''Contained entirely within the BCM. ECU doesn't store any immobiliser data and only asks the BCM for permission to start.'''
+
+''Placeholder copied & pasted from the "Body Electrical System" section of the workshop manuals. To be rewritten''<blockquote>The "Stand alone" type immobilizer system is applied to the 2.7 v6 engine. The immobilizer system consists of a passive challenge-response (mutual authentication) transponder inside the key head, a stand alone antenna, the BCM unit and the ECM. The BCM unit shall emulate the original SCE type immobilizer to ECM protocol as closely as possible. In the Stand alone immobilizer system, the immobilizer is contained within the BCM. The ECM shall request the BCM for permission to start the vehicle. The BCM shall perform the immobilisation functions and reply "start" or "no start" permission to the ECM.</blockquote>For more information, see [[Standalone immobiliser]]

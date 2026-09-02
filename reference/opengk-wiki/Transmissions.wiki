@@ -1,0 +1,31 @@
+<div style="float:right">__TOC__</div>
+Purpose of this page is to list GK chassis and related transmissions information and parts interchangeability. 2.0L refers to Beta/Beta2, 2.7L refers to Delta/Mu and 2.4L refers to Sirius motors.
+
+== MT 6 Speed Aichi MFA60 2.0L & 2.7L ==
+Although this transmission is mostly unique to only the GK chassis this transmission does share some parts with the Nissan MFA60 and Mitsubishi MFA80 variants. Most of the Nissan OEM parts are no longer available but there is still some aftermarket support for the MFA80 found on the Evo 9 MR6 that could be modified to fit.
+
+=== MFA60 Parts ===
+'''Differential output bearings: (OEM 43340-39900 Unavailable)'''
+
+SKF 32009X: https://www.rockauto.com/en/moreinfo.php?pk=1837564
+
+TIMKEN 32009X: https://www.rockauto.com/en/moreinfo.php?pk=5426763
+
+National 32009X: https://www.rockauto.com/en/moreinfo.php?pk=218840
+
+'''Input shaft Seal:''' 
+
+Timken: https://www.rockauto.com/en/moreinfo.php?pk=1118992
+
+'''Input shaft bearing: (OEM 43222-39900 Unavailable)'''
+
+'''Speedometer plastic differential gear: (OEM 43333-39900 Unavailable)'''
+
+== MT 5 Speed Mitsubishi M5GF1 2.4L & 2.7L ==
+The largest of the M5 range is the M5GF1 found mainly on the 2.4L and 2.7L platforms. In some regions the M5GF1 may have been used on 2.0L variants such as the South Korean EF Sonata 2.0L taxi cab or Carens. Use of the 2.0L was not common in other regions for this transmission type and the bellhousing to adapt the M5GF1 to a 2.0L is no longer available new.
+
+== MT 5 Speed Mitsubishi M5BF1 2.0L ==
+The medium sized M5 is found mostly in the 2.0L platforms such as the GK, XD, and LD chassis.
+
+== AT 4 Speed Mitsubishi F4A42 2.0L & 2.7L ==
+(Coming soon)

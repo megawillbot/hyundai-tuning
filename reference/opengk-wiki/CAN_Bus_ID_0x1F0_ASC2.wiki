@@ -1,0 +1,27 @@
+CAN Arbitration ID for ASC2 is 0x1F0.
+
+Its sent out by the traction control module at a refresh rate of 20ms.
+
+*'''Byte 0 - Signal wheel 1'''
+*: Wheel 1 speed signal in Km/h
+*: Calculation = HEX * 0.95439
+*'''Byte 1 - Signal wheel 2 [LSB]'''
+*: Wheel 2 speed signal in Km/h
+*: Calculation = HEX * 0.95439
+*'''Byte 2 - Signal wheel 3 [LSB]'''
+*: Wheel 3 speed signal in Km/h
+*: Calculation = HEX * 0.95439
+*'''Byte 3 - Signal wheel 4 [LSB]'''
+*: Wheel 4 speed signal in Km/h
+*: Calculation = HEX * 0.95439
+*'''Byte 4''' - Unused
+*'''Byte 5''' - Unused
+*'''Byte 6''' - Unused
+*'''Byte 7''' - Unused
+Example messages:<syntaxhighlight>
+0C 0F 0B 0E 00 00 00 00
+
+35 35 35 34 00 00 00 00
+
+21 20 20 1F 00 00 00 00
+</syntaxhighlight>

@@ -1,0 +1,65 @@
+SMARTRA ('''SMAR'''t '''TR'''ansponder '''A'''ntenna) is a passive challenge-response immobiliser system developed for HMC (Hyundai Motor Company) by Bosch. On the GK platform, version 2 is used, called SMARTRA2.
+
+Not much information can be found online about version 2 of SMARTRA. However, version 3 is backwards compatible and thanks to the FCC, its [[:File:Smartra3 lxp-vima01 protocol-spec march-2007.pdf|protocol specification document]] is available. SMARTRA3 was assigned the FCC identificator [https://fccid.io/LXP-VIMA01 LXP-VIMA01]. 
+
+FCC is also [https://fcc.report/FCC-ID/LXP-VIM223 merciful enough to reward us with some information] about the standalone version of SMARTRA 2 - the little box you might've seen around the steering column in an Elantra or Accent. While they weren't installed in Tiburons, there's nothing stopping you from snapping the w-line on your BCM and connecting it to said box. The hardware and firmware inside of the BCM is virtually the same.
+
+The newer, standalone unit got assigned the identificatior LXP-SMARTRA32, but the FCC report doesn't contain half as much information: https://fcc.report/FCC-ID/LXP-SMARTRA32
+
+== Simplified overview of the system ==
+[[File:I4 immo graph.png|frameless|960x960px]]
+
+SMARTRA system is composed of three elements, each being vital to its operation:
+
+* Keyfob transponder
+* SMARTRA Control Unit (CU), integrated into the [[Body Control Module]]
+* Engine Control Unit [[5WY ECM Identification|(ECU/ECM)]]
+
+In simple terms:
+
+'''Keyfob''' stores its unique identificator ("32 bit identifier"/"Pre Secret Encryption Key") and the 3 byte (6 digits) encryption key. 
+
+'''BCM''' <u>'''doesn't store any SMARTRA-related data!'''</u> BCM is essentially a interface between ECU and the transponder. It doesn't validate transferred data or perform any other checks.
+
+'''ECU''' stores unique identificators of up to 4 keys (transponders) and a 6 digit DPN (Diagnostic PIN Number) which is used as the encryption key.
+
+
+So, in short: Keyfob transponders are paired to ECUs. BCMs are not paired nor contain any transponder data.
+
+=== Keyfob transponder ===
+SMARTRA system is based on the Hitag2 protocol (and encryption algorithm). A Hitag2 transponder made by NXP can be found integrated into the key: [[:File:PCF7936AS.PDF|PCF7936 (click for datasheet)]]. 
+
+PCF7936 provides a 32 bit unique identifier which is also referred to as "Pre Secret Encryption Key". This is the value that's stored in the ECU EEPROM. A 3 byte encryption key is stored in the transponder's memory. 
+
+There is no timeout mechanism so bruteforce attacks are possible: with a list of pre-generated encryption keys (from 0 to 999999 in increments of 16) a Proxmark 3 will be able to find it in under 4 hours.  
+
+=== Body Control Module ===
+BCM is packaging RF data in/out of transponder into the [[SMARTRA Protocol]] over [[W-Line]] while being semi-transparent in this process, it doesn't verify the data.
+
+Using the [[:File:Ignition switch.png|antenna mounted around the ignition switch]], a [https://opengk.org/files/Users/dante383/PCF7991AT_datasheet.pdf PCF7991AT IC (click for datasheet)] inside of the BCM communicates with the transponder unit on 125kHz, ASK modulation. 
+[[File:PCF7991AT immobiliser base station inside of the BCM.png|thumb|PCF7991AT immobiliser base station inside of the BCM]]
+
+=== Engine Control Unit ===
+ECU communicates with transponder through BCM over the [[W-Line]]. It stores all registered transponders/keys unique identifiers and the 3 byte DPN (Diagnostic PIN Number). DPN is used both as the encryption key and password to access immobilizer functions (teaching keys, neutralizing etc). Do not confuse 3 byte (6 digits) DPN with 4 digit limp home pin.
+
+Upon the start of a ignition cycle, ECU will request the identification number of the transponder. If it's registered (taught), the ECU will then generate 4 random bytes (''challenge'') and send them to the transponder along with inverted first 4 bytes of the keystream (see: [https://www.usenix.org/system/files/conference/usenixsecurity12/sec12-final95.pdf Gone in 360 Seconds: Hijacking with Hitag2]). Using this data, the transponder shall respond with the encrypted ''challenge''. ECU will now perform the same operation using the Hitag2 encryption algorithm and compare the results. If they're a match, vehicle can be started.
+
+== Encryption key ==
+Also known as "immo pin" or "DPN (Diagnostic PIN Number)", it's the 6 digit number you use to program new keys or neutralize the immobilizer. It can be derived from last 6 characters of your VIN. The algorithm was reverse engineered, Python implementation with simple calculator can be found here: https://github.com/Dante383/smartra-vin-to-pin 
+
+These 6 digits are part of the actual Hitag2 encryption key, which is composed like so:
+
+0xFFFFxxxxxxFF (xxx - DPN)
+
+Additionally, every PIN computed from VIN is dividable by 16 - that gives us precisely 65535 available combinations (instead of 12^16 that Hitag2 offers).
+
+'''The sentence above is not true for vehicles for the russian market. There might also be differences in the position of the immo pin in ECU memory - to be verified.'''
+
+== Limp home pin ==
+Sometimes confused with the encryption key / DPN, limp home pin is a user customizable password (at the dealership, but in most cases set to default 2345) that allows the car to start once in case of the immobiliser system failure. This pin can be changed over K-line - with GKFlasher or Cascade - if you know the previous one. Limited testing on 07+ ECUs indicated that this feature might've been removed entirely from the FL2 engine control units.
+
+To enter the limp home mode, user can provide the pin using GKFlasher/Cascade (but the diagnostics session will need to be active until starting the engine), or, more commonly, dialed in using the ignition switch as so. 1 rapid switch of ignition from ACC to IGN - the digit 1. 4 rapid switches - digit 4, and so on. 
+[[File:SMARTRA Entering limp home pin.png|frameless|800x800px]]
+
+== Transponder data structure ==
+[[File:Smartra PCF7936 transponder data structure.png|frameless|1203x1203px]]

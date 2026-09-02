@@ -1,0 +1,878 @@
+<div style="float:right">__TOC__</div>
+[[File:GK27-ECM-Socket.png]]
+
+
+'''Note:''' Some pins were not used on the GK platform but were later added for others to control variable intake actuators. Those pins will be grayed out.
+
+ECU Socket: TE 967288
+
+C133-1 & C133-5: TE 1-968307-2 Plug / TE 927768-1 Pins / TE 1-965486-1 & 2-965486-1 Molex Inserts
+
+C133-2: TE 1-968317-3 Plug / TE 5-963715-5 or 963715-6 Pins / TE 1-968322-1 & 2-968322-1 Molex Inserts
+
+C133-3: TE 1-968325-3 Plug / TE 5-963715-5 or 963715-6 Pins / TE 1-968322-1 & 2-968322-1 Molex Inserts
+
+C133-4: TE 1-968321-2 Plug / TE 5-963715-5 or 963715-6 Pins / TE 1-968326-1 & 2-968326-1 Molex Inserts
+
+==C133-1 - Voltage Supply==
+
+{| class="wikitable" style="width: 900px;"
+! colspan="5" style="font-weight:bold;" | C133-1 9-pin
+|-
+| style="text-align: center; font-weight:bold;" | Pin
+| style="text-align: center; font-weight:bold;" | Type
+| style="font-weight:bold;" | Description
+| style="font-weight:bold;" | Notes
+|'''AWG'''
+|-
+| style="text-align: center; font-weight:bold;" | 1
+| style="text-align: center; font-weight:bold;" | Input
+| Ignition switch signal input
+| Ignition Switch
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 2
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 3
+| style="text-align: center; font-weight:bold;" | I/O
+| Diagnostic Data Line (K-Line)
+| Immo W-Line
+Data Link Connector (DLC)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 4
+| style="text-align: center; font-weight:bold;" | Ground
+| ECM ground
+| Chassis ground
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 5
+| style="text-align: center; font-weight:bold;" | Ground
+| Power stage ground
+| Chassis ground
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 6
+| style="text-align: center; font-weight:bold;" | Ground
+| Power stage ground
+| Chassis ground
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 7
+| style="text-align: center; font-weight:bold;" | Input
+| Battery Voltage Supply
+| Battery
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 8
+| style="text-align: center; font-weight:bold;" | Input
+| Battery Voltage Supply after Main Relay
+| Main Relay
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 9
+| style="text-align: center; font-weight:bold;" | Input
+| Battery Voltage Supply after Main Relay
+| Main Relay
+|14
+|}
+
+==C133-2 - Peripherals==
+
+{| class="wikitable" style="width: 900px;"
+! colspan="5" style="font-weight:bold;" | C133-2 24-pin
+|-
+| style="text-align: center; font-weight:bold;" | Pin
+| style="text-align: center; font-weight:bold;" | Type
+| style="font-weight:bold;" | Description
+| style="font-weight:bold;" | Notes
+|'''AWG'''
+|-
+| style="text-align: center; font-weight:bold;" | 1
+| style="text-align: center; font-weight:bold;" | Output
+| Heated Oxygen Sensor (B1/S1) Heater
+| Heated Oxygen Sensor (B1/S1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 2
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 3
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 4
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 5
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 6
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 7
+| style="text-align: center; font-weight:bold;" | Output
+| Heated Oxygen Sensor (B1/S2) Heater 
+| Heated Oxygen Sensor (B1/S2)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 8
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 9
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 10
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 11
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 12
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 13
+| style="text-align: center; font-weight:bold;" | Output
+| Heated Oxygen Sensor (B2/S1) Heater 
+| Heated Oxygen Sensor (B2/S1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 14
+| style="text-align: center; font-weight:bold;" | Input
+| [0-5V] or [0-5V] Heated Oxygen Sensor (B1/S1) 
+| Heated Oxygen Sensor (B1/S1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 15
+| style="text-align: center; font-weight:bold;" | Input
+| [0-1V] or [0-5V] Heated Oxygen Sensor (B2/S1) 
+| Heated Oxygen Sensor (B2/S1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 16
+| style="text-align: center; font-weight:bold;" | Input
+| [0-1V] or [0-5V] Heated Oxygen Sensor (B1/S2) 
+| Heated Oxygen Sensor (B2/S2)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 17
+| style="text-align: center; font-weight:bold;" | Output
+| Fuel Consumption Signal
+| Trip Computer
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 18
+| style="text-align: center; font-weight:bold;" | Input
+| [0-1V] or [0-5V] Heated Oxygen Sensor (B2/S2) 
+| Heated Oxygen Sensor (B2/S2)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 19
+| style="text-align: center; font-weight:bold;" | Output
+| Heated Oxygen Sensor (B2/S2) Heater 
+| Heated Oxygen Sensor (B2/S2)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 20
+| style="text-align: center; font-weight:bold;" | Ground
+| Heated Oxygen Sensor (B1/S1)
+| Heated Oxygen Sensor (B1/S1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 21
+| style="text-align: center; font-weight:bold;" | Ground
+| Heated Oxygen Sensor (B2/S1)
+| Heated Oxygen Sensor (B2/S1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 22
+| style="text-align: center; font-weight:bold;" | Ground
+| Heated Oxygen Sensor (B1/S2)
+| Heated Oxygen Sensor (B1/S2)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 23
+| style="text-align: center; font-weight:bold;" | Output
+| Main Relay Control
+| Main Relay
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 24
+| style="text-align: center; font-weight:bold;" | Ground
+| Heated Oxygen Sensor (B2/S2)
+| Heated Oxygen Sensor (B2/S2)
+|20
+|}
+
+==C133-3 - Engine==
+{| class="wikitable" style="width: 900px;"
+! colspan="5" | C133-3 52-pin
+|-
+| style="text-align: center; font-weight:bold;" | Pin
+| style="text-align: center; font-weight:bold;" | Type
+| style="font-weight:bold;" | Description
+| style="font-weight:bold;" | Notes
+|'''AWG'''
+|-
+| style="text-align: center; font-weight:bold;" | 1
+| style="text-align: center; font-weight:bold;" | Input
+| [0-5V] Mass Air Flow Sensor 
+| Mass Air Flow Sensor (MAFS) 
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 2
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 3
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 4
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 5
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 6
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 7
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 8
+| style="text-align: center; font-weight:bold;" | Input
+| Crankshaft Position Sensor
+| Crankshaft Position Sensor (CKPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 9
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 10
+| style="text-align: center; font-weight:bold;" | Output
+| [5V] Throttle Position Sensor Supply
+| Throttle Position Sensor (TPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 11
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 12
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 13
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 14
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 15
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 16
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 17
+| style="text-align: center; font-weight:bold;" | Ground
+| Mass Air Flow Sensor
+| Mass Air Flow Sensor (MAFS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 18
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 19
+| style="text-align: center; font-weight:bold;" | Input
+| [0-5V] Throttle Position Sensor
+| Throttle Position Sensor (TPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 20
+| style="text-align: center; font-weight:bold;" | Ground
+| Throttle Position Sensor (TPS)
+| Throttle Position Sensor
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 21
+| style="text-align: center; font-weight:bold;" | Ground
+| Crankshaft Position Sensor
+| Crankshaft Position Sensor (CKPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 22
+| style="text-align: center; font-weight:bold;" | Output
+| [0-5V] Intake Air Temperature Sensor
+| Intake Air Temperature Sensor (IATS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 23
+| style="text-align: center; font-weight:bold;" | Ground
+| Intake Air Temperature Sensor
+| Intake Air Temperature Sensor (IATS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 24
+| style="text-align: center; font-weight:bold;" | Output
+| [0-5V] Engine Coolant Temperature Sensor
+| Engine Coolant Temperature Sensor (ECTS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 25
+| style="text-align: center; font-weight:bold;" | Ground
+| Engine Coolant Temperature Sensor
+| Engine Coolant Temperature Sensor (ECTS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 26
+| style="text-align: center; font-weight:bold;" | Input
+| Power Steering Load
+| Power Steering Switch
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 27
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 28
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 29
+| style="text-align: center; font-weight:bold;" | Input
+| Knock Sensor #1 (Cyl. #1, 3, 5)
+|  Knock Sensor (KS) #1
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 30
+| style="text-align: center; font-weight:bold;" | Ground
+| Knock Sensor #1 (Cyl. #1, 3, 5)
+| Knock Sensor (KS) #1
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 31
+| style="text-align: center; font-weight:bold;" | Input
+| Knock Sensor #2 (Cyl. #2, 4, 6)
+| Knock Sensor (KS) #2
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 32
+| style="text-align: center; font-weight:bold;" | Ground
+| Knock Sensor #2 (Cyl. #2, 4, 6)
+| Knock Sensor (KS) #2
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 33
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Injector (Cyl. 1)
+| Injector (Cyl. 1)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 34
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Injector (Cyl. 2)
+| Injector (Cyl. 2)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 35
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Injector (Cyl. 3)
+| Injector (Cyl. 3)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 36
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Injector (Cyl. 4)
+| Injector (Cyl. 4)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 37
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Injector (Cyl. 5)
+| Injector (Cyl. 5)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 38
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Injector (Cyl. 6)
+| Injector (Cyl. 6)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 39
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 40
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 41
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 42
+| style="text-align: center; font-weight:bold;" | Output
+| Purge Control Solenoid Valve PWM
+| Purge Control Solenoid Valve (PCSV)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 43
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 44
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 45
+| style="color:#808080; text-align: center; font-weight:bold;" | Output
+| style="color:#808080;" | Variable Intake Manifold Control Motor 1
+| style="color:#808080;" | Top right front of engine
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 46
+| style="text-align: center; font-weight:bold;" | Output
+| Idle Speed Control Actuator PWM (OPEN)
+| Idle Speed Control Actuator (ISCA)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 47
+| style="text-align: center; font-weight:bold;" | Output
+| Idle Speed Control Actuator PWM (CLOSE)
+| Idle Speed Control Actuator (ISCA)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 48
+| style="text-align: center; font-weight:bold;" | Ground
+| Knock Sensor Shield
+| Knock Sensor (KS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 49
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 50
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 51
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 52
+| style="color:#808080; text-align: center; font-weight:bold;" | Output
+| style="color:#808080;" |  Variable Intake Manifold Control Motor 2
+| style="color:#808080;" |  Top right rear of engine
+|20
+|}
+
+==C133-4 - Vehicle==
+{| class="wikitable" style="width: 900px;"
+! colspan="5" | C133-4 40-pin
+|-
+| style="text-align: center; font-weight:bold;" | Pin
+| style="text-align: center; font-weight:bold;" | Type
+| style="font-weight:bold;" | Description
+| style="font-weight:bold;" | Notes
+|'''AWG'''
+|-
+| style="text-align: center; font-weight:bold;" | 1
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 2
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 3
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 4
+| style="text-align: center; font-weight:bold;" | Output
+| Fuel Tank Pressure Sensor Supply
+| Fuel Tank Pressure Sensor (FTPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 5
+| style="text-align: center; font-weight:bold;" | Ground
+| Fuel Level Sensor Signal
+| Fuel Level Sensor (FLS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 6
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 7
+| style="text-align: center; font-weight:bold;" | Input
+| Camshaft Position Sensor
+| Camshaft Position Sensor (CMPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 8
+| style="text-align: center; font-weight:bold;" | Ground
+| Camshaft Position Sensor
+| Camshaft Position Sensor (CMPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 9
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 10
+| style="text-align: center; font-weight:bold;" | Output
+| Fuel Pump Relay
+| Fuel Pump Relay
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 11
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 12
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 13
+| style="text-align: center; font-weight:bold;" | Output
+| Throttle Position PWM
+| Other Control Modules
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 14
+| style="text-align: center; font-weight:bold;" | Ground
+| Fuel Tank Pressure Sensor
+| Fuel Tank Pressure Sensor (FTPS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 15
+| style="text-align: center; font-weight:bold;" | Input
+| Fuel Level Sensor
+| Fuel Level Sensor (FLS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 16
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 17
+| style="text-align: center; font-weight:bold;" | Output
+| Engine Speed Signal
+| Tachometer
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 18
+| style="text-align: center; font-weight:bold;" | Output
+| Cooling Fan Relay [Low]
+| Cooling Fan Relay
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 19
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 20
+| style="text-align: center; font-weight:bold;" | Input
+| Malfunction Indicating Lamp
+| Malfunction Indicating Lamp (MIL)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 21
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 22
+| style="text-align: center; font-weight:bold;" | Input
+| Vehicle speed Signal
+| ABS Control Module With ABS
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 23
+| style="text-align: center; font-weight:bold;" | Input
+| Air Conditioner Switch [Low/High]
+| Triple Switch
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 24
+| style="text-align: center; font-weight:bold;" | Input
+| Air Conditioner Switch
+| Air Conditioner Switch
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 25
+| style="text-align: center; font-weight:bold;" | Input
+| Air Conditioner Switch [Middle]
+| Triple Switch
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 26
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 27
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 28
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 29
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Air Conditioner Compressor Relay
+| Air Conditioner Compressor Relay
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 30
+| style="text-align: center; font-weight:bold;" | Output
+| [0/1] Canister Close Valve
+| Canister Close Valve (CCV) 
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 31
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 32
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 33
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 34
+| style="text-align: center; font-weight:bold;" | Input
+| [0-5V] Fuel Tank Pressure Sensor
+| Fuel Tank Pressure Sensor (FTPS) 
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 35
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 36
+| style="text-align: center; font-weight:bold;" | I/O
+| CAN [HIGH]
+| Other control modules (TCM, ABS, etc.)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 37
+| style="text-align: center; font-weight:bold;" | I/O
+| CAN [LOW]
+| Other control modules (TCM, ABS, etc.)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 38
+| style="text-align: center; font-weight:bold;" | Ground
+| Wheel Speed Sensor (WSS)
+| Wheel Speed Sensor (WSS) Without ABS
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 39
+| style="text-align: center; font-weight:bold;" | Input
+| Wheel Speed Sensor (WSS)
+| Speed Sensor (WSS)
+|20
+|-
+| style="text-align: center; font-weight:bold;" | 40
+| style="text-align: center; font-weight:bold;" | Output
+| Cooling Fan Relay [High]
+| Cooling Fan Relay
+|20
+|}
+
+==C133-5 - Ignition==
+{| class="wikitable" style="width: 900px;"
+! colspan="5" | C133-5 9-pin
+|-
+| style="text-align: center; font-weight:bold;" | Pin
+| style="text-align: center; font-weight:bold;" | Type
+| style="font-weight:bold;" | Description
+| style="font-weight:bold;" | Notes
+|'''AWG'''
+|-
+| style="text-align: center; font-weight:bold;" | 1
+| style="text-align: center; font-weight:bold;" | Output
+| Ignition coil #3 (Cyl. #3,6)
+| Ignition coil #3 (Cyl. #3,6)
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 2
+| style="text-align: center; font-weight:bold;" | Output
+| Ignition coil #2 (Cyl. #2,5)
+| Ignition coil #2 (Cyl. #2,5)
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 3
+| style="text-align: center; font-weight:bold;" | Output
+| Ignition coil #1 (Cyl. #1,4)
+| Ignition coil #1 (Cyl. #1,4)
+|14
+|-
+| style="text-align: center; font-weight:bold;" | 4
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 5
+| style="text-align: center; font-weight:bold;" | Ground
+| Ignition Coil Shield 
+| Ignition Coil and Chassis Ground
+|16
+|-
+| style="text-align: center; font-weight:bold;" | 6
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 7
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 8
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|-
+| style="text-align: center; font-weight:bold;" | 9
+| style="text-align: center; font-weight:bold;" | 
+| 
+| 
+|
+|}
+[[Category:Siemens V6 2.7L]]

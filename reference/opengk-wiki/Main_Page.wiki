@@ -1,0 +1,69 @@
+<div style="float:right">__TOC__</div>
+'''Welcome to the OpenGK Wiki'''
+[[File:Siemens T Logo.gif|frameless|right]]
+[[File:Discord-Logo+Wordmark-Color.png|150px|frameless|right|link=https://discord.gg/a4fWuBTfxV]]
+Our goal is to open source the Hyundai/Kia Siemens ECMs on the Beta and Delta motors to provide tuning options to the DIY enthusiasts. This project originally started for the [[Hyundai Tiburon|Hyundai Coupe/Tuscani/Tiburon platform]] but as we collected more data from other platforms with similar ECMs, it was clear that those other platforms can be supported using the same principals.
+
+We are looking for smart individuals that have experience with IDA Pro and disassembly that are willing to help push this project further. Please contact '''info(at)opengk.org''' or join our {{DiscordInvite}}if you would like to contribute to this project.
+
+If you are a tuner and found this site to be useful, please consider a donation to Paypal: '''donate(at)opengk.org''' to help keep the site alive.
+
+[[Getting started|>> <big>'''Getting started''' <<</big>]]
+
+==== General ====
+[https://vin.opengk.org VIN Decoder]
+<br>
+[[Hyundai Tiburon]]
+<br>
+[[Vehicle identification number (VIN)]]
+<br>
+[[Data link connector (OBD2)]]
+<br>
+[[Immobiliser]]
+<br>
+[[SMARTRA|Smartra]]
+<br>
+[[Body Control Module]]
+<br>
+[[Instrument Cluster]]
+<br>
+==== Communication protocols ====
+[[K-Line]]
+<br>
+[[SIMK43 CAN Bus|CAN Bus messages]]
+<br>
+==== ECM Tuning ====
+[[GKFlasher Instructions]]
+<br>
+[[Cross Flash Kia Spectra|Cross-Flash Kia Spectra > Tiburon Firmware]]
+<br>
+==== Siemens L4 2.0L Hardware ====
+[[5WY ECM Identification#Siemens 5WY 2 Connector .282.0L L4.29| ECM Identification]]
+<br>
+[[2.0l PCB Layouts| 2.0L PCB Layouts]]
+<br>
+[[Siemens 5WY 2 Connector Pinout| 2.0L L4 Pinout]]<br>
+[[2.0L ECM]]
+<br>
+
+==== Siemens V6 2.7L Hardware ====
+[[5WY ECM Identification#Siemens 5WY 5 Connector .282.7L V6.29|ECM Identification]]
+<br>
+[[2.7L V6 PCB Layouts]]
+<br>
+[[Siemens 5WY 5 Connector Pinout| 2.7L V6 Pinout]]
+<br>
+
+==== Parts Compatibility ====
+[[Sensor Information]]
+<br>
+[[Fuel Injector Specifications]]
+<br>
+[[Camshaft Specifications]]
+<br>
+[[2.7L V6 Valvetrain]]
+<br>
+[[Bosch Chip Part Numbers]]
+
+==== Downloads ====
+[https://opengk.org/files/ File Repository]<br>

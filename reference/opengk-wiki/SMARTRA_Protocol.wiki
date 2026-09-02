@@ -1,0 +1,65 @@
+{{Stub}}
+
+For physical layer, see [[W-Line]]. This article will not focus (for now) at all the details - they can be found in this user manual submitted to the FCC by Bosch:
+
+[[:File:Smartra3 lxp-vima01 protocol-spec march-2007.pdf]] Keep in mind, this manual is about SMARTRA 3, while GK platform uses SMARTRA 2
+
+== General overview ==
+SMARTRA doesn't initiate any communication on it's own, it only responds to ECU's commands. Each ECU command requires a response from SMARTRA. There may be only one response to a single command and there may be only one command sent at a time (that means, wait for reply before sending another command)
+
+=== Data packet breakdown ===
+{| class="wikitable"
+|+From ECU to SMARTRA (command)
+Address = 0x49
+!Address
+!Length
+!Command (Action)
+!Data
+!Checksum
+|}
+{| class="wikitable"
+|+From SMARTRA to ECU (response)
+Address = 0x69
+!Address
+!Length
+!Data
+!Checksum
+|}
+
+
+'''Address''' is always gonna be 0x49 for ECU command, 0x69 for SMARTRA response.
+
+'''Length''' is number of bytes coming after Length field, including checksum. So for this example (invalid) message: 
+
+0x49 ?? 0x55 0x02 0x03 0x04 0xFF
+
+?? (length) would be 0x05
+
+'''Command/Action''' - action to be executed by the SMARTRA unit. See Commands section.
+
+'''Data''' - data to be exchanged between SMARTRA and ECU
+
+'''Checksum -''' one byte addition of all bytes (excluding address). So for this example (invalid) message:
+
+0x49 0x05 0x55 0x02 0x03 0x04 ??
+
+?? (checksum) would be 0x05 + 0x55 + 0x02 + 0x03 + 0x04 = 0x63<nowiki/>https://www.drive2.ru/l/524292225174078068/
+
+== Commands ==
+
+=== 0x06 - Acknowledge ===
+{| class="wikitable"
+|+ECU:
+|0x49
+|0x02
+|0x06
+|0x08
+|}
+{| class="wikitable"
+|+SMARTRA:
+|0x69
+|0x02
+|0x06
+|0x08
+|}
+If the SMARTRA unit does not respond to this command then it will not be ready to accept other commands. This command could be used to determine if the SMARTRA is ready to receive data at the start of a communications session.

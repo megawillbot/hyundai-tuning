@@ -1,0 +1,114 @@
+Vehicle identificator number on the Tiburon can be found on a metal plate riveted to the firewall on the drivers side
+[[File:VIN location engine bay.png|thumb|VIN location engine bay]]
+
+== VIN structure ==
+{| class="wikitable"
+|+Based on valid KMHHM66D77U259135 VIN
+!Section
+!Digit
+!Example
+!Possible values
+!Description
+|-
+| rowspan="3" |[[wikipedia:Vehicle_identification_number#World_manufacturer_identifier|World Manufacturer Identifier]]
+|1
+|K
+|K
+|Manufacturer geograpic zone - Korea
+|-
+|2
+|M
+|M
+|Manufacturer - HMC (Hyundai Motor Company)
+|-
+|3
+|H
+|H
+|Vehicle type - passenger car
+|-
+| rowspan="6" |Vehicle Descriptor Section
+|4
+|H
+|H
+|Vehicle line - Tiburon/Coupe (GK)
+|-
+|5
+|M
+|M/N
+|Series:
+
+* M - Middle-Low/Deluxe
+* N - Middle/Super Deluxe
+|-
+|6
+|6
+|6
+|Body/cabin type - coupe
+|-
+|7
+|6
+|1/6/5
+|Restraint system:
+
+* 1 - Active belt (seat belt pretensioner). In European Union, required for all vehicles sold after 2002
+* 5 - Depowered airbags
+* 6 - Advanced airbags
+|-
+|8
+|D
+|B/D/F
+|Engine:
+
+* B - L4 1.6
+* D - L4 2.0
+* F - V6 2.7
+|-
+|9
+|7
+|[[wikipedia:Vehicle_identification_number#Check-digit_calculation|Checksum]] 
+or numeric + X/P/R
+|Checksum as described in linked article. Checksum
+is only used for Tiburons sold in the Unites States or Canada
+|-
+| rowspan="2" |Vehicle Indicator Section
+|10
+|7
+|1-9
+|Last digit of the model year
+|-
+|11
+|U
+|U
+|In theory production plant, but it's always U and 
+the production plant is stored in Hyundai's DB instead 
+|-
+| rowspan="6" |Serial number
+|12
+|2
+|0-2
+| rowspan="6" |Sequential numeric serial number in order of production. 
+If a Tiburon made at 12:01AM has a 123 serial number, the next Tiburon made will have a 124 serial number
+|-
+|13
+|5
+|0-9
+|-
+|14
+|9
+|0-9
+|-
+|15
+|1
+|0-9
+|-
+|16
+|3
+|0-9
+|-
+|17
+|5
+|0-9
+|}
+If you happened to possess a file containing a lot of VINs, and wanted to extract only the Tiburons, this grep should do it:<syntaxhighlight lang="bash">
+grep -E "KMHH[MN]6.[BDF]"
+</syntaxhighlight>It'll extract all passenger cars made by Hyundai (KMH), from the Tiburon line (H - this should be enough in itself, but Genesis Coupe inherited that identifier), with Middle-Low/Middle configurations ([MN]), coupe body type (6) and 1.6/2.0/2.7 engines ([BDF])

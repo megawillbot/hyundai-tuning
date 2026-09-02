@@ -2,3 +2,7 @@
 *.bin binary
 *.sie binary
 *.xdf -text
+
+# OpenGK reference mirror — keep verbatim, these are upstream artifacts
+*.adx -text
+*.wiki -text

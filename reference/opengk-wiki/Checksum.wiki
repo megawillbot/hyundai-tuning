@@ -1,0 +1,3 @@
+{{Stub}}
+
+https://github.com/Dante383/GKFlasher/blob/main/flasher/checksum.py

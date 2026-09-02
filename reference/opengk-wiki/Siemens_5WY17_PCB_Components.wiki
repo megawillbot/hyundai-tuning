@@ -1,0 +1,16 @@
+<div style="display: flex; justify-content: right;">__TOC__</div>
+
+{{PCB Picture|side=front|labeled_filename=5WY1700-Front.jpg}}
+
+== 1. Infineon C167CR-LM CPU ==
+16-Bit Single-Chip Microcontroller C166 Family
+
+{| class="wikitable"
+|-
+! Chip Markings
+|-
+| Infineon<br>SAK-C167CR-LM<br>GA-T
+|}
+[[Category:Siemens V6 2.7L]]
+[[Category:Siemens V6 2.7L PCB Layouts]]
+[[Category:PCB Layouts]]

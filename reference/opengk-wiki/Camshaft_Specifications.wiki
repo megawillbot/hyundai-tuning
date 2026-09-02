@@ -1,0 +1,216 @@
+{| class="wikitable"
+|+2.7L Delta Camshafts
+!Manufacturer
+!Part #
+!Lift
+!Duration
+!Separation
+!Overlap
+!In Open
+!In Close
+!Ex Open
+!Ex Close
+!Notes
+|-
+|OEM
+|
+|.316
+|232° Adv.
+|110°
+|14°
+|6° BTDC
+|46° ABDC
+|44° BBDC
+|8° ATDC
+|
+|-
+|Colt
+|Tri-Flow
+|.340 Int1
+.335 Int2
+
+.340 Exh
+|211° @0.050"
+201° @0.050"
+
+211° @0.050"
+|
+|
+|
+|
+|
+|
+|N/A Stage 1
+|-
+|Colt
+|Tri-Flow
+|.365 Int1
+.355 Int2
+
+.365 Exh
+|218° @0.050"
+210° @0.050"
+
+218° @0.050"
+|
+|
+|
+|
+|
+|
+|N/A Stage 2
+|-
+|Crower
+|E64012
+|.340
+|210° @0.050"
+|110°
+|10°
+|1° BTDC
+|31° ABDC
+|39° BBDC
+|9° ATDC
+|N/A Stage 1
+|-
+|Crower
+|F20688
+|.342
+|210° @0.050"
+|114°
+|14°??
+|5° BTDC
+|35° ABDC
+|43° BBDC
+|13° ATDC
+|F/I Stage 1
+|-
+|Crower
+|E65701
+|.349
+|214° @0.050"
+|114°
+|10°??
+| 3º BTDC
+|37º ABDC
+|45º BBDC
+| 11º ATDC
+|F/I Stage 2 (Duffer)
+|-
+|Crower
+|F5782
+F2418
+
+F18034
+|.349
+|210° @0.050"
+|110°
+|10°??
+|1º BTDC
+|31º ABDC
+|39º BBDC
+|9º ATDC
+|N/A Stage 2 alternative
+|-
+|Crower
+|F22168
+|.349
+|210° @0.050"
+|116°
+|16°??
+|7° BTDC
+|37° ABDC
+|45° BBDC
+|15° ATDC
+|F18034 But with 116° Sep.
+|-
+|Crower
+|F12413
+F7589
+|.351
+|210° @0.050"
+|110°
+|10°??
+|1° BTDC
+|31° ABDC
+|39° BBDC
+|9° ATDC
+|N/A Stage 2 alternative
+|-
+|Crower
+|???
+|.399
+|264° Adv.
+198° @0.050"
+|
+|
+|
+|
+|
+|
+|Still gathering details on this
+custom grind.
+|-
+|Crane
+|STG 1
+|.341
+|202º @0.050
+|110°
+|
+|
+|
+|
+|
+|NGM's N/A Stage 1
+|-
+|Crane
+|STG 2
+|.370
+|216° @0.050
+|117°
+|
+|
+|
+|
+|
+|NGM's F/I Stage 2
+|-
+|Crane
+|STG ???
+|.415
+|244° @0.050
+|
+|
+|
+|
+|
+|
+|NGM's N/A Shop Car
+|-
+|PROSS
+|HiCam
+9.2mm
+|.362 to
+.368
+|260° Adv.
+|
+|
+|
+|
+|
+|
+|Unknown
+|-
+|PROSS
+|HiCam
+10.7mm
+|.421 to
+.428
+|270° Adv.
+|
+|
+|
+|
+|
+|
+|Unknown
+|}

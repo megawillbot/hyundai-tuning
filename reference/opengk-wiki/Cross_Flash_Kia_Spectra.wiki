@@ -1,0 +1,17 @@
+The Kia Spectra runs calibration version ca662008 which has a very similar bootloader to ca663056 used on the GK Chassis. 
+
+The goal of this article is to cross-flash the Tiburon program code and calibration zone avoiding the error:<syntaxhighlight lang="text">
+'Negative response', '<0x22 - Conditions Not Correct Or Request Sequence Error>'
+</syntaxhighlight>The reason for this error, when performing a flash operation via k-line the bootloader validates the firmware that is being uploaded using the 0x2 subroutine. 
+
+The idea is to prevent a mismatch where the bootloader is unable to load the program code which would essentially brick the ECU requiring a BSL re-flash recovery.
+[[File:Kia crossflash prog.png|thumb|[[File:Kia crossflash cal.png|thumb]]
+[[File:Kia crossflash gui.png|thumb]]]]
+In order to by-pass the validation check we can insert the ca662008 version number into the ca663056 program code and calibration zone tricking the ECU into thinking it's running an older version. The two sections of code that need updating, 0x20000 (program code) and 0x10000 (calibration zone)
+Once the version details have been updated, correct the checksum and upload via GKFlasher using the 'Full Flash' option.
+
+Please note: 
+
+'''If your car ''is not equipped'' with immobilizer hardware''' (an immobilizer coil and keys containing a PCF793 transponder) then you'll be unable to programme the immobiliser data into the ECU. In this scenerio, you won't be able to start the car or re-program the ECU. The only option is to remove the ECU from the vehicle and bench flash via BSL. To avoid this scenerio, only load ECU firmware appropriate for your region where the immobiliser is preconfigured.
+
+'''If your car ''is equipped'' with immobilizer hardware''' you may need to re-program the immobilizer by running through the Teach Keys procedure (if the Immo status is 'virgin' or 'not learnt'). Bear in mind, if the immobilizer hasn't been programmed correctly you'll be unable to re-flash and will receive the 0x22 error above prior to the erase operation. This won't brick the ECU, its a security feature to prevent you tampering with the ECU if the keys aren't present.

@@ -1,0 +1,36 @@
+== Tune Identifier Legend ==
+
+{| class="wikitable" style="text-align:left;"
+! CODE !! MEANING !! ALTERNATIVES
+|-
+| KANES || Tuner's name || —
+|-
+| - || Separator || —
+|-
+| XX || Header Optim. || 41 = 4-1 Head., 42 = 4-2-1 Head., TB = Turbo
+|-
+| XX || Catalyst || CE = Catalyst Enabled, CD = Catalyst Disabled
+|-
+| X || Camshaft || S = Stock, G = Ghost Cams, C = Upgraded Cams
+|-
+| X || Pops & Bangs || S = Stock, P = Pops Enabled
+|-
+| X || IACV Tuning || S = Stock, I = IACV Tuned
+|-
+| X || Fuel Optim. || 95 = 95 RON, 98 = 98 RON, 10 = 100 RON
+|-
+| X || Launch Control || D = LC Disabled, L = LC Enabled
+|}
+
+== Example Breakdown ==
+
+'''Identifier:''' <code>KANES-42CDGPI98L</code>
+
+* '''KANES''' → Owner's name
+* '''42''' → 4-2-1 headers
+* '''CD''' → Catalyst Disabled
+* '''G''' → Ghost Cams Enabled
+* '''P''' → Pops & Bangs Enabled
+* '''I''' → IACV Tuned
+* '''98''' → Optimized for 98 RON
+* '''L''' → Launch Control Enabled

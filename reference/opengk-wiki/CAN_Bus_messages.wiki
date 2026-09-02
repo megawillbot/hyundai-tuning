@@ -1,0 +1,216 @@
+<div style="float:right;">__TOC__</div>
+
+CAN Bus on Hyundai Tiburon operates at a speed of 500kb/s and so do the SIMK4x ECUs. 
+
+SIMK4x reads the following messages for operation, if the corresponding module is present in car:
+*[[CAN Bus ID 0x153 ASC1|ARBID 0x153 ASC1 Traction Control]]
+*[[CAN Bus ID 0x43F EGS1|ARBID 0x43F EGS1 Automatic Transmission]]
+
+SIMK4x sends the following messages:
+*[[SIMK43 CAN Bus#DME5 0x2A0|ARBID 0x2A0 DME5 Engine Control Unit]] (since ca663056)
+*[[SIMK43 CAN Bus#DME4 0x545|ARBID 0x545 DME4 Engine Control Unit]]
+*[[SIMK43 CAN Bus#DME2 0x329|ARBID 0x329 DME2 Engine Control Unit]]
+*[[SIMK43 CAN Bus#DME1 0x316|ARBID 0x316 DME1 Engine Control Unit]]
+
+In addition to that, there are messages that are not used by the ECU, but still present on the CAN Bus:
+*[[CAN Bus ID 0x1F0 ASC2|ARBID 0x1F0 ASC2 Traction Control]]
+
+[https://www.csselectronics.com/pages/can-dbc-file-database-intro DBC file] of Tiburon's CAN Bus: [https://opengk.org/files/Users/dante383/Tiburon_SIMK4x.dbc Tiburon_SIMK4x.dbc] [https://raw.githubusercontent.com/OpenGK-org/opengk-simk/refs/heads/master/DBC/Tiburon_SIMK4x.dbc <nowiki>[mirror]</nowiki>]
+[[File:SavvyCAN with may2025 DBC loaded.png|none|thumb|1048x1048px|Example of a candump log imported into SavvyCAN with Tiburon_SIMK4x.dbc file loaded]]
+
+==Connection points==
+There is only one CAN bus found in the Tiburons, there are no gateways present. 
+
+CAN Bus is exposed on the standard pins in the [[Data link connector (OBD2)|OBD2 connector]] as in the following image (vehicle side):
+
+[[File:Obd2 canbus pinout.png|center|thumb|Tiburon's OBD2 plug pinout, limited to power and canbus ]]
+Depending on vehicle's production date and trim, there are between 1 to 4 modules on the bus.
+{| class="wikitable"
+|+ Modules connected to the CAN Bus
+!Module name
+! colspan="2" |Connector name
+!CAN high pin
+!CAN low pin
+!CAN ID
+|-
+|[[5WY ECM Identification|ECM]]
+|[[Siemens 5WY 2 Connector Pinout|2.0 pinout]]
+|[[Siemens 5WY 5 Connector Pinout|2.7 pinout]]
+|see pinout
+|see pinout
+|[[SIMK43 CAN Bus|0x545, 0x329, 0x316]]
+|-
+|TCM
+|[[Siemens 5WY 2 Connector Pinout|2.0 pinout]]
+|[[Siemens 5WY 5 Connector Pinout|2.7 pinout]]
+|see pinout
+|see pinout
+|[[CAN Bus ID 0x43F EGS1|0x43F]]
+|-
+| Multigauge unit (if equipped)
+| colspan="2" |M42
+|7
+|1
+|
+|-
+|ABS module (if equipped)
+| colspan="2" |E37
+|11
+|10
+|[[CAN Bus ID 0x153 ASC1|0x153]]
+|}
+
+==Messages==
+
+===DME1 0x316===
+Refresh Rate: 10ms
+
+*'''Byte 0 -''' bitfield
+**Bit 0 - SWI_IGK_CAN: Terminal 15 –KEY ON
+**Bit 1 - F_N_ENG_CAN: Error – engine speed signal
+**Bit 2 - ACK_TCS_CAN (LV_ACK_TCS): Acknowledgement of TCS. This bit is set to 0 if no CAN messages from the TCS were received for at least 500ms
+**Bit 3 - PUC_STAT: Engine in fuel cut off (LV_PUC - Trailing Throttle Fuel Cut Off)
+**Bit 4 - TQ_COR_STAT_CAN: Status of torque intervention 0 - The desired intervention regarding ignition angle retardation and cylinder shut-off is executed. (Default value) 1 - The desired intervention regarding ignition angle retardation and cylinder shut-off is executed; however, the requested target torque can not be adjusted precisely (torque steps) 2 - The torque reduction regarding the ignition angle retardation cannot be completely executed. A cylinder shut-off is not possible at this time. Therefore a remaining torque (as difference between TQI_ASR/GS_REQ and TQI_AV) is present and cannot be reduced. 3 - The desired torque intervention for TCS regarding the ignition angle and cylinder shut-off can no longer be executed. The torque intervention is terminated, the engine management system resets the requested engine torque to the TQI value using a ramp.
+**Bit 6 - RLY_AC_CAN: Activation, air conditioner compressor relay
+**Bit 7 - F_SUB_TQI_CAN: Error on torque measure or calculation
+* '''Byte 1 - TQI_TQR_CAN''' 
+*: Indexed Engine Torque in % of C_TQ_STND  (including ASR/MSR/ETCU/LIM/AMT/GEAR intervention)
+*:Calculation = HEX * 0.39
+*'''Byte 2 - N_ENG [LSB]'''
+*'''Byte 3 - N_ENG [MSB]'''
+*:Engine Speed in rpm
+*:Calculation = ((HEX[MSB] * 256) + HEX[LSB]) * 0.15625
+*'''Byte 4 - TQI_CAN''' 
+*:Indicated Engine Torque in % of C_TQ_STND (based on PVS, N, AMP, TIA ,TCO, IGA, PUC so ip_tqi_pvs__n__pvs)
+*:Calculation = HEX * 0.39
+*'''Byte 5 - TQ_LOSS_CAN (TQFR_CAN)'''
+*:Engine Torque Loss (due to engine friction, AC compressor and electrical power consumption) in % of C_TQ_STND
+*:Calculation = HEX * 0.39
+*'''Byte 6 - VS (VS_CAN)''' Vehicle speed in km/h
+*'''Byte 7 - TQI_MAF_CAN''' 
+*:Needs verification
+*:Theorethical Engine Torque in % of C_TQ_STND after charge intervention (based on MAF & IGA so ip_tqi_maf__n__maf)
+*: Calculation = HEX * 0.39
+Example messages: <syntaxhighlight>
+05 0B B8 0C 0B 0A 00 77
+
+05 0C B8 27 0C 0B 46 80
+
+0D 00 84 27 00 0B 31 82
+</syntaxhighlight>
+
+===DME2 0x329 ===
+Refresh Rate: 10ms
+
+* '''Byte 0''' - Bitfield
+*:* Bit 0 - CAN Version (CAN_VERS_CAN),
+*:* Bit 1 -  TCU configuration (CONF_TCU_CAN)
+*:* Bits 2-3 - OBD freeze frame (OBD_FRF_ACK_CAN) @TODO: Not sure about the length
+*:* Bit 4-5 - Torque scaling factor (TQ_STND_CAN) (6 bits long) @TODO: Not sure about the length
+*:* Bit 6 - MUL_CODE: Identification of MUL_INFO 
+*'''Byte 1 - TCO (TEMP_ENG_CAN)'''
+*: Engine (Coolant) Temperature in °C
+*:Calculation = (HEX * 0.75) - 48°C
+*:Init: 0xFF
+*:Min: 0x01 (-48°C)
+*:Max: 0xFF (142.5°C)
+*'''Byte 2 - AMP_CAN'''
+*:Ambient Pressure in hPa
+*:Calculation = (HEX * 2) + 598hPa
+*:Init = 0x00
+*:Min = 0x01 (600hPa)
+*:Max = 0xFE (1106hPa)
+*:Error = 0xFF
+*'''Byte 3''' '''- VB_OFF_ACT_CAN'''
+*:Detection of battery disconnection (0x10 - battery is connected)
+*'''Byte 4''' '''- ACK_ES_CAN'''
+*:Acknowledgement „engine stopped“
+*'''Byte 5 - TPS_CAN'''
+*:Accelerator Pedal Position in % of PVS_MAX
+*:Calculation = HEX * 0.390625
+*:Init = 0x00
+*:Min = 0x01 (0%)
+*:Max = 0xFE (99.2%)
+*:PVS Error = 0xFF
+*:Values around 10-15% are to be expected for an un-touched pedal
+*'''Byte 6''' '''- bitfield'''
+**'''Bits 0-4:''' ENG_CHR_CAN
+**:Engine Characteristic – Kind of fuel, ETS. 0xFF - gasoline
+**'''Bits 5-7''': Unused
+*'''Byte 7''' - Unused
+Example messages:<syntaxhighlight>
+4F B2 82 10 00 20 FF
+
+4F B0 82 10 00 32 FF
+
+4F B1 84 10 00 51 FF
+</syntaxhighlight>
+
+===DME4 0x545===
+Refresh Rate: 10ms
+
+*'''Byte 0''' - Bitfield
+*:* Bit 0 - LV_LOCK_IMOB (IM_AUTHEN_CAN): Authetication "immobilzer" (0/1), 1 bit long. @TODO confirm: this value is likely 0 before successful immo authentication
+*:* Bit 1 - L_MIL_CAN: Check Engine Lamp or Malfunction Indication Lamp (MIL for CARB/OBDII) (0/1), 1 bit long
+*:* Bit 2 - CONF_IMOB (IM_STAT_CAN): Status "immobilizer" (0/1), 1 bit long. @TODO confirm: this value likely shows whether the immobilizer is enabled in the calibration zone
+*:* Bit 3 - AMP_CAN: Atmospheric Pressure [mmHg]. 5 bytes long 
+*'''Byte 1 - FCO[LSB] (FCO_SUM_DIF)'''
+*'''Byte 2 - FCO[MSB] (FCO_SUM_DIF)'''
+*:Fuel Consumption in microliters (μl). Formula: HEX * 0,128
+*'''Byte 3''' - VB
+*:Battery voltage. Formula: HEX * 0.1
+*'''Byte 4''' - Unused
+*'''Byte 5''' - Unused
+*'''Byte 6''' - Unused
+*'''Byte 7''' - Unused
+Example messages:<syntaxhighlight>
+F6 61 01 89
+
+EE FA 02 89
+
+EE 8B 02 88
+</syntaxhighlight>
+
+=== DME5 0x2A0 ===
+Refresh rate: 10ms 
+
+@TODO. The values below '''have not been even looked at''' on any Tiburon candump and instead come from a newer engine control unit. '''Some might be accurate, or nothing may be accurate at all.''' Feel free to verify or supply some CAN logs
+
+* '''Byte 0''' - bitfield
+** Bit 0 - ECGPOvrd: Driver override (not relevant)
+** Bit 1 - QECACC: Failure in ACC-message detected by engine control (not relevant)
+** Bit 2 - ECFail: Function failure engine power control (not relevant)
+** Bit 3 - SwitchOffCondExt: ACC shut off condition detected (not relevant)
+** Bit 4 - BLCEFail: Failure brake light switch detected by engine control (not relevant) '''extremely unlikely to be used, as the brake light switch is not connected to the ECU on GK platform'''
+** Bit 5 - Unused
+** Bit 6 - Unused
+** Bit 7 - Unused
+** Bit 8 - Filtered Accelerator Pedal value(not relevant)
+
+* '''Byte 1''' - TIA_CAN: Intake Air temperature Temperature in Celsius, formula: HEX * 0.75. 
+* '''Byte 2''' - bitfield
+** Bits 0-7: STATE_DC_OBD: Status of rate-based monitoring
+** Bit 8: INH_DC_RBM - Inhibition of rate based monitoring
+*'''Byte 3''' - CTR_IG_CYC_OBD: Ignition cycle counter [LSB]
+*'''Byte 4''' - CTR_IG_CYC_OBD: Ignition cycle counter [MSB]
+*'''Byte 5''' - CTR_CDN_OBD: General denominator calculation [LSB]
+*'''Byte 6''' - CTR_CDN_OBD: General denominator calculation [MSB]
+*'''Byte 7''' - Unused
+*'''Byte 8''' - Unused
+
+== Example logs ==
+Here are some example canbus dumps. They were recorded on a 2008 Tiburon, 2.0 (cvvt) with manual transmission, fitted with ABS and ESP.
+
+https://drive.google.com/drive/folders/1j9GmhrkH-Lm7k_E4v4JQ_gHB_lFeJ5_U?usp=sharing
+
+'''2008_2.0_normal_city.log''' - This one features "eco-driving" around the city, without exceeding 40mph.
+
+'''2008_2.0_normal_highway.log''' - eco-driving around the highway, without exceeding 80mph.
+
+'''2008_2.0_spirited_highway.log''' - changing gears near the limiter until getting to the 110mph mark and mostly staying there for the whole duration of the log.
+
+'''2008_2.0_spirited_city.log''' - dynamic stroll through the city. This is the only log during which ESP intervention happened - it's reflected in [[CAN Bus ID 0x153 ASC1|ESP's module CAN messages]]. 
+
+Rest of the logs should have self-explanatory names.
+
+__FORCETOC__

@@ -1,0 +1,37 @@
+{{Stub}}
+
+Bootstrap Loader (BSL) on the C166 MCUs allows to execute code in memory, bypassing code stored on the EEPROM.
+
+This is often used to flash regions of memory inaccessible through OBD2, such as the bootloader. Most notable case would be removing the [[immobiliser]], or performing a ca663056->ca663057 upgrade, which requires changing the bootloader.
+
+To enter BSL mode, you must ground the BOOT pin and then feed power to the ECU, which will make the CPU wait for input over serial port instead of executing code stored on the flash memory. Then, typically a small loader is uploaded which later facilitates upload and execution of the proper BSL program, which will offer ways to manipulate memory. 
+
+[https://github.com/dante383/gkflasher GKFlasher] supports BSL mode.
+
+== Entering BSL mode (2.0L) ==
+[[File:Boot pin ziome3eg.png|thumb|BOOT pin]]
+
+=== Non-immo ECUs ===
+
+# Connect ECU pins 3, 14, 21 and 22 to +12V.
+# Connect [[K-Line]] per [[Siemens 5WY 2 Connector Pinout|ECU pinout.]]
+# Pull down the BOOT pin to Ground through a 10kΩ resistor. (Most V6 ECU's have the resistor onboard). 
+# Connect power and ground to the ECU.
+# ECU is now ready for BSL input - you can press any button in the BSL tab in GKFlasher.
+
+=== Immo ECUs ===
+
+# Connect ECU pins 3, 14, 21 and 22 to +12V.
+# Connect K-Line (pin 77) per [[Siemens 5WY 2 Connector Pinout|ECU pinout]]. 
+#Attach a 470Ω resistor on the [[W-Line|W-Line<small>(? citation needed)</small>]].
+#Splice [[K-Line]] into [[K-Line]] on the ECU header - if you're using a Y-split OBD2 cable, that'd be [[Data link connector (OBD2)|pin 9]].
+# Pull down the BOOT pin to Ground through a 10kΩ resistor.
+# Connect power and ground to the ECU.
+# ECU is now ready for BSL input - you can press any button in the BSL tab in GKFlasher.
+[[File:Bsl pins dmg210.png|thumb]]If the method above does not work, try the following:
+
+# Connect ECU pins 3, 14, 21 and 22 to +12V.
+# Connect K-line (OBD pin 7) to W-Line on the ECU header (pin 47).
+# Pull down the BOOT pin (pin 28 of the flash chip) to Ground through a 10kΩ resistor.
+# Connect power and ground to the ECU.
+# ECU is now ready for BSL input - you can press any button in the BSL tab in GKFlasher.

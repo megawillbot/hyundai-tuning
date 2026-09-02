@@ -1,0 +1,75 @@
+Each Hyundai/KIA chassis has it's own two letter identifier. So far, on the [[5WY ECM Identification|ECU label]], the first letter of the identifier has always been used 
+{| class="wikitable"
+|+
+!Chassis identifier
+!Model
+|-
+|GK
+|Hyundai Tiburon
+|-
+|BK
+|Genesis Coupe
+|-
+|CM
+|Hyundai Santa Fe (2005-2012)
+|-
+|EF
+|Hyundai Sonata (1998-2004)
+|-
+|EN
+|Hyundai Veracruz
+|-
+|FC
+|Hyundai Matrix
+|-
+|FO
+|Hyundai Trajet
+|-
+|HD
+|Hyundai Elantra (2006-2010)
+|-
+|HP
+|Hyundai Terracan
+|-
+|JM
+|Hyundai Tucson
+|-
+|KM
+|KIA Sportage
+|-
+|LC
+|Hyundai Accent (2000-2005)
+|-
+|LD
+|KIA Spectra / Cerato
+|-
+|MC
+|Hyundai Accent (2006-2010)
+|-
+|MS
+|KIA Optima
+|-
+|NF
+|Hyundai Sonata (2004-2009)
+|-
+|RD
+|Hyundai Scoupe (1996-2001)
+|-
+|SM
+|Hyundai Santa Fe (2000-2006)
+|-
+|TB
+|Hyundai Getz
+|-
+|TG
+|Hyundai Grandeur/Azera
+|-
+|X3
+|Hyundai Accent 1995-2000 (1999 USDM)
+|-
+|XD
+|Hyundai Elantra (2000-2005)
+|-
+|XG
+|Hyundai Grandeur
+|}

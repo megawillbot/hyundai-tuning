@@ -1,0 +1,23 @@
+
+
+SIMK43 Map notes
+
+'''c_n_max''' is the ignition cut rev limiter
+
+'''c_n_max_max''' is the fuel cut rev limiter
+
+'''c_n_max_hys''' is the rpm hysteresis for the ignition cut
+
+'''c_n_max_hys_max''' is the rpm hysteresis for the fuel cut
+
+'''id_tps_fl__n''' is the minimum TPS angle before full load aka open loop WOT detection begins and fuel enrichment begins
+
+'''ip_ti_fl__n__amp''' is the fuel add factor for fuel enrichment while in full load open loop
+
+'''ip_iga_bas__n_32__maf_hb''' is the basic ignition advance angle
+
+'''ip_iga_ref__n_32__maf_hb''' is the reference ignition advance angle
+
+'''ip_iga_dif_min_bas''' is unknown, but has something to do with blending of ignition angle from CVVT high vs low states
+
+'''id_maf_tab''' is your mass airflow calibration table

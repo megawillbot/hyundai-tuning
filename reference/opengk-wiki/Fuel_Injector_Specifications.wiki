@@ -1,0 +1,356 @@
+__TOC__
+
+There are several injectors that will fit both Beta and Delta fuel rails from other makes and models. This list will detail all of the available specifications we could find on each injector and what engine they originated from.
+
+==Injector List ==
+{| class="wikitable"
+|+Injector Matrix
+!Brand
+!Part #
+!Type
+!Flow @
+45psi (3.1bar)
+!Flow @
+43.5psi (3bar)
+!Nozzle Hole
+Count
+!Impedence
+Ohms
+!Original Application
+!Notes
+|-
+|Kefico
+Hyundai
+|9260930006
+35310-22600
+|EV6
+|164cc
+|162cc
+|4
+|14.3Ω
+|1.6L G4ED Alpha 2
+|OEM Hyundai
+|-
+|DENSO
+Hyundai
+|195500-4470
+35310-23700
+|EV6
+|210cc
+|206cc
+|4
+|14.2Ω
+|2.0L G4GC Beta 2
+|OEM KIA
+|-
+|Kefico
+Hyundai
+|9260930004
+35310-37150
+|EV6
+|194cc
+|190cc
+|4
+|14.2Ω
+|2.0L G4GC Beta 2
+2.7L G6BA Delta
+|OEM Hyundai
+|-
+|Kefico
+Hyundai
+|9260930013
+35310-23600
+|EV6
+|194cc
+|190cc
+|4
+|14.2Ω
+|2.0L G4GC Beta 2
+2.7L G6EA Mu
+|OEM Hyundai
+|-
+|Kefico
+Hyundai
+|9260930003
+35310-38010
+|EV6
+|300cc
+|294cc
+|4
+|14.2Ω
+|2.4L G4JS Sirius 2
+3.5L G6AU Sigma
+|OEM Hyundai
+|-
+|Kefico
+Hyundai
+|S040
+35310-2C100
+|EV6
+|366cc
+|360cc
+|4
+|14.3Ω
+|2.0 G4KF
+Turbo Theta 2
+|OEM Hyundai
+|-
+|Bosch
+GM
+|62203
+0280155868
+|EV6
+|360cc
+|354cc
+|4
+|12.2Ω
+|3.8L L67 SC
+|OEM 
+|-
+|DENSO 
+Nissan
+|16600-JK20A
+|EV6
+|361cc
+|355cc
+|12
+|12-14Ω
+|3.5L VQ35VHR
+|OEM Nissan
+|-
+|DENSO
+Nissan
+|297500-0950
+16600-EY00A
+|EV14
+|361cc
+|355cc
+|12
+|12-14Ω
+|3.7L VQ37VHR
+|OEM Nissan
+|-
+|DENSO
+Subaru
+|195500-3920
+16611-AA521
+|EV6
+|447cc
+|440cc
+|4
+|12-14Ω
+|2.5L EJ25 Turbo
+|OEM Subaru
+|-
+|DENSO
+Nissan
+|16600-JF00A
+|EV6
+|559cc
+|550cc
+|12
+|12.6Ω
+|3.8L VR30DDTT
+|OEM Nissan
+|-
+|Siemens Deka
+Mototron
+|FI114961
+INJ-GAS-006
+|EV1
+|640cc
+|630cc
+|4
+|12.5Ω
+|
+|Requires 5mm spacer for fuel rail
+|}
+
+== Injector Identification ==
+[[File:GK2.7 OEM Injector.png|right|thumb]][[File:GK2.7 OEM Injector Nozzle.png|right|thumb]]
+Many aftermarket "OE" injectors are either Chinese fakes or they perform poorly in our systems. It's important to know how to identify a genuine injector from a fake injector. Here are the main identifiers to look for when shopping for used, new or remanufactured/reflowed injectors.
+
+# Kefico part number
+# "Four Leaf Clover" or "Venus Korean Dogwood Flower"
+# Hyundai "H" logo
+# Hyundai part number
+# "K" and "C" are stamped near the nozzles
+
+
+
+
+
+
+
+
+
+
+
+
+== Injector Dead Times ==
+[[File:Kefico 9260930004 Dead Times.png|thumb|'''Kefico 9260930004''']]Additional injector data can be found over at MS4X's page here: https://www.ms4x.net/index.php?title=Fuel_Injector_Deadtimes
+{| class="wikitable"
+|+Kefico 190cc 9260930004 2.7L V6
+!Volts
+!Milliseconds
+|-
+|5.486
+|0.640
+|-
+|5.994
+|2.816
+|-
+|9.957
+|1.152
+|-
+|11.989
+|0.768
+|-
+|13.005
+|0.640
+|-
+|14.021
+|0.512
+|-
+|15.951
+|0.384
+|-
+|24.994
+|0.128
+|}
+{| class="wikitable"
+|+Kefico 190cc 9260930004 2.0L L4
+!Volts
+!Milliseconds
+|-
+|5.49
+|0.640
+|-
+|5.99
+|2.912
+|-
+|8.03
+|1.760
+|-
+|9.96
+|1.216
+|-
+|11.99
+|0.832
+|-
+|13.00
+|0.704
+|-
+|14.02
+|0.576
+|-
+|17.98
+|0.256
+|}
+{| class="wikitable"
+|+Bosch 62203 0280155868 360cc
+!Volts
+!Milliseconds
+|-
+|10.00
+|0.743
+|-
+|12.00
+|0.497
+|-
+|13.00
+|0.414
+|-
+|14.00
+|0.313
+|}
+{| class="wikitable"
+|+Mitsubishi Evo X OEM 525cc
+!Volts
+!Milliseconds
+|-
+|4.69
+|3.825
+|-
+|7.04
+|3.270
+|-
+|9.38
+|1.695
+|-
+|11.73
+|1.110
+|-
+|14.08
+|0.810
+|-
+|16.42
+|0.570
+|-
+|18.70
+|0.405
+|}
+{| class="wikitable"
+|+Siemens Deka 630cc FI114961 
+!Volts
+!Milliseconds
+|-
+|8.00
+|1.538
+|-
+|9.00
+|1.231
+|-
+|10.00
+|0.923
+|-
+|11.00
+|0.708
+|-
+|12.00
+|0.523
+|-
+|13.00
+|0.400
+|-
+|14.00
+|0.308
+|-
+|15.00
+|0.215
+|-
+|16.00
+|0.092
+|-
+|17.00
+|0.000
+|}
+{| class="wikitable"
+|+DENSO Subaru 195500-3920 16611-AA521 Estimated Values
+!Volts
+!Milliseconds
+|-
+|5.49
+|7.000
+|-
+|5.99
+|4.900
+|-
+|8.03
+|2.750
+|-
+|9.96
+|1.200
+|-
+|11.99
+|0.880
+|-
+|13.00
+|0.750
+|-
+|14.02
+|0.670
+|-
+|17.98
+|0.400
+|}

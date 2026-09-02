@@ -55,7 +55,48 @@ roms/tunes/   Modified bins, one subfolder per tune with a notes.md changelog.
 defs/         TunerPro XDF definition files matching our calibration version.
 logs/         Datalogs (before/after each change).
 docs/         Notes, wiring, references.
+reference/    Mirror of OpenGK wiki + GitHub definitions (see below).
 tools/        External tools (gitignored — GKFlasher lives here).
+```
+
+## Reference mirror — read this before researching anything
+
+`reference/` is a local copy of everything from [opengk.org](https://opengk.org) and
+the [OpenGK-org GitHub](https://github.com/OpenGK-org) relevant to this car, mirrored
+**2026-08-30**. **Check here before searching the web** — most questions about this
+ECU are already answered offline.
+
+**[`reference/INDEX.md`](reference/INDEX.md) is the annotated index.** Read it first;
+it explains what each file is, which ones don't apply to our calibration and why, and
+what was deliberately left out.
+
+| Path | What |
+|---|---|
+| `reference/opengk-wiki/` | 41 wiki pages as MediaWiki source: ECM pinouts, K-line/CAN protocol, GKFlasher instructions, injector/cam specs, VIN and chassis decoding |
+| `reference/opengk-simk/XDF/Delta-27/` | All five Delta 2.7 XDFs. **`ca652048 2700.xdf` has 725 tables / 922 constants** vs our 42 — the reference for what functions exist in a SIMK43 2.7 |
+| `reference/opengk-simk/XDF/docs/` | Human-readable table listings per calibration |
+| `reference/opengk-simk/ADX/` | TunerPro datalogging definitions (ca663056-based — offsets don't match ours, scalings do) |
+| `reference/opengk-simk/DBC/` | CAN message definitions, 500 kb/s, 10 ms broadcast |
+| `reference/opengk-simk/EEPROMS/` | Six sibling ROM dumps closest to our calibration |
+| `reference/ghidra_scripts/` | SIMK4x Ghidra loader, C167 symbol annotations, KWP2000/CCP command sets |
+
+Three things from the mirror that change how you should read the rest of this repo:
+
+- **Our power maps are identical to the European car.** The cal zone differs from
+  `ca654019 / G4E7TS0A` (GK, auto, Europe MY04) by only 1.7%, and the ignition table,
+  WOT enrichment, WOT TPS trigger, fuel pulse width, MAF max and rev limits are all
+  byte-identical. The `J` (Japan) in our platform version buys no separate power
+  calibration.
+- **`AD0B WOT Enrichment` and `9A72 WOT TPS Trigger` are 1-D f(rpm) tables**, not the
+  "12x16" their XDF titles claim. Their internal names `IP_TI_FL__N` / `ID_TPS_FL__N`
+  confirm it (`__N` = function of engine speed only).
+- **Variable intake manifold tables exist on this platform but are missing from our
+  XDF** (`ID_VIM__N_32_VIM__TPS_VIM`, `C_N_HYS_VIM` and friends in `ca652048`).
+
+**Upstream moves.** The `ca654019` XDF was updated 2026-08-29, one day after our
+first download. Re-check before any flash:
+```powershell
+gh api repos/OpenGK-org/opengk-simk/commits --jq '.[0:5][] | "\(.commit.author.date[0:10])  \(.commit.message)"'
 ```
 
 ## Workflow rules

@@ -1,0 +1,233 @@
+<div style="float:right">__TOC__</div>
+
+Siemens 5WY ECMs were used on both Delta and Beta motors on a range of vehicles from the mid 1990s to early 2010s. The main difference is the number of harness/socket and pin counts.
+
+== Label ==
+[[File:ECU label description.png]]
+{| class="wikitable"
+|+
+!#
+!Name
+!Example
+!Description
+|-
+|#1
+|Hyundai part number
+|39105-23220
+|
+|-
+|#2
+|Hardware revision
+|5WY1611B
+|Also called hardware family. See sections below for v6/l4 examples
+|-
+|#3
+|Barcode
+|1611B0271531823X
+|"Code 39" barcode. Contains hardware revision, index, serial and production date(?). Do not rely on the barcode from image above - it has been randomly generated
+|-
+|#4
+|Production date
+|21.08.03/7
+|
+|-
+|#5
+|Region / emissions standard
+|N
+|
+A | Australia
+
+D | Korea
+
+E | EC 2000 (Euro 3?)
+
+F | Euro Zone 4
+
+G | Euro Zone 2
+
+N | North America / Canada 
+
+T | Euro Zone 3
+
+|-
+|#6
+|Engine
+|C
+|0 - Beta 2.0L non-CVVT / Delta 2.0L (depending on chassis)
+C - Beta 2.0L CVVT 
+
+5 - Delta 2.5L
+
+7 - Delta 2.7L
+
+8 - Beta 1.8L
+|-
+|#7
+|Model year
+|4
+|Last digit of model year. 4 - 2004, 7 - 2007, etc.
+|-
+|#8
+|[[Chassis identifiers|Chassis]]
+|G
+|Intended [[Chassis identifiers|chassis identifier]]
+|-
+|#9
+|Serial
+|1823
+|Last 4 digits of the ECU serial number, which can be found in the bootloader / UIF zone
+|-
+|#10
+|Index
+|02
+|Unknown
+|}
+
+==Siemens 5WY 5 Connector (2.7L V6)==
+[[File:GK27-ECM-Socket.png|600px]]
+[[File:Siemens-5WY-5-Connector-Label-v2.png|400px|thumb|right|2003 2.7L V6 Delta 2MBit]]
+[[File:Siemens-5WY-5-Connector-Label.png|400px|thumb|right|2004 2.7L V6 Delta 4MBit]]The Siemens 5WY 5 connector ECM is found on an array of vehicles ranging between 1999 and 2012 equipped on the 2.5L and 2.7L Delta motors including the Sonata, Santa Fe, Tucson, Tiburon and Sportage. There are two types of EEPROMs used across this range known as 2MBit and 4MBit (or 256Kbytes and 512Kbytes). There are 7 major variants of this ECM. These variants can be identified by the 5WY designation under the SIEMENS logo here:
+{| class="wikitable"
+|+5WY 5 Connector Identification Matrix
+!EEPROM
+!Family
+!Variants
+!Years
+!Calibration Version
+Cross Compatibility
+!Engine
+Type
+!O2
+Sensor
+!SIMK # 
+|-
+| rowspan="2" |2MBit
+AM29F200BB
+
+M29F200BB
+|5WY12
+|5WY1215
+|1999-2001
+|ca650055
+|Delta
+G6BV/G6BW 
+
+2.5L
+| rowspan="2" |5volt NB
+| rowspan="2" |SIMK41 
+|-
+|5WY15
+|5WY1502
+5WY1503
+
+5WY1515
+
+5WY1541
+|2002-2003
+|ca652040
+ca652048
+
+ca652051
+| rowspan="6" |Delta
+G6BA
+
+2.7L
+|-
+| rowspan="5" |4MBit
+AM29F400BB
+
+M29F400BB
+|5WY17
+|5WY1706
+5WY1708
+
+5WY1710
+
+5WY1711
+
+5WY1745
+
+5WY1753
+|2003-2004
+|ca654011
+ca654012
+
+ca654014
+
+ca654015
+
+ca654016
+
+ca654019
+| rowspan="5" |1volt NB
+| rowspan="5" |SIMK43
+|-
+|5WY18v1
+|5WY1805
+5WY1842
+|2005
+|ca654020
+ca654021
+|-
+|5WY18v2
+|5WY1857
+|2006
+|ca654024
+ca654025
+|-
+|5WY1Fv1
+|5WY1F02
+5WY1F03
+|2007
+|ca655022
+|-
+|5WY1Fv2
+|5WY1F28
+5WY1F29
+
+5WY1F65
+
+5WY1F66
+|2008-2009
+|ca655027
+ca655029
+|}
+The vehicle chassis code, year, region and engine type can be found on the right of the label:
+
+*N - North American (E = European)
+*7 - Delta 2.7L (5 = Delta 2.5L)
+*2 - 2002 year (3 = 2003, 4 = 2004, 5 = 2005, etc. etc.)
+*G - GK model
+
+There is a date code just above the barcode which identifies the date which it was flashed. The dates are written as "DAY.MONTH.YEAR" with the following examples:
+
+*30.10.02 - October 30th 2002
+*18.12.03 - December 18th 2003
+A pinout can be found here: [[Siemens 5WY 5 Connector Pinout]]
+
+==Siemens 5WY 2 Connector (2.0L L4)==
+[[File:GK20-ECM-Socket.png|600px]]
+[[File:Siemens-5WY-2-Connector-Label-SIMK41.png|400px|thumb|right|2003 2.0L L4 Beta 2MBit Non-CVVT]][[File:Siemens-5WY-2-Connector-Label-SIMK43.png|400px|thumb|right|2004 2.0L L4 Beta 4MBit CVVT]]
+[[File:Siemens-VDO-5WY-2-Connector-Label-SIMK43.png|400px|thumb|right|2008 2.0L L4 Beta 4MBit CVVT]]The Siemens 5WY 2 connector ECM is found on an array of vehicles up to approximately 2012 equipped with the 2.0L Beta motors. There are two types of EEPROMs used across this range known as 2MBit and 4MBit (or 256Kbytes and 512Kbytes). There are 5 major variants of this ECM. These variants can be identified by the 5WY designation under the SIEMENS logo here:
+
+* 5WY14 - 2MBit family w/o CVVT 2002-2003
+* 5WY16 - 4MBit family w/ CVVT 2004-2006 MT
+*5WY41 - 4MBit family w/ CVVT 2004-2006 AT
+*5WY19 - 4MBit family w/ CVVT 2007-2009 MT
+*5WY1A - 4MBit family w/ CVVT 2007-2009 MT
+*5WY44 - 4MBit family w/ CVVT 2007-2009 AT
+
+The vehicle chassis code, year, region and engine type can be found on the right of the label:
+
+* N - Region. N is North American
+*C - BETA 2.0 CVVT (0 is BETA 2.0 non-CVVT)
+* 4 - 2004 year (3 = 2003, 4 = 2004, 5 = 2005, etc. etc.)
+* G - GK model
+
+There is a date code just above the barcode which identifies the date which it was flashed. The dates are written as "DAY.MONTH.YEAR" with the following examples:
+
+* 07.05.03 - May 7th 2003
+* 21.08.03 - August 21st 2003
+* 29.08.07 - August 29th 2007
+
+A pinout can be found here: [[Siemens 5WY 2 Connector Pinout]]

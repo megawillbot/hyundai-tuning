@@ -1,0 +1,228 @@
+Original source: "Mines Better"
+{| class="wikitable"
+|+ <ref>https://web.archive.org/web/20111029150514/http://www.hyundaihouseofpower.com/timeslips.htm</ref>GK Chassis Verified Timeslips
+|-
+! Username !! Vehicle !! Power Adder(s) !! WHP/WTQ !! 60' !! 1/8 ET @ MPH !! 1/4 ET @ MPH
+|-
+| APE tom(Drag Car) || 2003 Tiburon I4 || Turbo + Nitrous (150) || 650/--- || -.--- || -.---@--.-- || 10.564@140.18
+|-
+| chadoffl || 2004 Tiburon V6 || NGM Twincharged/N20(50) || 445/--- || 1.857 || 7.7@94.75 || 11.86@115.47
+|-
+| zeenon53 || 2004 Tiburon V6 || NGM Assassin S/C || ---/--- || 1.97 || 8.3@88.78 || 12.55@116.25
+|-
+| tiburondriver47 || 2003 Tiburon V6 || NGM Sniper S/C || 321/274 || 1.975 || 8.275@93.10 || 12.56@113.53
+|-
+| FstrTib || 2003 Tiburon V6 || NGM Assassin S/C || ~420/~380 || 2.059 || 8.303@90.76 || 12.602@115.16
+|-
+| 12secTib || 2003 Tiburon V6 || NGM Assassin S/C || 294/257 || 1.844 || 8.071@86.83 || 12.618@107.05
+|-
+| Tibby03 || 2003 Tiburon V6 || NGM Alpine S/C || 327/312 || 1.75 || 8.024@86.30 || 12.623@102.33
+|-
+| Farrelan || 2003 Tiburon V6 || NGM Stealth Turbo || 401/--- || 1.976 || 8.259@88.18 || 12.653@109.70
+|-
+| Mines Better || 2003 Tiburon V6 || NGM Alpine S/C || ---/--- || 1.96 || 8.172@88.51 || 12.663@109.03
+|-
+| Bakering31 || 2003 Tiburon V6 || NGM Sniper S/C || ~300/--- || 1.96 || 8.407@83.95 || --.---@---.--
+|-
+| dawgincustoms || 2005 Tiburon V6 || NGM Assassin S/C || ~375/~350 || 2.136 || 8.562@86.19 || 13.012@106.31
+|-
+| brownnote || 2003 Tiburon V6 || NGM Assassin S/C || ~330/--- || 1.99 || 8.470@86.07 || 13.034@107.02
+|-
+| 05tibbygts/c || 2005 Tiburon V6 || NGM Sniper S/C || ---/--- || 1.868 || 8.074@79.13 || --.---@---.--
+|-
+| Ibbanez || 2003 Tiburon V6 || Custom Turbo || 266/--- || 2.242 || 8.671@85.08 || 13.180@108.87
+|-
+| MrPhotoman || 2003 Tiburon V6 || Alpine S/C || 275/--- || 1.92 || 8.485@81.90 || 13.230@104.48
+|-
+| UnHolyTib || 2004 Tiburon V6 || Alpine S/C || 247/--- || 2.22 || 8.740@86.09 || 13.320@106.38
+|-
+| kellydood || 2004 Tiburon V6 || NGM Alpine S/C || 285/--- || 2.173 || 8.745@83.66 || 13.362@106.50
+|-
+| Lotus580 || 2003 Tiburon V6 || NGM Alpine S/C || 260/--- || -.--- || -.---@--.-- || 13.510@107.20
+|-
+| lostdestiny14 || 2004 Tiburon V6 || NGM Sniper S/C || ~285/--- || 1.965 || 8.865@80.93 || 13.564@100.74
+|-
+| Jim || 2004 Tiburon V6 || NGM Stealth Turbo || 360/--- || 2.212 || 8.992@85.59 || 13.577@107.65
+|-
+| The_wheelman || 2004 Tiburon V6 || NGM Sniper S/C || ~285/--- || 1.983 || 8.768@80.25 || 13.612@101.72
+|-
+| 3DZer0 || 2004 Tiburon V6 || NGM Assassin S/C || 285/251 || 2.037 || 8.760@80.63 || 13.640@102.16
+|-
+| Terry || 2003 Tiburon V6 || NGM Alpine S/C || ---/--- || 2.315 || 9.090@81.77 || 13.680@98.90
+|-
+| AssassinN05 || 2005 Tiburon V6 || NGM Assassin S/C || 290/--- || 2.295 || 9.059@82.78 || 13.689@107.45
+|-
+| myst || 2003 Tiburon V6 || NGM Alpine S/C || 248/--- || 2.112 || 8.849@80.02 || 13.736@101.16
+|-
+| Nalucido || 2008 Tiburon V6 || NGM Sniper S/C || 268/--- || 2.269 || 9.069@81.47 || 13.791@102.99
+|-
+| militaryat17 || 2004 Tiburon V6 || NGM Sniper S/C || 270/230 || 2.14 || 8.970@81.61 || 13.820@102.39
+|-
+| mayom15 || 2003 Tiburon V6 || Custom Turbo || ---/--- || 2.305 || 9.197@81.70 || 13.948@104.87
+|-
+| DeShark || 2005 Tiburon V6 || Naturally Aspirated || 213/197 || 2.019 || 8.981@77.16 || 13.993@98.11
+|-
+| Nokeler || 2003 Tiburon V6 || NGM Alpine S/C || 225/225 || 2.216 || 9.049@79.13 || 14.011@98.79
+|-
+| Johnabis || 2003 Tiburon V6 || Nitrous || 205/--- || 2.121 || 9.074@76.94 || 14.150@96.96
+|-
+| Spike || 2003 Tiburon V6 || Custom NGM Stealth Turbo || 274/254 || 2.318 || 9.137@80.76 || --.---@--.--
+|-
+| dlanes || 2004 Tiburon V6 || NGM Alpine S/C || 262/238 || 2.399 || 9.337@80.19 || 14.158@102.85
+|-
+| Magister || 2003 Tiburon V6 || Nitrous || ~200/--- || 2.212 || 9.325@78.36 || 14.195@96.83
+|-
+| bluegtv6 || 2003 Tiburon V6 || Naturally Aspirated || 202/--- || 2.144 || 9.181@78.15 || 14.207@98.42
+|-
+| delta119 || 2006 Tiburon V6 || NGM Alpine S/C || ---/--- || 2.157 || 9.248@78.79 || 14.242@96.71
+|-
+| Malogus || 2003 Tiburon V6 || Naturally Aspirated || 210/--- || 2.159 || 9.180@77.60 || 14.257@96.70
+|-
+| VoodooXTC || 2003 Tiburon V6 || Naturally Aspirated || 182/--- || 2.242 || 9.307@77.01 || 14.405@99.52
+|-
+| IWB || 2003 Tiburon V6 || NGM Sniper S/C || ---/--- || 2.215 || 9.342@77.51 || 14.423@98.80
+|-
+| Dingleweed || 2003 Tiburon V6 || Naturally Aspirated || 197/--- || 2.247 || 9.384@77.44 || 14.472@96.81
+|-
+| 05xd || 2006 Tiburon I4 || Alpine Turbo || 187/--- || 2.354 || 9.511@79.87 || 14.48@100.13
+|-
+| ron169 || 2003 Tiburon V6 || Naturally Aspirated || 185/184 || 2.26 || 9.490@78.00 || 14.550@96.99
+|-
+| kliped || 2003 Tiburon V6 || Naturally Aspirated || 180/--- || 2.203 || 9.464@77.59 || 14.581@94.34
+|-
+| Solo2Tib || 2003 Tiburon V6 || Naturally Aspirated || 165/--- || 2.146 || 9.378@75.40 || 14.622@93.25
+|-
+| TATTOO || 2006 Tiburon V6 || NGM Sniper S/C || 210/--- || 2.316 || 9.550@77.06 || 14.641@97.55
+|-
+| wxman25 || 2004 Tiburon V6 || Alpine S/C || 260/--- || 2.398 || 9.615@77.69 || 14.679@97.51
+|-
+| fidanza9.5 || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.25 || 9.520@--.-- || 14.767@93.79
+|-
+| ImportSharkGT || 2003 Tiburon V6 || Naturally Aspirated || 174/--- || 2.315 || 9.578@74.96 || 14.785@95.75
+|-
+| sick shift || 2003 Tiburon V6 || Naturally Aspirated || 175/--- || 2.283 || 9.534@75.37 || 14.786@93.62
+|-
+| RavensFan || 2004 Tiburon V6 || Naturally Aspirated || 174/--- || 2.158 || 9.554@74.16 || 14.801@93.60
+|-
+| MaDCoW8Me || 2003 Tiburon V6 || Naturally Aspirated || 180/--- || 2.265 || 9.540@74.13 || 14.810@93.03
+|-
+|Derek Sitler
+|2003 Tiburon V6
+|Naturally Aspirated
+|~180/---
+|2.211
+|9.556@74.55
+|14.839@92.12
+|-
+| Zeb8806 || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.263 || 9.587@74.46 || 14.841@92.92
+|-
+| Alex_04_TibGT || 2004 Tiburon V6 || Naturally Aspirated || 175/--- || 2.304 || 9.584@74.47 || 14.851@92.93
+|-
+| Joshewuhh || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || -.--- || -.---@--.-- || 14.883@91.00
+|-
+| RandomHero || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.27 || 9.600@74.50 || 14.898@93.44
+|-
+| aLiEn_sPoReZ || 2004 Tiburon I4 || Naturally Aspirated || 142/--- || 2.293 || 9.644@74.37 || 14.953@92.95
+|-
+| Flcarbon || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.237 || 9.603@73.61 || 14.958@91.22
+|-
+| Vinny || 2004 Tiburon V6 || Naturally Aspirated || 158/--- || 2.166 || 9.612@72.76 || 14.989@91.08
+|-
+| sorensilk || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.2 || 9.656@74.10 || 14.992@91.53
+|-
+| Karma || 2006 Tiburon V6 || Naturally Aspirated || ---/--- || 2.265 || 9.666@73.89 || 14.992@93.02
+|-
+| LittleRedRidingHard || 2004 Tiburon V6 || Naturally Aspirated || 181/183 || -.--- || 9.693@73.116 || --.---@--.--
+|-
+| mistad254 || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.322 || 9.734@73.97 || 15.003@93.40
+|-
+| CableTec || 2004 Tiburon V6 || Naturally Aspirated || 162/--- || 2.283 || 9.754@73.52 || 15.099@91.07
+|-
+| dirtyred || 2003 Tiburon V6 || Alpine S/C || 226/--- || 2.316 || 9.875@74.98 || 15.133@91.25
+|-
+| tibboy03 || 2003 Tiburon V6 || Alpine S/C || ---/--- || 2.48 || 9.881@74.57 || 15.156@92.69
+|-
+| Tommy || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.397 || 9.810@72.85 || 15.194@90.89
+|-
+| TibRider || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.31 || 9.800@73.00 || 15.201@91.33
+|-
+| blackgtv6tib || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.34 || 9.855@72.54 || 15.219@90.76
+|-
+| usmc03tib || 2003 Tiburon V6 || Naturally Aspirated || 165/--- || 2.398 || 9.860@73.44 || 15.244@91.29
+|-
+| Make7upyours728 || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.392 || 9.906@72.94 || 15.245@92.63
+|-
+| Red XIII || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.343 || 9.884@72.55 || 15.289@91.09
+|-
+| FIRE || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.29 || 9.880@73.06 || 15.297@90.66
+|-
+| one35967 || 2003 Tiburon V6 || Alpine S/C || ---/--- || 2.328 || 9.884@72.47 || 15.299@90.50
+|-
+| TheWickerman || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.354 || 9.934@72.17 || 15.376@89.87
+|-
+| Sleasy || 2003 Tiburon V6 || Naturally Aspirated || 170/--- || 2.386 || 9.987@73.39 || 15.376@91.26
+|-
+| PSPTibby || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.307 || 9.892@71.23 || 15.393@89.21
+|-
+| GT03TibCM || 2003 Tiburon V6 || Naturally Aspirated || 162/--- || 2.392 || 9.987@72.13 || 15.432@87.57
+|-
+| Yablargo || 2004 Tiburon V6 || Naturally Aspirated || 155/--- || 2.354 || 9.962@72.28 || 15.446@90.17
+|-
+| Silentbob812 || 2006 Tiburon V6 || Naturally Aspirated || ---/--- || 2.285 || 9.949@71.47 || 15.466@89.19
+|-
+| OneHOttTibbyGT || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.363 || 10.050@71.72 || 15.549@88.58
+|-
+| philm00x || 2005 Tiburon V6 || Naturally Aspirated || 150/--- || 2.41 || 10.099@71.77 || 15.551@90.66
+|-
+| yellowtibman || 2004 Tiburon V6 || Naturally Aspirated || 195/--- || 2.4 || 9.786@73.51 || 15.561@90.81
+|-
+| mcdwf398 || 2005 Tiburon V6 || Naturally Aspirated || 164/--- || 2.304 || 10.070@69.82 || 15.598@90.39
+|-
+| candle || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.409 || 10.107@70.96 || 15.599@89.62
+|-
+| Mbleek711 || 2003 Tiburon V6 || Naturally Aspirated || 200/--- || 2.7 || 8.389@88.00 || 15.600@93.00
+|-
+| ucf_bronco || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.357 || 10.031@71.07 || 15.603@87.89
+|-
+| Jay_Michael || 2005 Tiburon V6 || Naturally Aspirated || ---/--- || 2.299 || 10.070@70.00 || 15.630@88.70
+|-
+| kaotic1121 || 2003 Tiburon V6 || Naturally Aspirated || 130/--- || 2.38 || 10.106@70.68 || 15.639@88.95
+|-
+| Dopey || 2003 Tiburon V6 || Naturally Aspirated || 148/--- || 2.321 || 10.067@70.24 || 15.658@88.28
+|-
+| Geoff || 2003 Tiburon V6 || Naturally Aspirated || 139/--- || 2.416 || 10.134@70.53 || 15.667@89.64
+|-
+| TNT || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.475 || 10.252@71.45 || 15.739@90.04
+|-
+| smiley || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.399 || 10.161@70.74 || 15.759@88.05
+|-
+| Orlean || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.404 || 10.248@70.57 || 15.775@88.54
+|-
+| TiburonHunnieGT || 2004 Tiburon V6 || Naturally Aspirated || 135/--- || 2.411 || 10.300@69.87 || 15.780@87.67
+|-
+| Chaotix || 2003 Tiburon V6 || Naturally Aspirated || 164/--- || 2.381 || 10.167@69.87 || 15.787@86.91
+|-
+| StarChyld || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.4 || 10.240@69.82 || 15.810@88.65
+|-
+| Ghostshark || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.294 || 10.155@68.68 || 15.813@86.34
+|-
+| GT Shark || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.2 || 10.318@65.23 || 15.861@90.15
+|-
+| Black03tib || 2003 Tiburon I4 || Naturally Aspirated || 135/--- || 2.43 || 10.233@69.69 || 15.867@86.02
+|-
+| GET 1T DONE || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.448 || 10.358@70.42 || 15.890@89.46
+|-
+| tanker deux || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.451 || 10.384@69.09 || 16.093@85.91
+|-
+| lamel80 || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.449 || 10.445@68.59 || 16.160@86.40
+|-
+| scotty_gt_racing || 2003 Tiburon V6 || Naturally Aspirated || ---/--- || 2.521 || 10.629@68.73 || 16.322@86.28
+|-
+| Dubie || 2005 Tiburon V6 || Naturally Aspirated || ---/--- || 2.532 || 10.660@67.69 || 16.440@85.02
+|-
+| MLC || 2004 Tiburon V6 || Naturally Aspirated || ---/--- || 2.4 || --.---@--.-- || 16.450@84.00
+|-
+| Redtibofmakakilo || 2004 Tiburon I4 || Naturally Aspirated || 142/--- || 2.505 || 10.693@66.46 || 16.608@82.69
+|-
+| Yorath || 2003 Tiburon V6 || Alpine S/C || ---/--- || -.--- || --.---@--.-- || 17.880@76.71
+|}

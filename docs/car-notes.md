@@ -4,18 +4,110 @@
 
 | Field | Value |
 |-------|-------|
-| ECU | Siemens **SIMK43 V6 4mbit (5WY17)** |
+| ECU | Siemens **SIMK43** — GKFlasher `--id` matched the **5WY17** profile; chase206 (OpenGK), comparing program zones, believed the hardware was actually a **5WY18**. Evidence now leans 5WY17 — see [Hardware revision](#hardware-revision-5wy17-vs-5wy18) below. Still not conclusively settled. |
 | Calibration description | **ca654019** |
-| Calibration version | **G5J7TS0A** (`TS` = automatic trans variant) |
+| Calibration version | **G5J7TS0A** (G=GK chassis, 5=MY2005, J=emissions region **Japan**, 7=2.7 engine; `TS`=auto) |
 | Bootloader (0x8c) | KR77035202 |
 | Program code (0x8d) | KR77035111 |
 | EEPROM size | 512 KiB (bin_offset −0x80000) |
-| Immobilizer | Reported **disabled** |
+| Immobilizer | **Non-immo car** (confirmed via vin.opengk.org) |
 | VIN in ECU | blank (0xFF) — normal for 02–04 |
 
 **The public OpenGK XDF matches this car exactly** — `defs/ca654019 2700.xdf` is the
 right definition file; no cross-flashing to another calibration is needed. Open a
 stock bin in TunerPro with that XDF and the maps line up.
+
+## Provenance & quirks (per chase206 / OpenGK, 2026-08-28)
+
+- **Japan-market import**, now in NZ (Christchurch). VIN **KMHHN61FR5U161849**; production date **2004-11-15**, model year **2005** (late-04 build titled as MY05 — CarJam showed 2004). Sometimes badged **'FX'** (old RD-chassis moniker).
+- ca654019 is **rare** — chase had only OEM samples from an EF Sonata and a France (Cedric's) car; both were **5WY18**. This is why he suspects 5WY18 hardware here.
+- **Emissions oddity:** the OpenGK VIN DB shows *conflicting* flags — both `[3931] NON SPEED DENSITY` and `[3933] SPEED DENSITY`, and it's a **4× O2-sensor car** (front manifold has an integrated cat). First 4×O2 car chase had seen flagged this way. Possible the car was **emissions-swapped for its market** or the VIN DB is off — NZ imports are messy. Program zone differs slightly vs a 2005 EU ca654019 file.
+- Stock calibration bin **shared to the OpenGK repo** (chase confirmed the cal zone contains **no IMMO/keyfob/critical secrets**).
+
+## Our calibration vs the European car — the maps are identical
+
+Established **2026-08-30** by diffing our stock cal zone (0x8000–0xDF40) against
+`ca654019 / G4E7TS0A` — same calibration, GK chassis, automatic, **Europe MY04** —
+mirrored locally at `reference/opengk-simk/EEPROMS/ca654019_G4E7TS0A_GK27.bin`.
+
+```
+cal bytes differing: 407 / 24384 (1.7%)
+  A272 ignition table    IDENTICAL
+  AD0B WOT enrichment    IDENTICAL
+  9A72 WOT TPS trigger   IDENTICAL
+  D3A8 fuel pulse width  IDENTICAL
+  81B8 MAF max           IDENTICAL
+  8222/8230 rev limits   IDENTICAL
+```
+
+**Every power-relevant map is byte-identical to the European car.** The `J` (Japan)
+in `G5J7TS0A` does *not* buy a separate power calibration.
+
+Consequences for tuning:
+
+- The high-load ignition trough at **3700–4000 rpm** (~4.5° below both neighbours,
+  right at the 245 Nm torque peak) is **not** Japanese-regular-fuel margin. It ships
+  in a car sold into a 95 RON market. Treat it as the common Delta 2.7 *automatic*
+  calibration — most likely transaxle torque limiting or a knock-prone resonance
+  region, not octane headroom waiting to be reclaimed.
+
+  > **Resolved 2026-09-02** — see [[full-map-ca654019]] §2. It is **neither**.
+  > Transaxle limiting is ruled out: `ca654019_G5E7TM0A`, the **manual**, has a
+  > byte-identical ignition map. A knock resonance is ruled out: `ID_FAC_KNK_0` and
+  > the knock windows run perfectly smooth through 3700–4000. The dip is
+  > load-dependent (0.5° at load 50, **5.2°** at load 330) and WOT enrichment ramps
+  > at the same rpm (38 → 53 → 63 → 77). Same dip in the Sonata and Santa Fe cals.
+  > It is the knock/thermal limit tracked through the VE peak — engine-wide, both
+  > transmissions. The conclusion stands and strengthens: **not headroom.**
+- Do **not** assume extra timing is available just because NZ has 98 RON. Any timing
+  work needs knock feedback, not an octane assumption.
+
+The 407 differing bytes are 25 scattered singles/pairs in the constants block
+(0x8001–0x848D — likely emissions and diagnostic configuration, consistent with the
+emissions oddity above) plus four runs at `0xAA7E–0xAA83`, `0xC9B8–0xC9C3`,
+`0xD010–0xD057` (70 bytes) and `0xD5E8–0xD707` (288 bytes). **None of those runs are
+covered by any table in our XDF** — worth mapping if the emissions question matters.
+
+> **Mapped 2026-09-02** — see [[full-map-ca654019]] §1. **330 of the 407 bytes are
+> places where our cal is blank/filler and the EU cal has data; zero bytes go the
+> other way.** `0xD5E8–0xD707` is all-FF in ours, `0xD010–0xD057` is `00 10` filler,
+> both in lambda-diagnostic territory. Of the 77 real value differences, 17 are two
+> **coolant rationality (thermostat) diagnostics** — `IP_TCO_MES_DIF_MIN_DIAG`
+> @0xAA7E and `IP_TCO_SUB_DIF_MIN_DIAG` @0xC9B8 — and 2 are the checksum. All
+> emissions/diagnostic; nothing power-relevant. Not a read defect: our cal has
+> 2618 FF bytes vs 2815–2886 in siblings ca654012/014.
+
+For scale: the EF Sonata build of the same calibration differs by 17.5% of the cal
+zone and the SM by 24.2%, with all major maps differing.
+
+## Hardware revision: 5WY17 vs 5WY18
+
+Recorded above as unresolved. As of **2026-08-30** three independent sources say
+**5WY17**:
+
+1. GKFlasher `--id` auto-detect: `Found! SIMK43 V6 4mbit (5WY17)` (`logs/program_read.log`)
+2. The OpenGK repo's GK-27 ca654019 dump is named `..._5WY1708B_...`
+3. The OpenGK repo's EF-27 ca654019 dump is named `..._5WY1785D_...`
+4. GKFlasher's checksum `detect_offsets()` — a *separate* mechanism from `--id`, keyed on
+   calibration-zone layout rather than the ECU's ID response — reports `v6 (5WY17)`
+   (observed 2026-08-31 during the ghost-cam flash).
+
+Both repo filenames encode `5WY17`, which is the opposite of the note above that
+chase's EF and France samples "were both 5WY18". Either the filename convention
+differs from what he was reading, or his 5WY18 samples were never uploaded.
+**Worth putting to him directly** — it's the last open question on our hardware.
+
+> **Closed 2026-09-02** — see [[full-map-ca654019]] §4. Across 26 archived
+> calibrations the ECM family tracks the calibration number exactly, and the
+> boundary falls at ours: **ca654011/012/014/015/019 are all 5WY17; ca654020 and
+> everything after are 5WY18.** ca654019 is the *last* 5WY17 calibration. Every
+> archived ca654019 file is 5WY17 — the European GK is `5WY1708B`, the EF Sonata is
+> `5WY1785D`. Those are the two samples chase cited for 5WY18; the files say
+> otherwise. That is a fifth independent line of evidence. Likely explanation for
+> his recollection: ca654020+ cars *are* 5WY18, one calibration step away.
+Wiki pages for both revisions are mirrored at
+`reference/opengk-wiki/Siemens_5WY17_PCB_Components.wiki` and
+`Siemens_5WY18_V2_PCB_Components.wiki`.
 
 ## Memory regions (from ecu_definitions.py, this ECU)
 

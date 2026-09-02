@@ -1,0 +1,12 @@
+List of acronyms used in this wiki and official workshop manuals 
+
+
+'''BCM''' - [[Body Control Module]]
+
+
+'''ECU''' - Engine Control Unit
+
+'''ECM''' - Engine Control Module (same as above)
+
+
+'''TCM''' - Transmission Control Module

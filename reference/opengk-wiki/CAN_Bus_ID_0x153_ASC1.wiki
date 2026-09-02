@@ -1,0 +1,40 @@
+CAN Arbitration ID for ASC1 is 0x153.
+
+Its sent out by the traction control module at a refresh rate of 10ms
+
+*'''Byte 0''' - Bitfield
+**Bit 0 - TCS_REQ_CAN: Request TCS
+**Bit 1 - MSR_C_REQ_CAN: Request for MSR functions
+**Bit 2 - TCS_PAS: TCS disabled by user (not used for EMS)
+**Bit 3 - TCS_GSC: TCS gear shift characteristic (not used for EMS)
+**Bit 4 - Not used
+**Bit 6 - ABS_DIAG: ABS_TCS/ESP "diagnostic mode" indication (not used for EMS)
+**Bit 7 - ABS_DEF: ABS "defective" indication (not used for EMS)
+*'''Byte 1''' - Bitfield
+**Bit 0 - TCS_DEF: TCS "defective" indication (not used for EMS)
+**Bit 1 - TCS_CTL: TCS "control" indication (not used for EMS)
+**Bit 2 - ABS_ACT: ABS "control" indication (not used for EMS)
+**Bit 3 - EBD_DEF: EBD "defective" indication (not used for EMS)
+**Bit 4 - ESP_PAS: ESP disabled by user (not used for EMS)
+**Bit 5 - ESP_DEF: ESP "defective" indication (not used for EMS)
+**Bit 6 - ESP_CTL: ESP "control" indication (not used for EMS)
+**Bit 7 - TCS_MFRN: TCS Manufacturer Information (not used for EMS)
+*'''Byte 3 - MD_IND_ASC'''
+*:Torque intervention for ASC function
+*:Calculation = HEX * 0.390625
+*:Min: 0x00 (0.0%) max. reduction
+*:Max: 0xFF (99.6094%) no reduction
+*'''Byte 4 - TQI_MSR_CAN'''
+*:Reserved for MSR
+*'''Byte 5 - TQI_SLW_TCS_CAN'''
+*:Slow torque intervention for TCS functiuons, referred to the indicated engine torque
+*'''Byte 6''' - Unused
+*'''Byte 7''' - Unused
+
+Example messages:<syntaxhighlight>
+00 80 48 FF 00 FF 00 00
+
+00 80 38 FF 00 FF 00 00
+
+00 80 0D FF 00 FF 00 00
+</syntaxhighlight>

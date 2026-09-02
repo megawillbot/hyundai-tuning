@@ -1,0 +1,17 @@
+{{Draft}}
+
+VCI is a diagnostic interface manufactured by [https://gitauto.com gitauto.com], used with OEM Hyundai/KIA diagnostic tool - [[GDS]]. 
+
+While genuine interfaces are difficult and/or expensive to obtain, plenty of knockoffs can be found on Aliexpress. This article is based on said knockoff
+
+== Variants ==
+[[File:GDS VCI blue and red.png|thumb]]
+The interface can be found in blue or red case. There are no differences in the hardware or firmware. Red variant comes with KIA stickers, blue one comes with Hyundai stickers. The red variant allegedly becomes sticky to the fingers with heat exposure or normal wear&tear. 
+
+== Components ==
+Depending on the vendor and selected options, you might find the following included with your device. This list might not be complete
+
+=== The GDS VCI interface ===
+
+=== AC Power adapter ===
+GDS VCI is powered by 12 volts, with included adapter being able to supply 2A/24W.

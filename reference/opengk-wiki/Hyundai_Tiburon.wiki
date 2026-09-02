@@ -1,0 +1,54 @@
+<div style="float:right;">__TOC__</div>
+
+Hyundai Tiburon (Tuscani or Turbulence in Korea) known in Europe as the Hyundai Coupé is a sports coupe that was produced by the South Korean manufacturer Hyundai from 1996 to 2008.
+
+This wiki is focused on the GK [[Chassis identifiers|platform]] which Tiburon was based on from 2001 to the end of production in 2008.
+
+== Generations ==
+
+=== GK (2001-2004) ===
+<blockquote>"bubble headlights and mostly red tails. Front bumper has the long narrow slits and side gills look like gills. FL headlights require a harness modification or swap. Can be converted to FL taillights by hammering the chassis in to dent it. Convert to FL2 tails requires cutting chassis and swapping FL2 rear bumper."</blockquote><gallery>
+File:Hyundai Coupe 2002 cropped.jpg|2002 Hyundai Tiburon (GK), side profile
+File:2004 Hyundai Coupe SE 1.6 Front.jpg|2004 Hyundai Tiburon (GK), front
+</gallery>
+
+=== FL (2005-2006) ===
+<blockquote>"Non bubble headlights and better looking taillights that are often swapped on to the GK chassis. Front bumper has the bigger mouth that looks like it would fit an intercooler. Side gills changed to a single vertical slit. Tails can be converted to FL2 with some hammering. Requires rear bumper cover."<gallery>
+File:2006-Hyundai-Tiburon.jpg|2006 Hyundai Tiburon (FL)
+File:2005–2007 Hyundai Tiburon (GK) V6 coupe.jpg|2005 Hyundai Tiburon
+</gallery></blockquote>
+=== FL2 (2007-2009) ===
+<blockquote>"GK and FL headlights, taillights and gills are not swappable without major work. Bumpers, hood, gills, fenders are all different."</blockquote><gallery>
+File:2007-Hyundai-Tiburon.jpg|2007 Hyundai Tiburon (FL2), front
+File:Hyundai Tiburon (5844320428).jpg|2007 Hyundai Tiburon (FL2), rear
+</gallery>
+
+== Powertrain ==
+
+{| class="wikitable"
+|-
+! Engine!! Production!! Transmission!! Power!! Torque
+|-
+| 1.6L Alpha II|| 2001–2006
+(GK, FL)
+| 5-speed manual|| 	104 hp @ 5,800 rpm|| 143 N⋅m; 106 lbf⋅ft @ 4,500 rpm
+|-
+| rowspan="2" | 2.0L Beta II|| rowspan="2"| 2001–2003
+(GK)
+| 5-speed manual|| rowspan="2"|136 hp @ 6,000 rpm|| rowspan="2" | 	181 N⋅m; 134 lbf⋅ft @ 4,500 rpm
+|-
+| 4-speed automatic
+|-
+| rowspan="2" |2.0L Beta II (CVVT)
+| rowspan="2" | 2004–2008
+(GK, FL, FL2)
+| 5-speed manual||  rowspan="2"|141 hp @ 6,000 rpm|| rowspan="2" | 186 N⋅m; 137 lbf⋅ft @ 4,500 rpm
+|-
+| 4-speed automatic
+|-
+|  rowspan="2"| 2.7L Delta|| rowspan="2"| 2001–2008
+(GK, FL, FL2)
+| 5-speed manual<br>6-speed manual||  rowspan="2"| 	165–172 hp @ 6,000 rpm|| rowspan="2" | 245 N⋅m; 181 lbf⋅ft @ 4,000 rpm
+|-
+| 4-speed automatic
+|}

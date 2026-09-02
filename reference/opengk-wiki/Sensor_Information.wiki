@@ -1,0 +1,93 @@
+<div style="float:right">__TOC__</div>
+
+The purpose of this article is to list the best known sensor brands with associated part numbers. The Siemens ECUs in our vehicles are very sensitive and don't perform well without the right brand sensors. Using sensors outside of this list will result in unpredictable results. In most cases the Hyundai part is a white labeled and repackaged sensor from the sensors within this list. Even reputable brands such as Bosch will '''not''' perform in the majority of our sensor locations causing more problems. There are exceptions to the rule, however.
+
+== 2.7L Sensors ==
+
+====== '''Crank Angle Sensor''' ======
+
+* Hyundai 39180-37150, 39180-37200
+* NTK EH0220
+* MANDO 22A1223
+
+====== '''Camshaft (TDC) Sensor''' ======
+
+* Hyundai 39350-37100, 39350-37110
+* NTK EC0145
+* MANDO 22A1218
+
+====== '''Mass Air Flow (MAF) Sensor''' ======
+
+* Hyundai 28164-37200
+* Siemens 5WK9643
+* Continental/VDO  5WK9643Z (5WK96050Z Is also compatible from BMW)
+
+====== '''Upstream B1S1 & B2S1 O2 Sensors''' ======
+5volt 5WY12 & 5WY15 2MBit up to Jan 31st 2003
+
+* Hyundai 39210-37120, 39210-37125, 39210-3712A
+* NTK 25000
+* Mando (Out of production?)
+
+1volt 5WY17, 5WY18 & 5WY1F 4MBit after Jan 31st 2003
+
+* Hyundai 39210-37510, 39210-37530
+* NTK 25180
+* MANDO 18A1437, 18A1438 
+
+====== '''Downstream B1S2 O2 Sensor''' ======
+5volt 5WY12 & 5WY15 2MBit up to Jan 31st 2003
+
+* Hyundai 39210-37190
+* NTK 25166
+* Mando (Out of production?)
+
+1volt 5WY17, 5WY18 & 5WY1F 4MBit after Jan 31st 2003
+
+* Hyundai 39210-37540
+* NTK 25178
+* Mando 18A1444
+
+====== '''Downstream B2S2 O2 Sensor''' ======
+5volt 5WY12 & 5WY15 2MBit up to Jan 31st 2003
+
+* Hyundai 39210-37151
+* NTK 25169
+* Mando (Out of production?)
+
+1volt 5WY17, 5WY18 & 5WY1F 4MBit after Jan 31st 2003
+
+* Hyundai 39210-37525
+* NTK 25181
+* Mando 18A1440
+
+====== '''Throttle Position Sensor''' ======
+
+* Hyundai 35170-37100
+* NTK TH0151 (May have quality control issues on this brand specifically. Use at your own risk)
+
+====== '''Idle Air Control Valve (IACV)''' ======
+
+* Hyundai 35150-33010
+* Kefico 9540930002
+
+====== '''ABS/Wheel Speed Sensors''' ======
+Front Right (ECU's Wheel Speed Sensor)
+
+* Hyundai 95670-2C100, 95670-2C800
+* Mando 25A5072
+
+Front Left
+
+* Hyundai 95670-2C000, 95670-2C600
+* Mando 25A5071
+
+Rear Left
+
+* Hyundai 95680-2C600, 95680-2C000
+* Mando 25A5073
+
+Rear Right
+
+* Hyundai 95680-2C800, 95680-2C100
+* Mando 25A5074

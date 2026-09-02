@@ -1,0 +1,336 @@
+K-Line on SIMK43 runs at 10400 baud and uses the KWP2000 protocol for diagnostic communication. 
+
+== Connection points ==
+
+=== OBD2 ===
+K-line uses the standard pin 7 on the [[Data link connector (OBD2)|OBD2 connector]]
+
+=== ECU ===
+
+==== If you have 1.6 or 2.0 without immobilizer installed: ====
+Good news! Your K-Line pins (OBD2/MCC) are connected directly to the K-line pin on the ECU (2.0 - 77)
+
+==== If you have 1.6 or 2.0 with immobilizer installed: ====
+Your K-Line pins (OBD2/MCC) are connected to BCM's "Diagnosis" pin (BCM-IM, pin 19). '''THERE IS NOTHING CONNECTED TO K-LINE PIN AT THE ECU!!''' (2.0 77). Instead, all K-line stuff is connected to the ECU's W-Line (2.0 - 47)
+
+==== If you have 2.7 with or without immobilizer installed: ====
+Your K-Line pins (OBD2/MCC) are connected to BCM's "Diagnosis" pin (BCM-IM, pin 19). Your K/Immo-Line pin at the ECU (C133-1, pin 3) is connected to BCM's "Immo W-line" (BCM-IM, pin 20). 2.7 ECUs don't have a separate K and W line - it's all integrated in one pin, you don't have nothing to worry about.
+
+== KWP2000 ==
+Recommended document: [https://opengk.org/files/Users/dante383/OBDII%20Specifications%20-%20KWP2000%20DaimlerChrysler%202002.pdf OBDII Specifications - KWP2000 DaimlerChrysler 2002.pdf]
+
+To start communication, you need to use Fast Init - so bring the K-line down for exactly 25ms, then up for 25ms followed by StartCommunication request. Python example of that using a FTDI cable [https://github.com/Dante383/gkbus/blob/a3ff894e8352ef2faab36e22553da7ddf5688cb8/gkbus/interface/kline/KLineSerial.py#L48 can be found in GKBus] code.
+
+ID of the ECU is 0x11, and as a diagnostic device you should be using ID 0xF1. So an example command and response would look like this:
+
+Diagnostic device: <code>82 11 F1 27 01 AC</code> (security access request)
+
+ECU response: <code>83 F1 11 67 02 34 22</code>
+
+==== Baudrate ====
+
+By default, SIMK43 uses 10400 baud. On some ECUs (so far testing revealed that <2005 ECUs might not support that), baudrate can be manipulated by additional undocumented parameter of the StartDiagnosticSession service:
+{| class="wikitable"
+|+
+!Baudrate identifier, 
+passed to StartDiagnosticSession
+!Baudrate on K-line 
+(bits per second)
+|-
+|0x01
+|10400
+|-
+|0x02
+|20000
+|-
+|0x03
+|40000
+|-
+|0x04
+|60000
+|-
+|0x05
+|120000
+|}
+<blockquote>
+ </blockquote>
+
+==== Challenge-response calculation ====
+SIMK43/41 uses a 2 byte seed and 2 byte key for security access. You can take a look at it's Python implementation in GKFlasher: https://github.com/Dante383/GKFlasher/blob/15a715b18f2119d697a5ceed00f6383f690c4a23/ecu.py#L42
+
+The algorithm presents as so (Python):
+
+<code>def calculate_key (seed):</code>
+
+<code>    key = 0x9360</code>
+
+<code>   </code> 
+
+<code>    for index in range(0x24):</code>
+
+<code>        key = key * 2 ^ seed</code>
+
+<code>       </code> 
+
+<code>    return key & 0xFFFF</code> 
+
+
+==== Input-Output local identifiers ====
+{| class="wikitable"
+|+
+!Identifier (hex)
+!Description
+!Notes
+|-
+|0x10
+|check engine light
+|
+|-
+|0x11
+|EVAP canister close valve (on)
+|
+|-
+|0x12
+|fuel pump relay
+|
+|-
+|0x13
+|a/c compressor relay
+|
+|-
+|0x14
+|fuel pump control
+|
+|-
+|0x15
+|?
+|
+|-
+|0x16
+|Canister Close Valve-Lock
+|
+|-
+|0x1A
+|cooling fan relay high
+|-
+|0x1B
+|cooling fan relay low
+|
+|-
+|0x1C
+|main relay
+|
+|-
+|0x20
+|canister purge valve
+|
+|-
+|0x23
+|idle speed actuator
+|
+|-
+|0x24
+|cvvt valve
+|
+|-
+|0x30
+|fuel cut-4 cylinders
+|i4 non-cvvt only
+|-
+|0x31
+|ignition coil #1, 4
+|
+|-
+|0x32
+|ignition coil #2, 3
+|Coil #5 v6 only
+|-
+|0x33
+|ignition coil #3, 6
+|Coil #6 v6 only
+|-
+|0x39
+|injector cylinder 1
+|i4 only
+|-
+|0x3A
+|injector cylinder 2
+|i4 only
+|-
+|0x3B
+|injector cylinder 3
+|i4 only
+|-
+|0x3C
+|injector cylinder 4
+|i4 only
+|-
+|0x300701
+|injector cylinder 1
+|v6 only
+|-
+|0x300702
+|injector cylinder 2
+|v6 only
+|-
+|0x300704
+|injector cylinder 3
+|v6 only
+|-
+|0x300708
+|injector cylinder 4
+|v6 only
+|-
+|0x300710
+|injector cylinder 5
+|v6 only
+|-
+|0x300720
+|injector cylinder 6
+|v6 only
+|-
+|0x40
+|Version Configuration
+|Automatic Transaxle (0x08) - This is the ECU reset function to install M/T or Non-TCS system.
+|-
+|0x41
+|Version Configuration
+|Traction Control System (0x08) - This is the ECU reset function to install M/T or Non-TCS system.
+|-
+|0x42
+|?
+|
+|-
+|0x50
+|adaptive values
+|0x04 - clear function
+|-
+|0x71
+|?
+|
+|-
+|0x72
+|?
+|
+|-
+|0x73
+|?
+|
+|-
+|0x74
+|?
+|
+|-
+|0x79
+|?
+|
+|-
+|0x7A
+|?
+|
+|-
+|0x95
+|evap leakage test
+|0x06 - start function
+|-
+|0x96
+|?
+|
+|-
+|0xA0
+|?
+|
+|}
+<blockquote></blockquote>
+
+==== Routines by local identifier ====
+{| class="wikitable"
+|+
+!Identifier (hex)
+!Description
+!Notes
+|-
+|0x00
+|erase program section
+|
+|-
+|0x01
+|erase calibration section
+|
+|-
+|0x02
+|verify and mark blocks as ready to execute
+|Needs to be called after flashing
+|
+|-
+|0x03
+|check reprogramming status
+|available after a complete flash, until the ecu reset. Returns a bitfield. @todo definition, but for a successful flash it's 0xBBA0
+|-
+|0x04
+|unknown
+|returns 0x22 Conditions Not Correct Or Request Sequence Error
+|
+|-
+|0x05
+|unknown
+|returns 0x22 Conditions Not Correct Or Request Sequence Error
+|
+|-
+|0x12
+|query immobilizer info  
+|1 byte number of keys learnt, 1 bytes immo status (0x01 = learnt), 1 byte key status (0x00 not learnt), 1 byte smartra status if applicable
+|
+|-
+|0x13
+|needs to be called before immobilizer password teaching/changing  
+|
+|-
+|0x14
+|needs to be called before immobilizer teaching. 
+|
+|-
+|0x15
+|needs to be called before ECU immobilizer reset  
+|
+|-
+|0x16
+|needs to be called before putting immobilizer in limp home mode  
+|
+|-
+|0x17
+|input new limp home password  
+|
+|-
+|0x18
+|activate limp home mode  
+|takes user-provided (default: 2345) password as parameters
+|-
+|0x19
+|confirm limp home password change 
+|takes 0x01 as a parameter 
+|-
+|0x1A
+|input 6 digit immobilizer password   
+|Needs to be called before teaching, resetting or other actions modifying the immo system. Takes password and 6x 0xFF as parameters
+|-
+|0x1B, 0x1C, 0x1D, 0x1E
+|teach keys 1,2,3,4  
+|Takes 0x01 as a parameter
+|-
+|0x20
+|reset ECU immo.   
+|Takes 0x01 as a parameter
+|-
+|0x25
+|needs to be called before neutralizing smartra  
+|
+|-
+|0x26
+|confirm neutralizing smartra.
+|takes 0x01 as a parameter
+|-
+|0xFA
+|Launch [[MTOS]]
+|Requires Siemens level access (0xFD)
+|}

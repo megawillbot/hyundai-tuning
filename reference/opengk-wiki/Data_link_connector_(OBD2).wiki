@@ -1,0 +1,65 @@
+==Location==
+[https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II OBD2 port] on the Tiburon is hidden behind the [[Body Control Module|fusebox cover]] located right under the steering wheel. 
+[[File:Obd2 location.jpg|center|thumb|OBD2 port (bottom right corner, black connector on silver plate)]] 
+
+==Pinout==
+
+{{Warning|'''THIS PINOUT IS OF THE HARNESS SIDE FEMALE CONNECTOR, AS IT'S SUPPOSED TO BE!''' OEM wiring diagrams reference male OBD2 '''plug''' instead. Assigned pin numbers will be mirrored between OEM's and diagram below. }}
+
+[[File:OBDII female type A.jpg|thumb|Female (vehicle's side) OBD-II connector pinout - front view]]
+
+{| class="wikitable"
+|- valign="top"
+!1
+|
+!9
+|
+|- valign="top"
+! style="background-color: blue" |2
+|Not connected
+! style="background-color: blue" |10
+|Not connected
+|- valign="top"
+!3
+|'''Vehicle Speed sensor'''<br>Going directly into pin 3 of vehicle's speed sensor
+!11
+|
+|- valign="top"
+! style="background-color: gray" |4
+|'''Chassis ground'''
+!12
+|'''Airbag'''
+Goes into pin 16 of [[Body Control Module|BCM]]'s BCM-IM connector
+|- valign="top"
+! style="background-color: gray" |5
+|'''Signal ground ("Sensor ground")'''
+!13
+|
+|- valign="top"
+! style="background-color: lime" |6
+|'''CAN high'''<br>
+(ISO 15765-4 and SAE J2284)
+! style="background-color: lime" |14
+|'''CAN low'''<br>
+(ISO 15765-4 and SAE J2284)
+|- valign="top"
+! style="background-color: yellow" |7
+|[[K-Line|'''K-line'''<br>]]
+(ISO 9141-2 &/ KWP2000)
+! style="background-color: yellow" |15
+|'''[[L-line|L-Line]]'''<br>Needs to be grounded to access [[Body Control Module|BCM]] diagnostics. 
+|- valign="top"
+!8
+|'''ABS/ESP'''<br>Goes directly into ABS/ESP module and 
+the "ESC AIR BLEEDING CONNECTOR" 
+
+(if equipped with traction control)
+! style="background-color: red" |16
+|'''Battery voltage ("Memory Power")'''<br>
++12 Volt
+|}
+
+==== For more CAN information, see [[SIMK43 CAN Bus]] ====
+
+==== For more K-line information, see [[K-Line]] ====
+<references />

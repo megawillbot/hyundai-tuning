@@ -1,0 +1,82 @@
+<div style="float:right">__TOC__</div>
+The purpose of this article is to list known forced induction kits, their parts lists and approximate power figures.
+= Turbocharger Kits and Stages =
+Compiling a list of kits soon. All existing kits reached end of production in the early 2010s. General recommendation is to custom build your own from existing examples.
+
+https://www.newtiburon.com/threads/2003-6mt-turbo-2-7l-v6-build.481235/
+
+= Supercharger Kits and Stages =
+== Magnuson MP62 & MP90 based kits ==
+The following descriptions were laid out using NGM data from various sources.<ref>https://www.newtiburon.com/threads/definitive-supercharger-part-s-almanac.217082/</ref><ref>https://web.archive.org/web/20120229143613/http://www.ngmhouseofpower.com/</ref> The Alpine stages are similar enough that the same list of parts will work similarly. Minor differences in intake design will produce less power on the Alpine kits unless significant port work is done to the upper intake manifold. In some instances the Alpine came packaged with a 3.5" or 2.75" pulley instead of the common 3.4" or 2.8" pulley often found in the NGM kits. Keep note that the Alpine and NGM MP62 cases and innards are the same but the snout/nose length and pulley boss offsets differ.
+
+=== MP62 Stage 0 (210WHP 2-3 PSI) ===
+The stage 0 kit is the entry-level setup, upgradeable to stage IV. This kit does not require tuning and excludes a heat exchanger, icebox, or cooling lines.
+
+'''Included components:'''
+
+* Eaton’s 4th-generation MP62 blower
+* 3.4” blower pulley
+* NGM fully-fabricated, CNC’d, TIG-welded IceBox intake
+* NGM high-flow billet plenum
+* Belt, complete billet brackets & accessories
+* Full stainless mounting hardware
+* Vacuum fittings, plenum gasket, throttle body gasket, vacuum hose, and wire loom
+
+=== MP62 Stage I (225WHP 2-3 PSI) ===
+This stage adds an intercooled setup while maintaining the 3.4” pulley, delivering an additional 15WHP. Tuning is not required.
+
+'''Added components:'''
+
+* NGM IceBox manifold
+* NGM heat exchanger & reservoir kit
+* Bosch high-flow intercooler pump with coolant hoses
+
+'''Includes all Stage 0 components.'''
+
+=== MP62 Stage II (260-270WHP 5-6 PSI) ===
+This stage is ideal for OEM rotating assemblies but requires a reflash or tuning solution.
+
+'''Added components:'''
+
+* NGM 360cc injectors (Minimum 290cc injectors)
+* NGM 2.8" supercharger pulley
+* NGM fuel tuner (Stage II reflash available)
+
+'''Suggested upgrades:''' Headers, intake, exhaust  '''Includes all Stage 0 & I components.'''
+
+=== MP62 Stage III (280-300WHP 8-10 PSI) ===
+This stage pushes the limits of stock blocks with a 6.5” crank pulley. It stresses engine components, leading to potential failures.
+
+'''Added components:'''
+
+* NGM 360cc injectors (Or larger alternatives)
+* NGM billet 6.5" lower crank pulley
+
+'''Suggested upgrades:''' Headers, intake, exhaust, and fuel pump  '''Includes all Stage 0, I & II components.'''
+
+=== MP62 Stage IV (320-340WHP 12-13 PSI) ===
+This stage uses a 7” crank pulley and is not recommended for stock engines. Tuning options include a reflash or standalone ECM.
+
+'''Added components:'''
+
+* NGM billet 7.0" lower crank pulley
+
+'''Suggested upgrades:''' Headers, intake, exhaust, alcohol/meth injection, and a high-flow fuel pump  '''Includes all Stage 0, I & II components.'''
+
+=== MP90 Stage I (370-385WHP 7 PSI) ===
+The MP90 kit offers higher efficiency than the MP62 and can reach 400WHP with different pulleys. A standalone ECM is recommended for safety.
+
+'''Components:'''
+
+* Eaton’s 4th-generation MP90 blower
+* NGM CNC'd IceBox intake manifold & 90mm billet plenum
+* NGM front mount IceBox reservoir & heat exchanger kit
+* NGM exclusive 460cc injectors (or Subaru 440cc injectors)
+* NGM Mafterburner Stage II fuel tuner and MafExtender
+* NGM billet throttle body adaptor and complete brackets
+* Full stainless hardware, vacuum fittings, and more
+
+'''Suggested upgrades:''' Headers, intake, exhaust, and fuel pump
+
+== Vortech Based Kits ==
+Coming soon

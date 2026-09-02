@@ -1,0 +1,65 @@
+Depending on what your goals are, here is a list of resources you could start with. 
+
+== I want to read and write to my ECU ==
+You can download the latest release of GKFlasher as a Windows installer from [https://github.com/Dante383/GKFlasher/releases https://github.com/dante383/GKFlasher], or set up a development build based on [[GKFlasher Instructions|GKFlasher Instructions.]] The former is only advisable if you're technologically savvy.
+
+Recommended adapter: [https://www.aliexpress.us/item/2251832612703671.html Galletto 1260 ECU Chip Tuning Tool EOBD Programmer FTDI]  Note: These adapters are not currently supported with BSL 
+
+GKFlasher supports Linux and Windows, as well as MacOS, but MacOS isn't tested regularly and support is treated as unofficial. 
+
+On the ECU side, we support all 2.0 and 2.7 SIMK41 and SIMK43 ECUs. We do not support Kefico ECUs or SIMK4x ECUs that drive engines other than the Beta and Delta.
+
+== I want to tune the .bin file I read out of my ECU ==
+In the [https://github.com/OpenGK-org/opengk-simk opengk-simk repository] that you'll find on the OpenGK [https://github.com/opengk-org Github organization], you'll find the necessary TunerPro definitions. Feel free to hop onto our {{DiscordInvite|discord}}if you feel stuck or need advice
+
+== I want to log my ECU ==
+Well-known Torque app paired with an ELM327 adapter will only provide a very limited set of variables, at a horrible polling rate.
+
+For using the FTDI adapters at up to 120k baud, you'll need TunerPro RT and logging definitions from the [https://github.com/OpenGK-org/opengk-simk/tree/master/ADX opegk-simk repository]. At the moment of writing this article (Aug 2025), a definition for only a single calibration is present. We do have definitions for several others, but not in a state that'd make them ready for publishing - feel free to ask about them on our {{DiscordInvite}}.
+
+GKFlasher also supports logging, but it's only from the command line interface and intended for development purposes. No support will be provided for GKFlasher logging, unless you're proficient with software engineering.
+
+== I want to decode my VIN / acquire my immo pin ==
+You'll find our VIN decoder at https://vin.opengk.org. If your VIN doesn't exist in our database yet, check again in a month - we log the "not found" responses and update the database regularly.
+
+== I need hundreds of unvetted bins to perform some analysis ==
+We scrapped attachments from popular tuning forums and extracted SIMK4x dumps, which you can find here: https://opengk.org/files/?dir=Users/dante383/scrapped_bins
+
+Be advised, '''do not flash any of these files to your ECU!''' Some files will just brick your ECU, making it unrecoverable without performing a [[Bootstrap Loader|BSL]] flash. Some files will mess with the [[immobiliser]], making your car unable to start. We've also seen recklessly modified bins out in the wild, some of them will induce severe knock, some will make you run extremely rich or lean, resulting in '''irreversible damage to your engine'''.
+
+== I need data on 264k+ of Tiburons, for example to reverse lookup a vehicle based on transmission or engine number ==
+You can download the database running our VINDecoder at https://opengk.org/files/?dir=Users/dante383. At the moment of writing this article [August 2025] the VINDecoder is being refactored, and it might be worth to ask on the {{DiscordInvite}}for confirmation. VINDecoder V3 will include a link to the latest database in the footer.
+
+== I want to reverse engineer the firmware ==
+You'll find a ghidra loader in the [https://github.com/OpenGK-org/ghidra_scripts ghidra-scripts] repository. To work on c166 binaries with Ghidra, you'll need the [https://github.com/keyhana/c166-ghidra-module keyhana c166-ghidra-module]. 
+
+We have a ca663056 Ghidra project and a ca663057 dev firmware IDA project actively worked on. We intend to switch to Ghidra fully. We didn't yet find a suitable way to distribute said projects, so for now just ask on the {{DiscordInvite}}for the latest version.
+
+== I want to contribute ==
+Depending on your skillset, there are several ways you could contribute
+
+=== Universal ===
+- PayPal donation to '''donate(at)opengk.org'''. Funds are used to pay for infrastructure, ECUs for development and required tools. Every cent helps with keeping the project alive
+
+- Reporting bugs, unclear instructions, undocumented knowledge. GKFlasher doesn't behave as it should? You feel as if there's some information missing on the wiki? Let us know on the Discord! We can't fix what we don't know is broken
+
+=== I'm an aspiring copywriter ===
+Over the years, we acquired enough information to really struggle with keeping up - much less, writing it down. If a currently existing wiki page feels to you like it could use some love, or you're up for the challenge of documenting something that's missing - reach out on the Discord. You can start by immediately sending over your version of the article, or by asking some questions if you're currently writing one and need some technical clarification. After a few meaningful contributions, an editor account can be created for you on the wiki.
+
+=== I have an unusual build ===
+LED indicators and headlight eyebrows didn't cut it for you? share-your-builds section on the Discord is waiting for you! Spread the knowledge, and share the data - we appreciate all engine logs, both from stock and heavily modified vehicles. There is no such thing as too much data
+
+=== I just read out my ECU using GKFlasher or other tool ===
+Share your bin! We have hundreds of bins to go through, but only vetted ones make it to the [https://opengk.org/files/?dir=EEPROMS main directory]. If your bin was read from a stock ECU on a running vehicle, we can add it immediately. If your ECU was previously modified by a 3rd party tuner, we'll be more than happy to use your bin for analysis, but we don't publish modified files.
+
+=== I can recite the HMC parts catalog while sleeping ===
+This section is still under construction, but we're working on creating a page that combines both available aftermarket parts, and OEM upgrades. Can you play the OEM puzzle and [https://www.newtiburon.com/threads/g4gc-with-6-speed-gearbox.481905/ build your own six speed transmission for the 2.0]? We want to know what you know! For now, feel free to reach out on Discord.
+
+=== I was blessed with advanced pattern recognition skills ===
+If you open a hex editor and see ignition tables and axles instead of random characters - come on down! Share your findings that could be added to the TunerPro definitions, and we'll add you to the channels dedicated with developing new XDFs. As much as we try to keep everything out in the open, we need a few private channels with limited members to avoid any offtopic discussions that break the flow.
+
+=== I know what a stack pointer is and 'embedded' isn't just an adjective to me ===
+Ask for the latest Ghidra project, and similiarly as with TunerPro definitions; share some findings, and we'll add you to channels dedicated to reverse engineering the firmware. As much as we try to keep everything out in the open, we need a few private channels with limited members to avoid any offtopic discussions that break the flow.
+
+=== I'm proficient with Python, PHP or frontend engineering ===
+Pull requests to [https://github.com/dante383/gkflasher GKFlasher] or [https://github.com/dante383/gkbus GKBus] are more than welcome. The [https://vin.opengk.org VINDecoder] is not a public repository yet, but if you feel you could make some improvements - ask and you shall receive the codebase. Before you start working on the next great feature, a good practice would be mentioning it in the Discord - we have a lot of stuff in the works and there's a possibility somebody is already working on it.

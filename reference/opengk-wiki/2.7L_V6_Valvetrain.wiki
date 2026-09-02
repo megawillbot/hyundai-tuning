@@ -1,0 +1,95 @@
+The purpose of this article is to explore other valvetrain options using stock components from other makes and/or models. Now that Ferrea no longer sells a complete kit we need to look to other options. For camshafts please see [[Camshaft Specifications]].
+
+== Valve Springs ==
+The following table assumes you use the OEM valve retainer and keepers and maintain the OEM 34.5mm installed spring height. Stock lift is 8mm and lift of the commonly used Crower .349-.351" regrind is 8.9mm.
+{| class="wikitable"
+|+2.7L V6 Valve Spring Comparison
+!Description
+!I.D.
+O.D.
+!Coil Bind Height
+!Press. @34.5mm 
+(Installed Height)
+!Press. @26.5mm
+(Open 8mm Lift)
+!Press. @25.6mm
+(Open 8.9mm Lift)
+!Notes
+|-
+|OEM 2.7L Delta
+|17.50mm
+24.70mm
+|23.80mm
+|45 lbs
+|100-105 lbs
+|110-115 lbs
+|
+|-
+|BrianCrower
+BC1260<ref>https://store.briancrower.com/products/valve-springs-single-nissan-qr25?variant=13489382457409</ref>
+|17.90mm
+24.89mm
+|21.85mm
+|70 lbs
+|140 lbs
+|150 lbs
+|Best fit for 45-55% more pressure
+|-
+|BrianCrower
+BC1220<ref>https://store.briancrower.com/products/valve-springs-single-nissan-vq35de?variant=13489358929985</ref>
+|17.96mm
+25.15mm
+|22.86mm
+|90 lbs
+|175 lbs
+|185 lbs
+|Spring base in cyl head needs machining.
+OEM Retainer I.D. may be too small.
+|-
+|OEM 3.5L Sigma
+|19.20mm
+26.50mm
+|26.4mm
+|50 lbs
+|100 lbs
+|****
+|'''Coil bind near 8mm lift.'''
+|-
+|Melling
+VS-2283<ref>https://www.summitracing.com/parts/mel-vs-2283</ref>
+|19.10mm
+26.80mm
+|25.83mm
+|60 lbs **
+|100 lbs **
+|110lbs **
+|Spring base in cyl head needs machining.
+OEM Retainer I.D. may be too small.
+|-
+|Melling
+VS-2285<ref>https://www.summitracing.com/parts/mel-vs-2285</ref>
+|17.60mm
+26.70mm
+|26.42mm
+|80 lbs **
+|120 lbs **
+|130 lbs **
+|Spring base in cyl head needs machining.
+'''Coil bind near 8mm lift.'''
+|-
+|Ferrea
+S10134<ref>https://www.vividracing.com/ferrea-single-valve-spring-single-hyundai-lambda-2010-p-153686147.html</ref>
+Lambda 3.8L
+|18.30mm
+25.19mm
+|21.60mm
+|95 lbs **
+|140 lbs **
+|150 lbs **
+|Spring base in cyl head needs machining.
+OEM Retainer I.D. may be too small.
+|}
+<nowiki>**</nowiki> Denotes assumed pressure from online specifications. Valve spring yet to be measured in person.
+
+== Valve Spring Retainers & Keepers/Locks ==
+Our OEM retainers and keepers are meant for a ~17.50mm I.D. valve spring. The keeper angle is 9 degrees for a 6mm valve stem. There are several retainers that look like they might fit our motor but you may run into mismatched keeper angles, valve stem diameters or incorrect keeper grooves on the valve stems. For example a BC2220<ref>https://store.briancrower.com/products/bc2220-1?variant=13489835540545</ref> Titanium retainer may appear like a perfect match but it has a 7 degree keeper angle.

@@ -1,0 +1,843 @@
+<div style="float:right">__TOC__</div>
+
+<span style="margin-left: 20%;">C33</span>
+[[File:GK20-ECM-Socket.png]]
+
+
+{{Warning|SIMK41 and SIMK43 pinouts are different! Using the wrong ECM or harness will result in '''damage to your vehicle'''! Use at your own risk. Verify the type of ECM and harness before proceeding.}}
+
+Male Socket: TE 1746979-1 121 Pin Socket
+
+Female Plug: TE 368290-1 or 368376-1 81 Pin Plug
+
+==SIMK41 2MBit (MAP)==
+
+{| class="wikitable" style="width: 900px;"
+! colspan="4" style="font-weight:bold;" |ECM Socket 81-pin
+|-
+| style="text-align: center; font-weight:bold;" |Pin
+| style="text-align: center; font-weight:bold;" |Type
+| style="font-weight:bold;" |Description
+| style="font-weight:bold;" |Notes
+|-
+| style="text-align: center; font-weight:bold;" |1
+| style="text-align: center; font-weight:bold;" |Ground
+|Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |2
+| style="text-align: center; font-weight:bold;" |Ground
+|Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |3
+| style="text-align: center; font-weight:bold;" |Input
+|Memory Power Supply (ECM Fuse)
+|
+|-
+| style="text-align: center; font-weight:bold;" |4
+| style="text-align: center; font-weight:bold;" |Output
+|Ignition Coil #1 & #4
+|
+|-
+| style="text-align: center; font-weight:bold;" |5
+| style="text-align: center; font-weight:bold;" |Output
+|Ignition Coil #2 & #3
+|
+|-
+| style="text-align: center; font-weight:bold;" |6
+| style="text-align: center; font-weight:bold;" |I/O
+|[[CAN Bus messages|CANBUS]] Low
+|
+|-
+| style="text-align: center; font-weight:bold;" |7
+| style="text-align: center; font-weight:bold;" |I/O
+|[[CAN Bus messages|CANBUS]] High
+|
+|-
+| style="text-align: center; font-weight:bold;" |8
+| style="text-align: center; font-weight:bold;" |Output
+|O2 Sensor Heater Control (B1/S1)
+|
+|-
+| style="text-align: center; font-weight:bold;" |9
+| style="text-align: center; font-weight:bold;" |Output
+|O2 Sensor Heater Control (B1/S2)
+|
+|-
+| style="text-align: center; font-weight:bold;" |10
+| style="text-align: center; font-weight:bold;" |Input
+|Knock Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |11
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |12
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |13
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |14
+| style="text-align: center; font-weight:bold;" |Input
+|Battery (From SNSR Fuse)
+|
+|-
+| style="text-align: center; font-weight:bold;" |15
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |16
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |17
+| style="text-align: center; font-weight:bold;" |Input
+|Wheel Speed Sensor (Right Front) -
+|
+|-
+| style="text-align: center; font-weight:bold;" |18
+| style="text-align: center; font-weight:bold;" |Input
+|Wheel Speed Sensor (Right Front) +
+|
+|-
+| style="text-align: center; font-weight:bold;" |19
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |20
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |21
+| style="text-align: center; font-weight:bold;" |Input
+|Battery (From SNSR Fuse)
+|
+|-
+| style="text-align: center; font-weight:bold;" |22
+| style="text-align: center; font-weight:bold;" |Input
+|On/Start Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |23
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #4 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |24
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #1 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |25
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |26
+| style="text-align: center; font-weight:bold;" |Output
+|Canister Purge Valve Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |27
+| style="text-align: center; font-weight:bold;" |Ground
+|Crankshaft Position Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |28
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |29
+| style="text-align: center; font-weight:bold;" |Input
+|Crankshaft Position Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |30
+| style="text-align: center; font-weight:bold;" |Ground
+|Knock Sensor and Camshaft Shared Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |31
+| style="text-align: center; font-weight:bold;" |Input
+|Engine Coolant Temperature Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |32
+| style="text-align: center; font-weight:bold;" |Input
+|Throttle Position Signal (TPS)
+|
+|-
+| style="text-align: center; font-weight:bold;" |33
+| style="text-align: center; font-weight:bold;" |Input
+|Fuel Tank Pressure Sensor Signal (above fuel tank)
+|
+|-
+| style="text-align: center; font-weight:bold;" |34
+| style="text-align: center; font-weight:bold;" |Ground
+|Fuel Tank Pressure Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |35
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |36
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |37
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |38
+| style="text-align: center; font-weight:bold;" |Ground
+|Throttle Position Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |39
+| style="text-align: center; font-weight:bold;" |Input
+|Vehicle Speed Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |40
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |41
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |42
+| style="text-align: center; font-weight:bold;" |Input
+|O2 Sensor Signal (B1/S2)
+|
+|-
+| style="text-align: center; font-weight:bold;" |43
+| style="text-align: center; font-weight:bold;" |Input
+|O2 Sensor Signal (B1/S1)
+|
+|-
+| style="text-align: center; font-weight:bold;" |44
+| style="text-align: center; font-weight:bold;" |Output
+|Fuel Tank Pressure Sensor and Manifold Absolute Pressure Shared Power
+|
+|-
+| style="text-align: center; font-weight:bold;" |45
+| style="text-align: center; font-weight:bold;" |Output
+|Throttle Position Sensor Power
+|
+|-
+| style="text-align: center; font-weight:bold;" |46
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |47
+| style="text-align: center; font-weight:bold;" |I/O
+|[[W-Line|Immobilizer W-Line]]
+|
+|-
+| style="text-align: center; font-weight:bold;" |48
+| style="text-align: center; font-weight:bold;" |Ground
+|Manifold Absolute Pressure Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |49
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |50
+| style="text-align: center; font-weight:bold;" |Input
+|Air Conditioner Signal Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |51
+| style="text-align: center; font-weight:bold;" |Input
+|Air Conditioner Pressure Switch Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |52
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |53
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |54
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |55
+| style="text-align: center; font-weight:bold;" |Ground
+|Ignition Coil Shield Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |56
+| style="text-align: center; font-weight:bold;" |Input
+|Intake Air Temperature Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |57
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |58
+| style="text-align: center; font-weight:bold;" |Input
+|Air Conditioner Switch On
+|
+|-
+| style="text-align: center; font-weight:bold;" |59
+| style="text-align: center; font-weight:bold;" |Ground
+|O2 Sensor and Engine Coolant Temperature Shared Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |60
+| style="text-align: center; font-weight:bold;" |Input
+|Manifold Absolute Pressure Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |61
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #3 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |62
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #2 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |63
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |64
+| style="text-align: center; font-weight:bold;" |Output
+|Fan Relay Control (High)
+|
+|-
+| style="text-align: center; font-weight:bold;" |65
+| style="text-align: center; font-weight:bold;" |Output
+|Fan Relay Control (Low)
+|
+|-
+| style="text-align: center; font-weight:bold;" |66
+| style="text-align: center; font-weight:bold;" |Output
+|Engine RPM Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |67
+| style="text-align: center; font-weight:bold;" |Input
+|Main Relay Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |68
+| style="text-align: center; font-weight:bold;" |Output
+|Air Conditioner Relay Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |69
+| style="text-align: center; font-weight:bold;" |Output
+|Fuel Pump Relay Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |70
+| style="text-align: center; font-weight:bold;" |Output
+|Check Engine Indicator Control (MIL)
+|
+|-
+| style="text-align: center; font-weight:bold;" |71
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |72
+| style="text-align: center; font-weight:bold;" |Input
+|Camshaft Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |73
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |74
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |75
+| style="text-align: center; font-weight:bold;" |Output
+|Fuel Consumption Signal (for multigauge and instrument cluster)
+|
+|-
+| style="text-align: center; font-weight:bold;" |76
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |77
+| style="text-align: center; font-weight:bold;" |I/O
+|[[K-Line|Diagnostics K-Line (OBD2)]]
+|
+|-
+| style="text-align: center; font-weight:bold;" |78
+| style="text-align: center; font-weight:bold;" |Output
+|Idle Air Control Valve (Close)
+|
+|-
+| style="text-align: center; font-weight:bold;" |79
+| style="text-align: center; font-weight:bold;" |Output
+|CCV Control (at rear undercarriage, near fuel tank)
+|
+|-
+| style="text-align: center; font-weight:bold;" |80
+| style="text-align: center; font-weight:bold;" |Output
+|Idle Air Control Valve (Open)
+|
+|-
+| style="text-align: center; font-weight:bold;" |81
+| style="text-align: center; font-weight:bold;" |Output
+|Immobilizer Indicator Control
+|}
+
+==SIMK43 4MBit (MAF)==
+
+{| class="wikitable" style="width: 900px;"
+! colspan="4" style="font-weight:bold;" |ECM Socket 81-pin
+|-
+| style="text-align: center; font-weight:bold;" |Pin
+| style="text-align: center; font-weight:bold;" |Type
+| style="font-weight:bold;" |Description
+| style="font-weight:bold;" |Notes
+|-
+| style="text-align: center; font-weight:bold;" |1
+| style="text-align: center; font-weight:bold;" |Ground
+|Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |2
+| style="text-align: center; font-weight:bold;" |Ground
+|Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |3
+| style="text-align: center; font-weight:bold;" |Input
+|Memory Power Supply (ECM Fuse)
+|
+|-
+| style="text-align: center; font-weight:bold;" |4
+| style="text-align: center; font-weight:bold;" |Output
+|Ignition Coil #1 & #4
+|
+|-
+| style="text-align: center; font-weight:bold;" |5
+| style="text-align: center; font-weight:bold;" |Output
+|Ignition Coil #2 & #3
+|
+|-
+| style="text-align: center; font-weight:bold;" |6
+| style="text-align: center; font-weight:bold;" |I/O
+|[[SIMK43 CAN Bus|CANBUS]] Low
+|
+|-
+| style="text-align: center; font-weight:bold;" |7
+| style="text-align: center; font-weight:bold;" |I/O
+|[[SIMK43 CAN Bus|CANBUS]] High
+|
+|-
+| style="text-align: center; font-weight:bold;" |8
+| style="text-align: center; font-weight:bold;" |Output
+|O2 Sensor Heater Control (B1/S1)
+|
+|-
+| style="text-align: center; font-weight:bold;" |9
+| style="text-align: center; font-weight:bold;" |Output
+|O2 Sensor Heater control (B1/S2)
+|
+|-
+| style="text-align: center; font-weight:bold;" |10
+| style="text-align: center; font-weight:bold;" |Input
+|Knock Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |11
+| style="text-align: center; font-weight:bold;" |Output
+|CVVT Oil Control Valve (left rear of cylinder head)
+|
+|-
+| style="text-align: center; font-weight:bold;" |12
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |13
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |14
+| style="text-align: center; font-weight:bold;" |Input
+|Battery (From SNSR Fuse)
+|
+|-
+| style="text-align: center; font-weight:bold;" |15
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |16
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |17
+| style="text-align: center; font-weight:bold;" |Input
+|Wheel Speed Sensor (Right Front) -
+|
+|-
+| style="text-align: center; font-weight:bold;" |18
+| style="text-align: center; font-weight:bold;" |Input
+|Wheel Speed Sensor (Right Front) +
+|
+|-
+| style="text-align: center; font-weight:bold;" |19
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |20
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |21
+| style="text-align: center; font-weight:bold;" |Input
+|Battery (From SNSR Fuse)
+|
+|-
+| style="text-align: center; font-weight:bold;" |22
+| style="text-align: center; font-weight:bold;" |Input
+|On/Start Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |23
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #4 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |24
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #1 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |25
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |26
+| style="text-align: center; font-weight:bold;" |Output
+|Canister Purge Valve Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |27
+| style="text-align: center; font-weight:bold;" |Ground
+|Crankshaft Position Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |28
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |29
+| style="text-align: center; font-weight:bold;" |Input
+|Crankshaft Position Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |30
+| style="text-align: center; font-weight:bold;" |Ground
+|Camshaft Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |31
+| style="text-align: center; font-weight:bold;" |Input
+|Engine Coolant Temperature Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |32
+| style="text-align: center; font-weight:bold;" |Input
+|Throttle Position Signal (TPS)
+|
+|-
+| style="text-align: center; font-weight:bold;" |33
+| style="text-align: center; font-weight:bold;" |Input
+|Fuel Tank Pressure Sensor Signal (above fuel tank)
+|
+|-
+| style="text-align: center; font-weight:bold;" |34
+| style="text-align: center; font-weight:bold;" |Ground
+|Fuel Tank Pressure Sensor Ground (above fuel tank)
+|
+|-
+| style="text-align: center; font-weight:bold;" |35
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |36
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |37
+| style="text-align: center; font-weight:bold;" |Ground
+|O2 Sensor Ground (B1/S2) (below exhaust manifold)
+|
+|-
+| style="text-align: center; font-weight:bold;" |38
+| style="text-align: center; font-weight:bold;" |Ground
+|Throttle position sensor ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |39
+| style="text-align: center; font-weight:bold;" |Input
+|Vehicle Speed Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |40
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |41
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |42
+| style="text-align: center; font-weight:bold;" |Input
+|O2 Sensor Signal (B1/S2)
+|
+|-
+| style="text-align: center; font-weight:bold;" |43
+| style="text-align: center; font-weight:bold;" |Input
+|O2 Sensor Signal (B1/S1)
+|
+|-
+| style="text-align: center; font-weight:bold;" |44
+| style="text-align: center; font-weight:bold;" |Output
+|Fuel Tank Pressure Sensor Power
+|
+|-
+| style="text-align: center; font-weight:bold;" |45
+| style="text-align: center; font-weight:bold;" |Output
+|Throttle Position Sensor Power
+|
+|-
+| style="text-align: center; font-weight:bold;" |46
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |47
+| style="text-align: center; font-weight:bold;" |I/O
+|[[W-Line|Immobilizer W-Line]]
+|4800 baud, ISO 9142-2
+|-
+| style="text-align: center; font-weight:bold;" |48
+| style="text-align: center; font-weight:bold;" |Ground
+|MAF/IAT Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |49
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |50
+| style="text-align: center; font-weight:bold;" |Input
+|Air Conditioner Signal Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |51
+| style="text-align: center; font-weight:bold;" |Input
+|Air Conditioner Pressure Switch Input
+|
+|-
+| style="text-align: center; font-weight:bold;" |52
+| style="text-align: center; font-weight:bold;" |Input
+|Oil Temperature Sensor Signal (top right side of engine)
+|
+|-
+| style="text-align: center; font-weight:bold;" |53
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |54
+| style="text-align: center; font-weight:bold;" |Ground
+|Knock Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |55
+| style="text-align: center; font-weight:bold;" |Ground
+|Ignition Coil Shield Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |56
+| style="text-align: center; font-weight:bold;" |Input
+|Intake Air Temperature Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |57
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |58
+| style="text-align: center; font-weight:bold;" |Input
+|Air Conditioner Switch On
+|
+|-
+| style="text-align: center; font-weight:bold;" |59
+| style="text-align: center; font-weight:bold;" |Ground
+|O2 Sensor (B1/S1) Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |60
+| style="text-align: center; font-weight:bold;" |Input
+|Mass Airflow Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |61
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #3 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |62
+| style="text-align: center; font-weight:bold;" |Output
+|Injector #2 Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |63
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |64
+| style="text-align: center; font-weight:bold;" |Output
+|Fan Relay Control (High)
+|
+|-
+| style="text-align: center; font-weight:bold;" |65
+| style="text-align: center; font-weight:bold;" |Output
+|Fan Relay Control (Low)
+|
+|-
+| style="text-align: center; font-weight:bold;" |66
+| style="text-align: center; font-weight:bold;" |Output
+|Engine RPM Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |67
+| style="text-align: center; font-weight:bold;" |Input
+|Main Relay Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |68
+| style="text-align: center; font-weight:bold;" |Output
+|Air Conditioner Relay Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |69
+| style="text-align: center; font-weight:bold;" |Output
+|Fuel Pump Relay Control
+|
+|-
+| style="text-align: center; font-weight:bold;" |70
+| style="text-align: center; font-weight:bold;" |Output
+|Check Engine Indicator Control (MIL)
+|
+|-
+| style="text-align: center; font-weight:bold;" |71
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |72
+| style="text-align: center; font-weight:bold;" |Input
+|Camshaft Sensor Signal
+|
+|-
+| style="text-align: center; font-weight:bold;" |73
+| style="text-align: center; font-weight:bold;" |Ground
+|Engine Coolant Temperature Sensor Ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |74
+| style="text-align: center; font-weight:bold;" |
+|
+|
+|-
+| style="text-align: center; font-weight:bold;" |75
+| style="text-align: center; font-weight:bold;" |Output
+|Fuel consumption signal (for multigauge and instrument cluster)
+|
+|-
+| style="text-align: center; font-weight:bold;" |76
+| style="text-align: center; font-weight:bold;" |Ground
+|Oil temperature sensor ground
+|
+|-
+| style="text-align: center; font-weight:bold;" |77
+| style="text-align: center; font-weight:bold;" |I/O
+|[[K-Line|Diagnostics K-Line (OBD2)]]
+|
+|-
+| style="text-align: center; font-weight:bold;" |78
+| style="text-align: center; font-weight:bold;" |Output
+|Idle Air Control Valve (Closing)
+|
+|-
+| style="text-align: center; font-weight:bold;" |79
+| style="text-align: center; font-weight:bold;" |Output
+|CCV Control (at rear undercarriage, near fuel tank)
+|
+|-
+| style="text-align: center; font-weight:bold;" |80
+| style="text-align: center; font-weight:bold;" |Output
+|Idle Air Control Valve (Opening)
+|
+|-
+| style="text-align: center; font-weight:bold;" |81
+| style="text-align: center; font-weight:bold;" |Output
+|Immobilizer Indicator Control
+|
+|}
+[[index.php?title=Category:Siemens L4 2.0L]]

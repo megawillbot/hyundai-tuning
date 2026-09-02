@@ -1,0 +1,14 @@
+WARNING: No libpcap provider available ! pcap won't be used
+[*] GKFlasher v1.0.99
+[*] Selected protocol: kline. Initializing..
+[*] Trying to start diagnostic session
+[*] Set timing parameters to maximum
+[*] Security Access
+[*] Trying to identify ECU automatically.. 
+[*] Found! SIMK43 V6 4mbit (5WY17)
+[*] Trying to find calibration..
+[*] Found! Description: ca654019, calibration: G5J7TS0A
+[*] Reading from 0x90000 to 0x100000
+Page 28/28, offset 0xfc000 |████████████████████████████████████████| 458752B/458752B [100%] in 11:16.5 (678.12B/s) 
+[*] saved to C:\Users\megaw\OneDrive\hyundai-tuning\roms\stock\PROGRAM_ca654019_read_2026-08-29.bin
+[*] Done!

@@ -1,0 +1,8 @@
+Protocol called W-line is used for [[immobiliser]] communication between [[Body Control Module]] and [[5WY ECM Identification|ECU]] in [[SMARTRA]]-equipped vehicles. 
+
+== Overview ==
+Typically, you would now see somewhere around 200 pages of big words and lengthy paragraphs that would probably only increase your confusion and not generate any new knowledge.
+
+However, this is not a ISO specification and I'm not trying to sell you a $1500 device either so I'll just make it simple; '''W-Line is K-Line'''. At least on the physical side. The data layer is documented in [[SMARTRA Protocol]] and physical layer documentation is in [[K-Line|the K-Line article]] already, so there is no point duplicating that. 
+
+I'll only share a tip: [[wikipedia:Local_Interconnect_Network|LIN bus]] also uses the same physical layer. I had a "UART to LIN module" from asian marketplace laying around and used it for my W-line escapades (combined with ''the'' EEPROM programmer, CH134a, running in TTL<>USB mode. I recommend getting the ch134a, it's basically free.)

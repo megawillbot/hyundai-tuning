@@ -1,0 +1,32 @@
+/* CAN Calibration Protocol */
+
+enum CcpCommand {
+  CONNECT = 0x01,
+  SetMemoryTransferAddress = 0x02,
+  DataDownload = 0x03,
+  DataUpload = 0x04,
+  TestAvailability = 0x05,
+  StartStopDataTransmission = 0x06,
+  Disconnect = 0x07,
+  StartStopSynchronisedDataTransmission = 0x08,
+  GetCurrentlyActiveCalibrationPage = 0x09,
+  SetSessionStatus = 0x0C,
+  GetSessionStatus = 0x0D,
+  BuildChecksum = 0x0E,
+  ShortUpload = 0x0F,
+  ClearMemory = 0x10,
+  SelectCalibrationPage = 0x11,
+  GetSeedForKey = 0x12,
+  UnlockProtection = 0x13,
+  GetSizeOfDaqList = 0x14,
+  SetDaqListPointer = 0x15,
+  WriteDaqListEntry = 0x16,
+  ExchangeStationIdentifications = 0x17,
+  Program = 0x18,
+  MoveMemoryBlock = 0x19,
+  GetImplementedVersionOfCcp = 0x1B,
+  DiagnosticService = 0x20,
+  ActionService = 0x21,
+  Program6Bytes = 0x22,
+  DataDownload6Bytes = 0x23
+};
