@@ -51,6 +51,42 @@ code-derived def's raw values are for exploration only.
 - The **modelled-EGT map `0xCA24`** is in neither def, so it *is* a genuine
   recovery (though [[full-map-ca654019]] §6 discussed it by address).
 
+## Confirmed identities of novel tables (2026-09-04)
+
+Two functional clusters among the 152 traced through the code that consumes them.
+
+### The cat-overtemp protection subsystem
+
+A complete, coherent thermal-protection loop, none of it in either def:
+
+| cal addr | role | scaling / evidence |
+|---|---|---|
+| **`0xCA24`** | **modelled steady-state EGT**, 8×8 rpm/32 × load | raw ÷16 = **470–1160 °C** — matches [[full-map-ca654019]] §6 exactly, from an unrelated source |
+| `0xCAB0` | duplicate of `0xCA24` (byte-identical) | second reference copy |
+| `0xBA06` | thermal time-constant, 1-D f(airflow) | feeds the first-order filter |
+| `0xB9EE` | **protection factor**, 1-D | applied when modelled EGT exceeds the limit |
+
+The wiring (file `0x2D280`-`0x2D346`): `0xCA24` gives a steady-state EGT from
+rpm/32 × load; it is filtered into a running estimate `[0xE5A6]` with a time
+constant from `0xBA06`; that estimate is compared to a limit `[0xD020]`, and
+above it the factor from `0xB9EE` drives protective enrichment/timing into
+`[0xCFEA]`. **This is the system that pulls fuel and timing at sustained high
+load to save the cat** — directly relevant to anyone doing exhaust, headers, or
+forced induction, because it defines where the ECU thinks it is overheating.
+(As [[full-map-ca654019]] §6 noted, the model has no exhaust-side combustion
+term, so it cannot see overrun pops.)
+
+### A warmup / cold-enrichment injection factor
+
+`0xCC48` (and its twin `0xCC98`), 5 rpm × 8 temp, 16-bit, sits in the
+**injection-time correction chain** (file `0x2E546`): its output multiplies into
+the injection-time working value `[0xF560]`, just upstream of the altitude factor
+`IP_TI_FAC_ALTI`. The values fall steeply from cold to hot and with rpm —
+the signature of **warmup / cold-enrichment fuelling**. The exact multiplier
+scaling is unconfirmed (the raw range is large), and the temperature axis is
+`[0xC53F]`, identified as coolant-temp-like but not certain. Treat as a strong
+lead for cold-start/warmup driveability, not yet a calibrated lever.
+
 ## RAM inputs identified
 
 The axis a table is read on is whatever RAM variable the code passes to the axis
