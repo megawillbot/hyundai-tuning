@@ -1,0 +1,368 @@
+# SIMK43 ca654019 — program-zone architecture
+
+Established **2026-09-03/04** by disassembling the program zone. Everything here is
+derived from the firmware itself, not from another calibration's definitions.
+
+Prior work ([[full-map-ca654019]]) mapped the *data* segment by aligning against
+`ca652048`. This document is the *code* side, and it is a different kind of
+evidence: where the symbol map says "this address is probably `IP_TI_FL__N`
+because a same-family calibration has those bytes in that order", the code says
+"this address is read by a 2-D interpolation call whose axes are these two
+tables". The two agree far more often than not, and where they disagree the code
+wins.
+
+---
+
+## 1. The program read was never broken
+
+`roms/stock/PROGRAM_ca654019_read_2026-08-29.bin` was recorded in
+[[car-notes]] and [[open-threads]] as a failed read — "49% `0xFF`, unusable for
+disassembly", and the single blocker gating most of the project.
+
+**It is a complete, valid read.** The 49% `0xFF` is simply erased flash past the
+end of the program image.
+
+| check | result |
+|---|---|
+| Code region | file `0x10000`–`0x4A6A6` (239 270 bytes), **2.79% FF** |
+| Tail `0x4A6A6`–`0x80000` | **100% FF** — erased flash, not a read defect |
+| vs `ca654019_G5E7TM0A` (EU manual) | **0 bytes differ** |
+| vs `ca654019_E5N7SB1B` (EF Sonata) | **0 bytes differ** |
+| vs `ca654019_S5E7TM0B` (SM Santa Fe) | **0 bytes differ** |
+| vs `ca654020` / `ca654021` | 94% differ (different program) |
+| SHA256 of code region | `d024e1d1d6177fc75abe07de77be1024677b07aa98a619888e18dacc60bb1541` |
+
+Three independently sourced OpenGK dumps match ours byte-for-byte across all
+239 270 bytes. Our read predates the mirror (2026-08-29 vs 2026-08-30), so this
+is genuine external corroboration, not a copy.
+
+The ID string at file `0x1004E` reads `654F1010654019KR77035111`, matching the
+program code `KR77035111` that `--id` reports.
+
+> **The IOCLID privilege-escalation patch is not needed to read the program
+> zone.** What plain `--read` actually loses is the *calibration* region (which
+> comes back all-FF), which is why the file looked broken. Read the two regions
+> separately — `--read` for program, `--read-calibration` for maps — and both
+> are obtainable over K-line with no patch.
+
+Interesting side-note: the EU **automatic** `G4E7TS0A` differs from ours by 44%
+of the code region, while the EU **manual** is identical. The program image does
+not track the transmission.
+
+## 2. Address model
+
+The C167 is segmented; 16-bit data addresses are paged through DPP0–DPP3. The
+model below is not inferred — the firmware states it literally at file `0x439AC`:
+
+```
+439AC  e6 00 22 00   MOV DPP0, #0x0022      ; page 0x22 -> physical 0x88000
+439B0  e6 02 23 00   MOV DPP2, #0x0023      ; page 0x23 -> physical 0x8C000
+```
+
+| region | file offset | physical | notes |
+|---|---|---|---|
+| (unused / NVM) | `0x00000`–`0x08000` | `0x80000`–`0x88000` | see §6 |
+| calibration | `0x08000`–`0x0DF40` | `0x88000`–`0x8DF40` | pages `0x22`,`0x23` |
+| program | `0x10000`–`0x4A6A6` | `0x90000`–`0xCA6A6` | segments 9–C |
+
+So a 16-bit data operand maps to a calibration file offset as:
+
+| operand | DPP | maps to | bias |
+|---|---|---|---|
+| `0x0000`–`0x3FFF` | DPP0 = `0x22` | cal `0x8000`–`0xBFFF` | **+0x8000** |
+| `0x4000`–`0x7FFF` | DPP1 | *not calibration* | — |
+| `0x8000`–`0xBFFF` | DPP2 = `0x23` | cal `0xC000`–`0xFFFF` | **+0x4000** |
+| `0xC000`–`0xFFFF` | DPP3 = 3 | RAM `0xC000`–`0xDFFF`, XRAM `0xE000`, ESFR `0xF000`, IRAM `0xF200`, SFR `0xFC00`+ | — |
+
+Measured enrichment of operands against the independently derived symbol map,
+which is what established the two windows before the `MOV DPP` pair was found:
+
+| window | bias | distinct | hits | expected | enrichment |
+|---|---|---|---|---|---|
+| `0x0000`–`0x3FFF` | +0x8000 | 1307 | 766 | 73.7 | **10.4×** |
+| `0x8000`–`0xBFFF` | +0x4000 | 110 | 60 | 2.7 | **21.9×** |
+| `0x4000`–`0x7FFF` | either | — | — | — | none |
+
+**Two windows, not one.** Missing the second one silently hides every table
+above cal `0xC000` — which includes the main fuel map.
+
+Ground truth: all ten constants whose addresses were known independently
+([[full-map-ca654019]] §Constants) are referenced by code at exactly
+`address − 0x8000`:
+
+```
+C_MAF_MAX  0x81B8 -> operand 0x01B8  (3 refs)   C_N_MAX      0x8222 -> 0x0222 (2)
+C_N_FCUT   0x8219 -> operand 0x0219  (1 ref)    C_N_MAX_MAX  0x8230 -> 0x0230 (2)
+C_VS_MAX_0 0x8370 -> operand 0x0370  (2 refs)   ... 10 / 10
+```
+
+## 3. The table-access library
+
+Every calibration map is read through one of **fifteen routines** at file
+`0x44780`–`0x44B5E` (physical `0xC4780`–`0xC4B5E`). Calling convention:
+
+```
+MOV   R12, #<axis_addr  - bias>
+MOV   R13, <input value>            ; from RAM
+CALLS 0x0C, <axis search>           ; -> index + fraction in fixed RAM slots
+   ... repeat for the second axis of a 2-D table ...
+MOV   R12, #<table_addr - bias>
+CALLS 0x0C, <lookup>                ; -> result in RL4 (8-bit z) or R4 (16-bit z)
+```
+
+### The routines
+
+| file addr | role | breakpoints | interpolates |
+|---|---|---|---|
+| `0x44780` | **Y**-axis search | 16-bit | yes |
+| `0x447C8` | **Y**-axis search | 8-bit | yes |
+| `0x44B10` | **Y**-axis search | 16-bit | no (index only) |
+| `0x44AE4` | **Y**-axis search | 8-bit | no |
+| `0x44864` | **X**-axis search | 16-bit | yes |
+| `0x44812` | **X**-axis search | 8-bit | yes |
+| `0x44A8A` | **X**-axis search | 8-bit | no |
+
+| file addr | dims | z width | interpolates |
+|---|---|---|---|
+| `0x448B6` | 2-D | 8-bit | yes |
+| `0x449D4` | 2-D | 16-bit | yes |
+| `0x44B3C` | 2-D | 8-bit | no |
+| `0x44ACA` | 2-D | 16-bit | no |
+| `0x449A2` | 1-D | 8-bit | yes |
+| `0x44970` | 1-D | 16-bit | yes |
+| `0x44B54` | 1-D | 8-bit | no |
+| `0x44ABE` | 1-D | 16-bit | no |
+
+Axis-search results live in fixed RAM scratch, which is why a search can be
+shared by several consecutive lookups:
+
+| RAM | holds |
+|---|---|
+| `0xFBE4` | X (column) index |
+| `0xFBE6` | X breakpoint count — **this is the row stride** |
+| `0xFBE2` | X fraction, 16-bit |
+| `0xFBE5` | Y (row) index |
+| `0xFBE0` | Y fraction, 16-bit |
+| `M_FD40` bit 7 / bit 6 | X / Y clamped-to-end flag |
+
+### Axis table format
+
+```
+16-bit axis:  [count : u16][bp0 : u16][bp1 : u16] ...
+ 8-bit axis:  [count : u8 ][bp0 : u8 ][bp1 : u8 ] ...
+```
+
+**The XDF axis address is always the first breakpoint, i.e. the axis table
+address + 2 (word axes) or + 1 (byte axes).** The count prefix is invisible in
+every XDF. Confirmed against the hand-made def: code finds the ignition Y axis
+table at cal `0x8E92`, the XDF declares its axis at `0x8E94`.
+
+### Storage order and interpolation
+
+From `0x448B6`:
+
+```
+MOVBZ R13, [0xFBE5]      ; row index
+MOVBZ R5,  [0xFBE6]      ; column count
+MULU  R13, R5            ; row * NCOLS
+ADD   R12, MDL
+ADD   R12, R2            ; + column index
+MOVB  RL4, [R12]         ; z
+```
+
+**`z[row_index * NCOLS + col_index]` — row-major, NCOLS = the X-axis breakpoint
+count.** Interpolation is ordinary bilinear on the *raw* stored values with
+round-to-nearest (`MULU` by the 16-bit fraction, then `ADD MDL,MDL` to put the
+half-bit in carry, then `ADDC`/`SUBC` on the high word). Out-of-range inputs
+**clamp**; there is no extrapolation.
+
+### `IP_` vs `ID_` is a real distinction, and the code proves it
+
+`IP_*` symbols are passed to the interpolating lookups; `ID_*` symbols are
+passed to the stepped ones. It is not a naming habit — they are different
+routines. An `ID_` table is a staircase; editing one changes the output
+discontinuously at the breakpoint.
+
+## 4. Code-derived table geometry
+
+`tools/c166/tables.py` walks every lookup call site and recovers, per table:
+dimensionality, element width, interpolated vs stepped, both axis tables, each
+axis's breakpoint list, and the RAM variable driving each axis.
+
+**464 distinct tables** with geometry recovered from 557 call sites:
+
+| | 8-bit z | 16-bit z |
+|---|---|---|
+| 1-D interpolated | 123 | 85 |
+| 1-D stepped | 47 | 14 |
+| 2-D interpolated | 123 | 55 |
+| 2-D stepped | 14 | 3 |
+
+Agreement with the derived symbol map, over the 310 tables in both:
+
+| | count | meaning |
+|---|---|---|
+| exact match (rows, cols, width) | 100 | — |
+| rows/cols transposed | 146 | **all 1-D tables**; `N×1` vs `1×N` is a presentation choice, no conflict |
+| same area, different shape | 0 | — |
+| **different element width** | **0** | — |
+| genuinely different | 4 | 2 are scanner limitations (see below), 2 need review |
+
+Zero width conflicts and zero area conflicts across 310 tables is a strong
+independent check on [[full-map-ca654019]]. The alignment method got the
+geometry right.
+
+Against the hand-made `defs/ca654019 2700.xdf`, all four 2-D tables the scan
+reaches match exactly **including both axis addresses**:
+
+```
+0xA272  Ignition Table        xdf 16x12@8b   code 16x12@8b  x:0x90EA y:0x8E94  OK
+0xA336  Ignition Table Idle   xdf  4x4 @8b   code  4x4 @8b  x:0x910E y:0x9104  OK
+0xA3AD  IP_ISAPWM_DHP_AT      xdf  7x5 @8b   code  7x5 @8b  x:0x8A86 y:0x8A7E  OK
+0xA525  IP_ISAPWM_TPS         xdf  7x5 @8b   code  7x5 @8b  x:0x8A86 y:0x8A7E  OK
+```
+
+### Known limitation of the scanner
+
+Axis state is tracked linearly, so where a lookup sits *after* a branch join and
+the two arms searched different axes, the scanner records whichever came last.
+This is exactly what happens at `IP_TI_FL__N` (§5) and accounts for 2 of the 4
+disagreements. A backward-CFG version is the fix; until then, treat a 1-D
+table's axis as advisory when the enclosing function contains more than one Y
+search.
+
+## 5. New findings from the code
+
+### 5a. There is a second, undocumented fuel map
+
+At file `0x2E5C2` the fuelling path forks on a RAM flag:
+
+```
+2E5C2  JB  M_FD14.12, 0x2E5EC
+       ; --- flag clear: normal path ---
+2E5C6  MOV R12,#0x0E92   ; Y axis cal 0x8E92 - 16 pt rpm, 420..6000
+2E5D2  MOV R12,#0x10E8   ; X axis cal 0x90E8 - 12 pt MAF
+2E5DE  MOV R12,#0x93A8   ; table cal 0xD3A8   <- main fuel pulse width
+2E5E2  CALLS LOOKUP2D_16
+       ; --- flag set: alternate path ---
+2E5EC  MOV R12,#0x1334   ; Y axis cal 0x9334 - 8 pt rpm, 500,650,750,850,1000,1200,1500,1800
+2E5F8  MOV R12,#0x1346   ; X axis cal 0x9346
+2E604  MOV R12,#0x9528   ; table cal 0xD528   <- second fuel map
+2E608  CALLS LOOKUP2D_16
+```
+
+`cal 0xD3A8` is the fuel pulse-width map [[car-notes]] already lists, now with
+confirmed geometry: **16 rows (rpm) × 12 columns (MAF), 16-bit, interpolated —
+the same axes as the ignition map at `0xA272`**.
+
+**`cal 0xD528` is a second complete fuel map on a low-rpm axis (500–1800 rpm),
+selected by a flag.** It is not in the working XDF. Its selector, `M_FD14.12`,
+is unidentified — the obvious candidates are cranking/start enrichment or a
+limp-home path. Worth identifying before any fuelling work: if it is the start
+map, it is where cold-start richness lives, and it is invisible to anyone
+editing `0xD3A8` alone.
+
+### 5b. WOT enrichment — the existing reading holds
+
+`IP_TI_FL__N` @ `0xAD0B` is looked up 1-D interpolated 8-bit at `0x2E614`, after
+the join above, and there is exactly **one** call site in the whole image. Its
+axis is therefore whichever rpm axis the fuel path used — normally the 16-point
+`0x8E92`. The README's claim that `AD0B` is a 1-D f(rpm) table on the main rpm
+axis is **correct**, and the values [[full-map-ca654019]] §2 quotes (38 at 3200,
+then 53/63/77 at 3700/4000/4500) land on the right breakpoints.
+
+One scaling detail the code adds: the result is shifted left 4 (`SHL R4,#4`)
+before being stored to `[0xF53A]`, and is forced to zero when the full-load flag
+`M_FD0A.13` is clear.
+
+### 5c. The calibration is copied to external RAM at `0x48000`
+
+The routine at file `0x43956` reconfigures a chip-select window and block-copies
+the calibration out of flash:
+
+```
+4395A  MOV SFR_FE1A, #0x0483    ; ADDRSEL2: base 0x048000, 32 KB window
+4395E  MOV DPP0, #0x0022        ; source page = calibration
+43962  MOV DPP2, #0x0012        ; dest page   = 0x48000
+43966  MOV R12,#0 / R13,#0x8000 / R14,#0x5FF0      ; 0x5FF0 bytes ~ cal size 0x5F40
+43970  <8x unrolled word copy, DPP increment on 16 KB boundary>
+439AC  MOV DPP0, #0x0022        ; restore
+439B0  MOV DPP2, #0x0023
+439B4  MOV SFR_FE1A, #0x08E1    ; ADDRSEL2 back to base 0x08E000, 8 KB
+```
+
+So a 32 KB device exists at physical `0x48000` and the whole calibration is
+staged into it. Purpose not yet established — the plausible readings are a
+flash-programming staging buffer or a boot-time RAM shadow. **If it is a live
+shadow, writes to `0x48000` would change calibration behaviour without
+flashing**, which would matter a great deal. Not yet tested; do not assume it.
+
+## 6. An undocumented non-volatile record area at file `0x4000`
+
+The region file `0x4000`–`0x5000` (physical `0x84000`–`0x85000`) is **not**
+covered by `--read-calibration` and is all-`FF` in both of our reads, because we
+have never read it. In the OpenGK full dumps it contains **two near-identical
+copies** of a structured record:
+
+```
+0x4000  81 4c 00 00 "KR77035111" 00 00 01 7f 02 7f 03 7f  81 4c 00 00 ...
+0x47F6  ... 82 4c 00 00 "KR77035111" 00 00 01 7f 02 7f 03 7f  82 4c 00 00 ...
+```
+
+The leading byte increments `0x81` → `0x82` between the two copies. That is the
+classic flash-EEPROM-emulation pattern: alternating banks with a monotonic
+sequence number, newest-wins. Each bank carries three sub-blocks
+(`0x4000`/`0x42B8`/`0x44B0` and the same three offset by `0x7F6`).
+
+The `0x42B8` sub-block is a run of fixed-size records whose leading 16-bit field
+decreases monotonically down the list:
+
+```
+7e fd 02 00 01 00 | b2 00 02 28 4a 2c b5 80
+7e c4 02 00 00 00 | 78 ff 01 28 1b 11 06 18
+7d c4 0e 00 03 00 | b1 00 01 27 52 15 ad 69
+...
+78 ca 02 00 00 00 | b2 00 01 05 1c 00 59 00
+```
+
+A descending counter plus a payload, oldest last — an **age-stamped fault log
+with freeze-frame data** is by far the best fit.
+
+This is a genuinely unexplored area for the platform, and it is reachable: it
+sits inside the program-zone read range. Reading it would expose learned
+adaptation and stored fault history; erasing it is a plausible "reset
+adaptations without disconnecting the battery". **All of that is inference from
+one reference dump — none of it is verified against a running car, and nothing
+here should be written to.**
+
+## 7. Tooling
+
+`tools/c166/` — no public C166 disassembler existed, so this is a new one.
+
+| file | what |
+|---|---|
+| `c166dis.py` | C166/C167 instruction decoder. 0.15% undefined on a blind linear sweep of the image; phase-independent (sweeps from offset 0 and 2 converge to identical instruction counts) |
+| `addrmodel.py` | the §2 address model, one place |
+| `analyze.py` | recursive-descent + linear-fill, 702 functions, 78 507 instructions |
+| `xref.py` | calibration cross-references — 1321 distinct addresses touched, 767 landing exactly on a mapped symbol |
+| `tables.py` | the §4 geometry extractor |
+
+Two encoding quirks worth recording, both found by semantic contradiction and
+fixed:
+
+- `MOVBZ`/`MOVBS` register-register form is encoded **`mn`, not `nm`** — the low
+  nibble is the word destination, the high nibble the byte source. Everything
+  else in the ALU column is `nm`.
+- `BSET`/`BCLR`/`JB`/`JNB` take a **bit address**, not a `reg`: `0x00`–`0x7F` is
+  RAM at `0xFD00 + 2n`, `0x80`–`0xEF` is SFR at `0xFF00 + 2(n−0x80)`,
+  `0xF0`–`0xFF` is a GPR. Decoding these as `reg` produces plausible-looking
+  nonsense like `BSET DPP0.15`.
+
+## Open
+
+- The scanner's linear axis tracking (§4) should become a backward-CFG walk.
+- `M_FD14.12` — what selects the second fuel map (§5a).
+- Whether `0x48000` is a live shadow or a programming buffer (§5c).
+- The `0x4000` record format (§6), and a real read of it from our car.
+- The KWP2000 handler: a serial state machine at `0x44B5E` dispatching through a
+  jump table at file `0x12D84`, `EXTP #0x024`. Not yet examined.

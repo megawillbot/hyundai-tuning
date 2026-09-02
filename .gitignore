@@ -3,8 +3,11 @@
 __pycache__/
 *.pyc
 
-# External tool clones (tracked upstream, not here)
-tools/
+# External tool clones (tracked upstream, not here).
+# tools/* rather than tools/ so our own code under tools/ can be re-included --
+# git cannot re-include anything inside an excluded *directory*.
+tools/*
+!tools/c166/
 
 # GKFlasher default read output if accidentally dumped in root
 output_*.bin
