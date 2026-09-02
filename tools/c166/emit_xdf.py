@@ -149,15 +149,19 @@ def emit():
                    ";".join("%05X" % s for s in g.get("sites", [])[:4]),
                    " ALL-FF in our cal (disabled feature)." if allff else ""))
 
+        # mmedtypeflags 0x02 = LSB-first (little-endian); the C167 is
+        # little-endian, so 16-bit cells MUST carry it or TunerPro reads them
+        # byte-swapped (big-endian). 8-bit needs no flag.
+        zflag = ' mmedtypeflags="0x02"' if zbits == 16 else ''
         z = ('    <XDFAXIS id="z">\n'
-             '      <EMBEDDEDDATA mmedaddress="0x%04X" mmedelementsizebits="%d" '
+             '      <EMBEDDEDDATA%s mmedaddress="0x%04X" mmedelementsizebits="%d" '
              'mmedrowcount="%d" mmedcolcount="%d" mmedmajorstridebits="0" '
              'mmedminorstridebits="0" />\n'
              '      <units></units>\n'
              '      <decimalpl>0</decimalpl>\n'
              '      <outputtype>1</outputtype>\n'
              '      <MATH equation="X"><VAR id="X" /></MATH>\n'
-             '    </XDFAXIS>' % (a, zbits, rows, cols))
+             '    </XDFAXIS>' % (zflag, a, zbits, rows, cols))
 
         tables.append(
             '  <XDFTABLE uniqueid="0x%X" flags="0x30">\n'

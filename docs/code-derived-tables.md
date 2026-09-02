@@ -9,36 +9,47 @@ other cannot.
 
 **Deliverable:** `defs/ca654019 2700 code-derived.xdf` — 464 tables, geometry
 and axes certified by the interpolation call that reads each one, scaling left
-raw, names provisional. An exploration aid, not a flashing definition.
+raw, names provisional. **152 of the 464 are in no other def**; the rest overlap
+and serve as cross-checks. An exploration aid, not a flashing definition — for
+the named maps (fuel, ignition, idle), use the hand-made `ca654019 2700.xdf`,
+which has real scaling. (16-bit cells carry `mmedtypeflags="0x02"` for
+little-endian — omitting it makes TunerPro read every 16-bit table byte-swapped.)
 
 ---
 
-## The headline: the main fuel map was not in the shipped definition
+## Correction (2026-09-04): the fuel maps were already defined
 
-The extended XDF from [[full-map-ca654019]] covers the high-address region very
-sparsely — **11 tables between `0xCA00` and `0xD770`**, where the code actually
-reads **~44**. The alignment method's own documented ceiling ("permanently
-invisible to alignment") is exactly this region, and it swallowed some of the
-most important maps in the calibration:
+An earlier draft of this file headlined "the main fuel map was not in the
+shipped definition." **That was wrong and is retracted.** The hand-made
+`defs/ca654019 2700.xdf` — 41 tables, the primary working def — already carries
+`0xD3A8` ("Closed Loop Pulse Width", 16×12×16, scaling `0.004*X`, 0–30
+mg/stroke) and `0xD528` ("Idle Closed Loop Pulse Width", 8×8×16), both present
+in the Aug-28 pre-session backup. [[car-notes]] referenced the fuel map too. So
+the fuel maps were known and defined before this work.
 
-| cal addr | what it is | geometry | in extended XDF? |
-|---|---|---|---|
-| **`0xD3A8`** | **main fuel / injection pulse width** | 16 rpm × 12 MAF, 16-bit interp | **no** |
-| **`0xD528`** | **secondary fuel map** (flag-selected, low rpm) | 8 × 8, 16-bit interp | **no** |
-| **`0xCA24`** | modelled EGT | 8 × 8, 16-bit interp | no |
-| `0xCAB0` | modelled EGT (2nd) | 8 × 8, 16-bit interp | no |
-| `0xCD88`–`0xD148` | six 8 × 12 16-bit maps | rpm × `[0xF4DA]` | no |
+What was actually true is narrower: the fuel maps are missing from the
+*auto-derived extended* XDF ([[full-map-ca654019]]), because the byte-alignment
+method goes sparse above `0xCA00` (11 tables in `0xCA00`-`0xD770` where the code
+reads ~44). The extended XDF is not the working def, so this is a limitation of
+that one artifact, not a gap in the project's knowledge.
 
-`0xD3A8` decodes cleanly against the stock bin — monotonic in load across every
-one of its 16 rpm rows, ~325 raw at idle load rising to ~3700 at full load, on
-the **same rpm × MAF axes as the ignition map** (`0x8E92` / `0x90E8`). It is
-unmistakably the base injection map. It shares those axes with ignition because
-the ECU searches both axes once and reuses the indices for several lookups (the
-`0xFBE0`-`0xFBE6` scratch slots in [[ecu-architecture]] §3).
+**For working the fuel map, use the hand-made `ca654019 2700.xdf`** — it has the
+name, real `0.004*X` scaling, and the correct little-endian flag. The
+code-derived def's raw values are for exploration only.
 
-The fuel map was known to exist — [[car-notes]] diffed "`D3A8` fuel pulse width"
-against the European car — but it never made it into a *definition* with usable
-geometry. Now it has one.
+### What the code scan genuinely adds here
+
+- **Independent confirmation** of the fuel-map geometry, axes and orientation.
+  `0xD3A8` decodes little-endian into a textbook surface — monotonic in load
+  across all 16 rpm rows — on the **same rpm × MAF axes as ignition** (`0x8E92` /
+  `0x90E8`), which the code proves by reusing one axis search across both
+  lookups (the `0xFBE0`-`0xFBE6` scratch in [[ecu-architecture]] §3). Two methods
+  from unrelated evidence agreeing is the value, not novelty.
+- **152 tables that are in *neither* def** (not the hand-made 41, not the
+  extended 607), recovered with code-certified geometry. This is the real
+  additive set — see below.
+- The **modelled-EGT map `0xCA24`** is in neither def, so it *is* a genuine
+  recovery (though [[full-map-ca654019]] §6 discussed it by address).
 
 ## RAM inputs identified
 

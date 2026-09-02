@@ -255,11 +255,13 @@ At file `0x2E5C2` the fuelling path forks on a RAM flag:
 confirmed geometry: **16 rows (rpm) × 12 columns (MAF), 16-bit, interpolated —
 the same axes as the ignition map at `0xA272`**.
 
-**`cal 0xD528` is a second complete fuel map on a low-rpm axis (500–1800 rpm),
-selected by a flag.** It is not in the working XDF. Its selector, `M_FD14.12`,
-is unidentified — the obvious candidates are cranking/start enrichment or a
-limp-home path. Worth identifying before any fuelling work: if it is the start
-map, it is where cold-start richness lives, and it is invisible to anyone
+`cal 0xD528` is a second complete fuel map on a low-rpm axis (500–1800 rpm). The
+map itself is already in the hand-made def ("Idle Closed Loop Pulse Width") — the
+new part is **the selector**: the fuelling path forks on RAM bit `M_FD14.12`
+between it and the main map. The selector is unidentified — the obvious
+candidates are cranking/start enrichment or a limp-home path. Worth identifying
+before any fuelling work: if it is the start map, it is where cold-start richness
+lives, and it is invisible to anyone
 editing `0xD3A8` alone.
 
 ### 5b. WOT enrichment — the existing reading holds
