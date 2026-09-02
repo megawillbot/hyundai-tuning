@@ -15,22 +15,34 @@ edit, checksum-correct, flash ([[ghost-cams]]).
 
 ## 1. Diagnostics — how a DTC matures, and how to suppress one
 
-Every emissions/fault monitor funnels through **one common maturation routine**
-(file `0x9E934`). Each caller passes its own increment and threshold:
+Fault monitors mature through a **pair of near-identical maturation routines** —
+`0x9E128` (the main one, ~109 call sites) and `0x9E934` (the lambda/VIM group,
+~22 sites). Both take the same arguments and run byte-identical counter logic:
 
 ```
 R14 = C_ABC_INC_<monitor>_DIAG    ; counter step when the fault is present
 R15 = C_ABC_MAX_<monitor>_DIAG    ; counter value at which the DTC confirms
-CALLS 0x09, 0xE934
+CALLS 0x09, 0xE128   (or 0xE934)
 ```
 
-The routine adds `INC` to a per-monitor counter while the fault is present and
+Each adds `INC` to a per-monitor debounce counter while the fault is present and
 **confirms the DTC (sets the matured bit, lights the MIL) when the counter
-reaches `MAX`**. Therefore:
+reaches `MAX`**. 40 of the 41 `C_ABC_INC_*` constants are referenced this way.
+Therefore:
 
 > **`C_ABC_INC_<monitor>_DIAG = 0` disables that monitor.** The counter never
-> rises, the code never confirms, the light never comes on. This is verified in
-> the routine, not inferred.
+> rises, the code never confirms, the light never comes on. Verified by reading
+> both routines — the increment is the passed constant, and zero never reaches
+> the threshold. Holds regardless of which of the two routines a monitor uses.
+
+**On the OBD P-code numbers:** each monitor also carries a descriptor pointer,
+but the chain runs through the `0x48000` RAM shadow into a format that did not
+resolve cleanly to OBD P-numbers from static analysis — so **this document
+deliberately does not publish a monitor→P-code table it can't stand behind.**
+The reliable way to get the exact code for a monitor is a live **ReadDTC (KWP
+0x18)** over the cable after the fault is set, or the OpenGK/GDS DTC list. The
+monitor names below are unambiguous enough to choose the right `C_ABC_INC` edit
+without the P-number.
 
 That is the clean lever for a mod that trips a specific code. It is per-monitor,
 so you disable exactly the one you need and leave the rest working.
@@ -78,9 +90,8 @@ plain-language mapping is in the right column.
 - Misfire (`T_SEG`) and cam/crank are active and should stay so — they protect
   the engine, not just emissions.
 
-The DTC→OBD P-code mapping itself lives in a 44-byte-per-entry descriptor table
-reached through the ReadDTC (service 0x18) path; not yet decoded to P-numbers,
-but the monitor names above are enough to aim at.
+(Monitor→P-code numbers: see the note under §1's routine description — not
+decoded from static analysis; use a live ReadDTC or the GDS/OpenGK list.)
 
 ## 2. Limiters
 
