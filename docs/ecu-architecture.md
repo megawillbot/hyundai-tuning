@@ -334,6 +334,56 @@ and adapted at runtime**. Consequences:
 - A logger cannot see the live adapted values over the calibration read; they
   are in RAM at `0x48000`+, reachable only by a RAM read (KWP ReadMemByAddress).
 
+## 5d. The rev limiter, confirmed and clamped in stages
+
+The limiter constants are read as **single bytes and compared against rpm/32**
+(`CMPB RL4, [0x0222]` at file `0x1319E`), which confirms the `X*32` byte scaling
+already in `docs/ca654019-constants-map.csv` — the code agrees with the shipped
+CSV exactly:
+
+| constant | byte | rpm | role |
+|---|---|---|---|
+| `C_N_FCUT` | 0x7D=125 | 4000 | launch/rolling fuel-cut point |
+| `C_N_MAX_FCUT` | 0x57=87 | 2784 | second launch limit |
+| `C_N_MAX` | 0xD5=213 | 6816 | **soft limit** |
+| `C_N_MAX_MAX` | 0xD8=216 | 6912 | **hard limit** |
+| `C_N_MAX_HYS` | 0x01=1 | 32 | hysteresis |
+
+To change the rev limit, edit **one byte** = target rpm ÷ 32 (e.g. 7200 rpm →
+225 = 0xE1 at `0x8222`). A 2-byte edit would be wrong.
+
+The effective limit is not a single constant — file `0x1319E`-`0x13206` walks a
+**clamp chain**: the working limit `[0xC19C]` is successively floored to
+`C_N_MAX`, then a gear/vehicle-speed cap `[0x0231]`, then a crank-diagnostic cap
+`[0x0233]` (gated by flags), then `[0x0227]` under `M_FD3E.14`. The lowest
+applicable cap wins. Raising `C_N_MAX` alone will not lift the limit if another
+cap in the chain is lower under the current conditions.
+
+## 5e. The diagnostic / KWP2000 layer
+
+The K-line serial path is a full KWP2000 stack, readable end to end:
+
+- **Byte framing ISR** — an 8-state machine at file `0x44B74`-`0x44C74`,
+  dispatched through a jump table at file `0x12D84` (`EXTP #0x024`). States cover
+  header, length, service-id, data and checksum bytes; `S0BG` (baud) is set to
+  `0x2F` on frame start. This is the layer GKFlasher talks to.
+- **Service dispatcher** — file `0x3BE74`, a 30-way compare-and-jump over service
+  IDs. Standard services (`0x10` StartDiagSession, `0x11` ECUReset, `0x1A`
+  ReadEcuId, `0x23` ReadMemByAddress, `0x27` SecurityAccess, `0x30`
+  IOControlByLocalId, `0x31`/`0x32`/`0x33` routines, `0x81`/`0x82`
+  Start/StopComm, `0x85` ControlDTCSetting) plus a block of manufacturer
+  services (`0x12`/`0x13`/`0x1B`/`0x1C`, `0x61`-`0x66`, `0x71`-`0x76`,
+  `0x79`/`0x7A`). A second session dispatcher is at file `0x41FF6`.
+- **SecurityAccess (0x27)** — handler at file `0x4219E`. It is per-subfunction:
+  the subfunction byte indexes a 12-byte-stride parameter block, a seed is issued
+  and the returned key checked. This is the gate on ReadMemByAddress /
+  WriteMemByAddress — i.e. the legitimate full-unlock path for an owned ECU, the
+  thing GKFlasher currently needs the bench IOCLID patch to substitute for. The
+  **mechanism and location are mapped; the exact seed→key transform is not yet
+  extracted** — a bounded next step for anyone wanting native full access over
+  K-line. Note this is *diagnostic* security only; the immobiliser (SMARTRA) is a
+  separate system and is already disabled on this car.
+
 ## 6. An undocumented non-volatile record area at file `0x4000`
 
 The region file `0x4000`–`0x5000` (physical `0x84000`–`0x85000`) is **not**
