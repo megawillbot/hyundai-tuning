@@ -275,27 +275,64 @@ One scaling detail the code adds: the result is shifted left 4 (`SHL R4,#4`)
 before being stored to `[0xF53A]`, and is forced to zero when the full-load flag
 `M_FD0A.13` is clear.
 
-### 5c. The calibration is copied to external RAM at `0x48000`
+### 5c. The `0x48000` RAM shadow, and where adaptation lives
 
 The routine at file `0x43956` reconfigures a chip-select window and block-copies
-the calibration out of flash:
+the calibration out of flash into external RAM:
 
 ```
 4395A  MOV SFR_FE1A, #0x0483    ; ADDRSEL2: base 0x048000, 32 KB window
-4395E  MOV DPP0, #0x0022        ; source page = calibration
-43962  MOV DPP2, #0x0012        ; dest page   = 0x48000
+4395E  MOV DPP0, #0x0022        ; source page = calibration (flash 0x88000)
+43962  MOV DPP2, #0x0012        ; dest page   = 0x48000 (external RAM)
 43966  MOV R12,#0 / R13,#0x8000 / R14,#0x5FF0      ; 0x5FF0 bytes ~ cal size 0x5F40
 43970  <8x unrolled word copy, DPP increment on 16 KB boundary>
-439AC  MOV DPP0, #0x0022        ; restore
-439B0  MOV DPP2, #0x0023
+439AC  MOV DPP0, #0x0022 / DPP2, #0x0023           ; restore
 439B4  MOV SFR_FE1A, #0x08E1    ; ADDRSEL2 back to base 0x08E000, 8 KB
 ```
 
-So a 32 KB device exists at physical `0x48000` and the whole calibration is
-staged into it. Purpose not yet established — the plausible readings are a
-flash-programming staging buffer or a boot-time RAM shadow. **If it is a live
-shadow, writes to `0x48000` would change calibration behaviour without
-flashing**, which would matter a great deal. Not yet tested; do not assume it.
+`0x48000` is **external SRAM** (it sits below the flash's `0x80000`+ address
+space, so it cannot be flash), and the whole calibration is shadowed into it.
+The copy is guarded: at file `0x42B72` a loop over 12 header entries compares
+flash (`[R9+0x10]`) against the shadow (`[R9+0x4068]`) and re-copies if they
+differ — a standard "is the RAM shadow still valid" check.
+
+**This is not a live base-map tuning lever.** The ignition map (`0xA272`) and
+both fuel maps (`0xD3A8`, `0xD528`) — and in fact all 464 tables the geometry
+scan found — are read from **flash**, through DPP0/DPP2 (operands
+`0x0000`-`0x3FFF` / `0x8000`-`0xBFFF`). Writing the RAM shadow would not change
+fuelling or timing. That closes the "could you tune in RAM without flashing"
+question in the negative.
+
+**What the shadow does hold is the adaptive system.** Exactly three lookups read
+from the shadow window, and they do it *indirectly*:
+
+```
+2428C..242B6  loop index R9 = 0..5   (six cylinders)
+  MOV R12, [R4 + #0x5F1A]     ; R4 = index*2 -- a POINTER read from the shadow
+  CALLS LOOKUP2D_8_STEP        ; the pointer points at a per-cylinder adaptive map
+  ... same for [R4+#0x5F26] and, later, [R7*2+#0x5F32]
+```
+
+`0x5F1A`/`0x5F26`/`0x5F32` are shadow offsets = calibration-equivalent
+`0x9F1A`/`0x9F26`/`0x9F32`. They are **`ldp_` pointer tables** (the
+link/pointer indirection [[open-threads]] flagged as what static analysis
+handles worst), relocated to RAM so their entries can point at RAM-resident,
+runtime-updated maps. The enclosing routine tracks min/max of rpm/32 (`[0xC4E8]`)
+and load (`[0xC4E7]`), searches a knock/correction map, and sets knock flags
+(`M_FD1E.10/.13/.14`) — a **per-cylinder knock/adaptation learning loop**.
+
+This resolves the [[open-threads]] note that "adaptive ignition `ID_IGA_AD_0..5`
+lives in the program zone and needs a clean read". It does not live in program
+flash — it lives in this **RAM shadow, seeded from the flash calibration at boot
+and adapted at runtime**. Consequences:
+
+- The learned values are volatile: a battery disconnect (or the shadow failing
+  its header check) reloads them from the flash seed. That *is* the "reset
+  adaptations" mechanism.
+- The flash seed for the adaptive maps is at cal `0x9F1A`-ish and is editable
+  like any other calibration data — it sets where adaptation starts from.
+- A logger cannot see the live adapted values over the calibration read; they
+  are in RAM at `0x48000`+, reachable only by a RAM read (KWP ReadMemByAddress).
 
 ## 6. An undocumented non-volatile record area at file `0x4000`
 

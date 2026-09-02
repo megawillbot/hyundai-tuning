@@ -82,7 +82,7 @@ Detail in [[ecu-architecture]] and [[code-derived-tables]]. Still open:
 |---|---|
 | **Scaling equations** for all tables | Reading the per-table decode routines (the arithmetic around each lookup call) — no longer a hardware gate |
 | **`M_FD14.12`** — selector between main fuel `0xD3A8` and alternate `0xD528` | Trace its writers; or datalog cold-start vs warm |
-| **Is `0x48000` external RAM (live cal shadow) or a flash-programming buffer?** | The bus/chip-select config (ADDRSEL/BUSCON decode); matters a lot if writable live |
+| ~~Is `0x48000` external RAM (live cal shadow)?~~ | **Resolved 2026-09-04** — external SRAM shadow of the cal, header-validated against flash. Base maps read from **flash**, so not a live-tuning lever; but the **adaptive/knock learning system lives there** (pointer tables at cal `0x9F1A`/`26`/`32`, per-cylinder loop). See [[ecu-architecture]] §5c |
 | **Security Access (0x27) seed/key** | Handler at file `0x4219E`, per-subfunction param table; the compute path past the `0x3812` memcpy is not yet read. The legitimate full-unlock path for an owned ECU |
 | The `0x4000` NVM record format (fault log?) | A real read of file `0x4000`-`0x5000` from our car (it is inside program-read range) |
 | Scanner's linear axis tracking | Backward-CFG walk in `tools/c166/tables.py` |
