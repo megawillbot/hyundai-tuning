@@ -113,3 +113,27 @@ Logger channel positions ([[logger-remap-ca654019]]):
 | Road speed | 19 |
 | Engine RPM | 20-21 (16-bit LE) |
 | Per-cylinder injection | 43-54 (6x 16-bit LE) |
+
+## Measuring the M_FD12.7 gate directly (added 2026-09-03)
+
+The pop patch's pattern is honored only while `M_FD12.7` is set (= `M_FD38.0`
+clear = ADC channel `[0xFA84]` below ~196/1024). To measure how often that gate
+is open:
+
+- **The existing logs cannot answer it.** They are the ECU's fixed RDBLI 0x01
+  sensor block — the internal flag word `M_FD12` (`0xFD12`) and the raw ADC
+  `[0xFA84]` are not (confirmably) in it, and more fundamentally `drive_raw_2026-08-29`
+  never entered overrun fuel cut at all (max 3347 rpm, no closed-throttle-high-rpm,
+  zero all-injectors-cut frames). No cut ⇒ nothing to observe. (Log byte **pos 61**
+  does track warm-vs-cold/running — 0 below ~62 °C/idle, 3 when warmed and driving —
+  a candidate status byte, but not the gate.)
+- **Direct read via KWP `0x23` ReadMemoryByAddress** on `0xFD12` (bit 7 =
+  `M_FD12.7`) and `0xFA84` (the ADC channel, 10-bit), polled alongside rpm/coolant/
+  TPS. This is how TunerPro ADX reads live RAM; our `0x23` path already works for
+  the calibration read. **First verify `0x23` reaches RAM** (read `0xFD12` at warm
+  idle, expect bit 7 set), then a short drive with a few overrun lifts shows: how
+  often the gate is open, whether it ever closes while warm, and what `[0xFA84]`
+  tracks (correlate with coolant/load). Fold into the capture run.
+- **You may not need it:** the gate is open in normal warm overrun by construction
+  (stock staged indices require it), so the capture's staging observation already
+  confirms the mechanism. The direct read is for curiosity / edge-case confidence.
