@@ -85,6 +85,82 @@ different address in our program. Applying it blind would corrupt `0x3CEF4`. We
 do not need it anyway: our program reads fine, and `--flash-program` needs only
 the Hyundai-level security GKFlasher already performs (§2).
 
+## 2c. Why K-line program flash is low-risk on *this* car, and the recovery guarantee
+
+The desolder route works but is horrible; K-line is the goal. The case that it is
+safe here rests on mechanism, not optimism:
+
+- **We have already done a successful K-line erase/write/verify on this exact
+  car** — the ghost-cam **calibration** flash (2026-08-31, [[ghost-cams]]).
+  Program flash is the *same* GKFlasher call (`cli_flash_eeprom`), the *same*
+  reprogramming session (`FLASH_REPROGRAMMING`), the *same* Hyundai-level
+  security (`enable_security_access` → `calculate_key`, `key=0x9360; 0x24×
+  (key=key*2 ^ seed)`), and the *same* bootloader machinery (RequestDownload /
+  TransferData / StartRoutine). The only differences are the erase routine
+  number (`0x00` program vs `0x01` calibration) and the fixed write pointer
+  (`0x90010` vs `0x88000`). Nothing on the unproven list is in the flash path.
+- **The erase/write code runs *from the boot sector*.** The AM29F400 command
+  sequences (unlock writes `0x5554`/`0xAAAA`) live at boot file `0x0422`,
+  `0x052A`, `0x3266`+ — all below `0x8000`. Flash cannot erase a sector while
+  executing from it, so a program erase **cannot touch the boot sector**. The
+  boot loader therefore survives *any* botched program flash and still answers
+  KWP2000 in reprogramming mode — which is exactly what makes a reflash possible.
+  (The bootloader's own range classifier at boot `0x2FC2` independently refuses
+  any write target outside program / calibration / NVM; boot is never a target.)
+- **Coherence holds by construction.** The verify routine checks a coherence
+  identifier tying the program image to the boot software (reprogramming-status
+  bit 12, `ecu_sw_does_not_fit_to_boot_sw`). Our candidate is built on **our own
+  program read**, whose ID/coherence block at file `0x1004E`
+  (`…654019KR77035111--11165401`) pairs with our boot `KR77035202` already, and
+  our patches never touch it (all 89 changed bytes are at `0x10010`–`0x1458F`,
+  none in `0x10012`–`0x11000`). **Rule: only ever flash a program image derived
+  from our own read — never a sibling dump**, whose coherence ID pairs with a
+  different boot and would be rejected at verify (or worse, accepted wrongly).
+
+**Recovery ladder if a program flash fails.** In order of use:
+
+1. Verify fails → GKFlasher prints the reprogramming-status word and "flash a
+   valid file". The boot loader is intact and in reprogramming mode. **Re-run the
+   same `--flash-program`.** Most transient comms drops end here.
+2. Power-cycle the ECM (ignition off ~20 s for the main relay to drop, ignition
+   on) and re-run. Clears a wedged session.
+3. Flash `roms/stock/FULL_ca654019_stock_merged.bin --flash-program` to return to
+   a known-good stock program (its coherence pairs with our boot; the cal it
+   leaves is whatever was last written — flash the stock cal too if unsure).
+4. Only if the boot loader itself stops answering (power lost mid-erase, hardware
+   fault) does the bench come out: desolder, write `FULL_ca654019_stock_merged.bin`
+   with the Willem GQ-4X (chase's method), resolder. This is the documented
+   backstop, not the expected path.
+
+Decoding the status word (routine `0x03`, `ReprogrammingStatus` in
+`ecu_definitions.py`) when a verify fails — the bits that matter:
+
+| bit | name | meaning if 0 |
+|---|---|---|
+| 0 | `checksum_of_calibration_data_is_correct` | cal checksum bad → re-run `--correct-checksum` |
+| 3 | `calibration_data_is_correct` | cal write incomplete |
+| 4 | `checksum_of_ecu_sw_is_correct` | **program checksum bad** → `--correct-checksum` before reflash |
+| 7 | `ecu_sw_is_correct` | program write incomplete → reflash program |
+| 8 | `ecu_reprogramming_successfully_completed` | the all-clear; 1 = done |
+| 11 | `calibration_data_does_not_fit_to_ecu_sw` | cal/program coherence mismatch (wrong pair) |
+| 12 | `ecu_sw_does_not_fit_to_boot_sw` | **flashed a program from the wrong boot family** — see the coherence rule above |
+
+## 2d. Baud rate — shrink the exposure window
+
+The stock read and the cal flash ran at the **10400** default (`~680 B/s`; the
+239 KB program read took 11 min). A program *write* at that rate is ~6 min of
+continuous K-line traffic — the main incremental risk over the 35 s cal flash is
+simply the length of the window. GKFlasher can negotiate up to **120000** baud
+(`--desired-baudrate 0x05`; `BAUDRATES` in `ecu_definitions.py`), which would cut
+the write to well under a minute.
+
+**Prove the fast baud on a read first** (read-only, no erase, fully safe): do a
+`--read-program --desired-baudrate 0x05` and compare the result to the known
+stock read (code region must hash `d024e1d1…`). If a full program read at 120000
+succeeds and matches, the rate is reliable on this cable/car and can be used for
+the flash. If it drops packets, stay at 10400 and accept the longer window — it
+is still recoverable, just slower.
+
 ## 2b. Runbook for the first program flash
 
 Battery on a charger, laptop on mains, both stock images at hand. Everything
@@ -96,6 +172,17 @@ python -u gkflasher.py --protocol kline --interface COM7 --id
 python -u gkflasher.py --protocol kline --interface COM7 --read-calibration -o ..\..\roms\stock\cal_before_program_flash.bin
 python -u gkflasher.py --protocol kline --interface COM7 --read-program     -o ..\..\roms\stock\program_before_program_flash.bin
 #    cal must hash 65DA7B7F… (ghost cams), program code region d024e1d1… (stock)
+
+# 0b. (optional, recommended) prove 120000 baud on a READ before trusting it on a write
+python -u gkflasher.py --protocol kline --interface COM7 --desired-baudrate 0x05 --read-program -o ..\..\roms\stock\program_fastbaud_test.bin
+#    code region 0x10000-0x4A6A6 must hash d024e1d1… (== stock). If it does, add --desired-baudrate 0x05
+#    to the flash commands below to cut the ~6 min window to <1 min. If not, drop it and stay at 10400.
+
+# 0c. TEST 0 — prove the program-flash PATH with a byte-identical stock program (zero behaviour change)
+python -u gkflasher.py --protocol kline --interface COM7 --flash-program ..\..\roms\stock\FULL_ca654019_stock_merged.bin
+python -u gkflasher.py --protocol kline --interface COM7 --read-program -o ..\..\roms\stock\program_after_test0.bin
+#    code region must still hash d024e1d1…  This is the single highest-value de-risk: it exercises
+#    erase+write+verify of the PROGRAM sector on this car/cable/boot rev with nothing to lose if it fails.
 
 # 1. calibration first (adds the unused PUC_3 table; stock program ignores it)
 python -u gkflasher.py --protocol kline --interface COM7 --flash-calibration ..\..\roms\tunes\puc-final-stage-patch\FULL_ca654019_ghostcam_pucstage_UNFLASHED.bin
@@ -180,10 +267,11 @@ pattern 6 (three injectors cut, uneven), −33° in the 3500 cell of
 2. **Confirm the flash path** with chase / OpenGK (§2: the bootloader ignores the
    download address and fixes the write pointer itself, so the only open point
    is the `KR77035202` revision). Asked 2026-09-03, awaiting reply.
-3. Battery on a charger, laptop on mains, stock merged image and the ghost-cam
-   cal at hand. Flash the **rehearsal** image **cal first, then program** (§2b
-   runbook), read both back, compare, start, idle, drive — behaviour must be
-   indistinguishable from today.
+3. Battery on a charger, laptop on mains. Optionally prove 120000 baud on a read
+   (§2d), then **Test 0**: flash the byte-identical **stock** program (§2b step 0c)
+   to prove the K-line program-flash path with nothing at stake. Then flash the
+   **rehearsal** image **cal first, then program**, read both back, compare, start,
+   idle, drive — behaviour must be indistinguishable from today.
 4. Flash the **pop-tune** cal (`--flash-calibration` only), read back, drive:
    rev past 4000 once, then lift from above 3000. Adjust to taste via three cal
    bytes (`0xBC91` arm, `0x875C` window, `0xBC90` pattern; `0xA19B` retard).
