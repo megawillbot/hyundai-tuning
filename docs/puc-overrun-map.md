@@ -153,12 +153,18 @@ firing ones burn in the exhaust — the classic recipe.
 Writing the pattern index to `[0xC1AB]` is *not* sufficient on its own. The mask
 applier at `0x14436` (called `0x4436`):
 
-- **Gates on `M_FD12.7`.** If `M_FD12.7` is **clear** when apply runs, it ignores
-  every source and forces the index to `0x0D` (all six). Our patched final stage
-  would then be **inert** — stock all-six, no pops. `M_FD12.7` is set/cleared by a
-  temperature-like threshold routine at `0x40000`+ (compares `[0xF970]`/`[0xF972]`
-  scaled, against `0x62`/`0x93`), not obviously tied to overrun; its state during
-  the final cut stage is **not settled statically**.
+- **Gates on `M_FD12.7`.** If `M_FD12.7` is **clear** when apply runs, it forces
+  the index to `0x0D` (all six). **Resolved (2026-09-03):** `M_FD12.7` is the exact
+  inverse of `M_FD38.0` (routine `0x40000`). `M_FD38.0` is a **debounced threshold
+  on one ADC channel `[0xFA84]`** (trips above ~196/1024, hysteresis), forcing the
+  all-six cut while tripped. That channel is a dedicated analog input nothing else
+  consumes — a protection/diagnostic sensor, not the main coolant signal (the
+  coolant/temp averages `[0xF970]/[0xF972]` gate the *sibling* bits 12.4/5/6). **The
+  gate is open in normal warm overrun by construction:** the stock cal ships real
+  staged indices `PUC_1=4` (1 cyl) and `PUC_2=9` (4 cyl), dead unless `M_FD12.7` is
+  set during the cut — so Siemens' own staged cut proves it, and being debounced on
+  a slow input it will not flip mid-coastdown. Our pattern is honored under the same
+  conditions as the stock staged cut. Low residual risk, not an open question.
 - **Takes the max**, not our value: `[0xC1AA] = max([0xC19A], [0xC5A0], [0xC57D],
   [0xC1AB], [0xC1AD])`, then outputs `pattern_table[[0xC1AA]]`. Our index 6 only
   wins if the other four sources are ≤6 at that moment. (During a clean coasting
@@ -170,15 +176,16 @@ Consequences, stated honestly:
   `pattern_table[max(...)]`, i.e. somewhere between our pattern and all-six — never
   fewer injectors than intended, never an invalid state, never anything outside a
   closed-throttle overrun. Worst case the patch does nothing.
-- **Whether it actually pops depends on `M_FD12.7` being set and the other sources
-  low during the final stage** — a runtime fact, not proven here.
-- **The capture run settles it empirically** ([[next-capture-script]]): if the
-  *stock* overrun shows the staged **1 → 4 → 6** cylinder cut, then `M_FD12.7` is
-  set through overrun and the other sources are ≤4 then ≤9 at stages 0/2 — so
-  index 6 will be honored at the final stage and the patch works. If the stock cut
-  shows **all six from the first frame**, the pattern mechanism is gated off and
-  the patch would be inert. **Do not flash the pattern patch until the capture
-  confirms real staging.**
+- **Whether it actually pops** now rests only on the other four max-sources being
+  ≤6 at the final stage (the `M_FD12.7` gate is resolved above). Stock `PUC_2=9`
+  giving a 4-cyl cut proves those sources are ≤9 at stage 2; the final stage needs
+  them ≤6 for the exact 3-cyl pattern (else it maxes up toward all-six — safe,
+  just more aggressive).
+- **The capture run confirms it** ([[next-capture-script]]): stock overrun staging
+  **1 → 4 → 6** confirms the gate is open and settles the max-competition down to
+  the final stage. It is now a confirmation of a well-supported conclusion, and it
+  still settles the bit-to-cylinder order for the pattern — worth having before
+  flashing, but no longer the deciding test.
 - **Contingency if inert:** have the state-4 handler write the injector mask word
   `[0xF9BA]` directly (bit 15 set, cut mask in bits 0-5) and skip apply, rather
   than routing through `[0xC1AB]`. Bigger stub, but bypasses both the gate and the

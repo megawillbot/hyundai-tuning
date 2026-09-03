@@ -83,7 +83,7 @@ Explicit predictions, so this is falsifiable rather than a fishing trip:
 |---|---|---|
 | A | On the 4000+ coastdowns, injection-time pairs at **pos 43-54** all drop to **0** | No cut at all -> map is wrong, or PUC is inactive on this cal. Either way the pop tune route is dead and we stop. |
 | B | They return to non-zero at **~1248 rpm** | A different resume rpm means `IP_N_MIN_PUC_AT` @0xA91F is mislocated |
-| C | The pairs drop in **stages: one injector, then four, then all six**, within a few engine cycles of the cut starting (code-verified sequence, [[puc-overrun-map]]) | **This is the go/no-go for the pop patch.** Real staging ⇒ the pattern mechanism (`M_FD12.7` gate + max) is live and the patch will produce its pattern. **All six from the first frame ⇒ the pattern patch would be inert** and needs the direct-`[0xF9BA]` contingency. Also settles the bit-to-cylinder order for the pattern choice. |
+| C | The pairs drop in **stages: one injector, then four, then all six**, within a few engine cycles of the cut starting (code-verified sequence, [[puc-overrun-map]]) | **Confirms the pop patch's mechanism.** Real staging ⇒ the `M_FD12.7` gate is open and the pattern will be honored (already well-supported by the stock staged indices). All six from frame one would be the surprise case ⇒ direct-`[0xF9BA]` contingency. Also settles the bit-to-cylinder order. |
 | D | Cruise at 100 km/h is **~2250 rpm** | Recomputes the margin under the 2496 threshold |
 | E | Speed byte at 50/80/100 tracks **1:1 with km/h** | Last unverified link in the threshold reasoning |
 
