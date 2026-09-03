@@ -9,6 +9,147 @@ Overrun fuel cut on SIMK43 is **PUC** — *pull fuel cut-off* (Siemens naming;
 None of it is in `defs/ca654019 2700.xdf` (55 entries). All of it exists in our
 binary.
 
+---
+
+## Code-verified (2026-09-03) — read this first
+
+The program-zone disassembly ([[ecu-architecture]]) reached every table below.
+**All 23 pinned addresses are confirmed**: each is read by an interpolation or
+stepped-lookup call whose recovered geometry and axes match this document
+(`tools/c166/tables.py` output, symbol column). Two of the "unresolved" tables
+are now placed by the code too: `IP_IGA_ACCIN_PUC__N` = `0x9FE4`,
+`IP_IGA_ACCIN_PUC_AT__N` = `0x9FE8` (4 × 8-bit on the `0x9078` axis), and
+`IP_CDN_REAC_CYCNR__N_32__GR_MT` = `0x9BC8`.
+
+Reading the consuming code corrects three things this document previously
+inferred from structure, and answers the gating question properly.
+
+### 1. The injector tables are pattern *indices*, not masks — retraction
+
+`ID_PAT_INH_IV_PUC_1/2` values (4 and 9) are **not** cylinder bitmasks ("cyl 3",
+"cyl 1,4" above is wrong). The apply routine at file `0x14436` takes the maximum
+of several inhibit *levels* (`[0xC1AB]` from overrun, plus rev-limit / launch /
+traction sources) and indexes a **word table at cal `0xB848`** with it
+(`MOV R5,[R4+#0x3848]`, DPP0). That table is in the extended def already as
+"pattern, inhibition, injection valve" (ca652048 `0xB0D2`). Bits 0-5 are the six
+injectors (bit-to-cylinder order not yet verified), bit 12 is a flag:
+
+| index | word | injectors inhibited | count |
+|---|---|---|---|
+| 0 | `0x0000` | `000000` | 0 |
+| 1 | `0x1000` | `000000` | 0 |
+| 2 | `0x1040` | `000000` | 0 |
+| 3 | `0x1110` | `010000` | 1 |
+| **4** | `0x1248` | `001000` | **1** (stage 1, stock) |
+| 5 | `0x124A` | `001010` | 2 |
+| 6 | `0x14AC` | `101100` | 3 |
+| 7 | `0x1555` | `010101` | 3 |
+| 8 | `0x19D9` | `011001` | 3 |
+| **9** | `0x1B6D` | `101101` | **4** (stage 2, stock) |
+| 10 | `0x1BB7` | `110111` | 5 |
+| 11 | `0x1EF7` | `110111` | 5 |
+| 12 | `0x1FFE` | `111110` | 5 |
+| **13** | `0x1FFF` | `111111` | **6** (final stage, hard-coded) |
+
+The stock overrun cut is therefore **staged: one cylinder, then four, then all
+six**, each of the first two stages lasting a hard-coded 11 cycles
+(`MOVB RL5,#0xB` at `0x14508`/`0x1454A`). The 6-point rpm axis only selects the
+index used during those two short stages.
+
+### 2. The state machine
+
+Injector-inhibit state `[0xC1AC]` (function at file `0x144BA`, jump table at
+file `0x104CA`), active only while the engine-state machine is in **overrun
+(state 5, `M_FD16.0`)**:
+
+| state | does | next |
+|---|---|---|
+| 0 | look up `PUC_1` on rpm/32 → level `[0xC1AB]`; counter = 11 | 1 |
+| 1 | count down | 2 when zero |
+| 2 | look up `PUC_2` → level; counter = 11 | 3 |
+| 3 | count down | 4 when zero |
+| 4 | **level = `0x0D`** (constant, `0x14574`/`0x14586`), set `M_FD16.12` | stays |
+
+On leaving overrun (`M_FD16.0` clear) the reactivation path runs:
+`ID_PAT_CYCNR_REAC` (all zero) cycles of `ID_PAT_INH_IV_REAC` (all zero), gated
+on coolant > `C_TCO_PAT_REAC_MIN`, a snap-lift test using the
+`ID_TPS_GRD_PAT_INH_IV_REAC*` tables against the TPS gradient `[0xF497]`, and
+`IP_CDN_REAC_CYCNR` — i.e. stock reactivates everything at once.
+
+The **engine-state machine** `[0xC20B]` (file `0x1BEE0`–`0x1C6B0`) is what
+decides overrun. States: 0 stop, 1 crank, **2 idle** (`M_FD14.12`), 3
+(`M_FD14.14`), 4 drive (`M_FD14.15`), **5 overrun** (`M_FD16.0`). From drive
+(`0x1C3CE`+), the cut engages when all of:
+
+- rpm ≥ the idle-exit threshold `[0xCEC0]` (RAM);
+- `N/32 ≥ [0xC20F] + [0xC20C]` where `[0xC20F]` is the coolant×gear lookup of
+  `IP_N_MIN_PUC_AT` (or `IP_N_ACCIN_MIN_PUC_AT` under `M_FD8C.14`, or
+  `C_N_MIN_PUC_DIAG` under CAN-timeout flags) and `[0xC20C]` is the hysteresis
+  (`C_N_HYS_MIN_PUC` = 6 → 192 rpm before a cut, `C_N_HYS_MAX_PUC` = 16 → 512
+  rpm after one);
+- if `N/32 < C_N_MAX_INF` (48 → 1536 rpm) the rpm gradient `[0xC59F]` must not
+  be below `C_N_GRD_MIN` (stall protection);
+- the closed-throttle / delay flags `M_FD1A.6` and `M_FD64.0`, and
+  `N/32 ≥ C_N_MIN_DHP` (22 → 704 rpm).
+
+It exits overrun (`0x1C52A`+) when the throttle flags drop (→ state 3) or when
+`N/32 < [0xC20F]` (→ drive if rpm ≥ `[0xCEC0]`, else idle). So **resume is the
+bare `IP_N_MIN_PUC_AT` value — 1248 rpm warm — and there is no upper rpm bound
+on the cut**.
+
+### 3. The ignition tables are relative corrections — datum resolved
+
+At file `0x20FBA`–`0x210B6` the overrun ignition value is chosen —
+`IP_IGA_PUC_AT__N` while a cut is pending or active (`M_FD16.5`),
+`IP_IGA_ACCIN_PUC_AT` under `M_FD8C.14`, `IP_IGA_PU_AT__N__TCO` on a plain
+trailing throttle, `IP_IGA_MAX_PUC__N` under `M_FD16.4` — then **slew-limited**
+toward the target (`[0xE10E]`, step `[0xE110]`) and finally **added to the
+running angle as `value − 128`** (`SUB R4,#0x80; ADD R8,R4`), clamped 0–255.
+
+So the `0.375X − 48` form this document worried about is exactly
+`0.375 × (X − 128)`: these tables are **signed retards/advances in 0.375°
+units around 128, applied on top of the base angle**. Stock `IP_IGA_PUC_AT` =
+`75, 61, 61, 61` → **−19.9° at 1200 rpm, −25.1° from 1600 rpm up**; the
+`ACCIN` variant `65, 46, 38, 57` → −23.6 / −30.8 / −33.8 / −26.6°; `IGA_PU_AT`
+row 0 `86, 83, 80, 75` → −15.8 … −19.9°. Absolute angles are base map plus
+these; no logger channel is needed to fix the datum any more.
+
+### 4. Answer to "pops only when winding down from 3500+"
+
+Pops need fuel in the exhaust *and* late combustion. During a stock cut there is
+neither above 1248 rpm (all six cut after ~22 cycles). The levers, honestly:
+
+| approach | rpm-windowed? | verdict |
+|---|---|---|
+| Raise `IP_N_MIN_PUC_AT` to ~3500 so fuel stays on below it | yes, but **inverted** — pops *below* 3500 on every lift, silent above | no |
+| Move the `0x8757` axis and edit `PUC_1/2` | only the two 11-cycle stages change; the steady state is still all-six | no |
+| Use `C_N_MAX_INF` / gradient test as an upper bound | it is a stall guard *below* 1536 rpm, not an upper cap | no |
+| Coolant / gear columns of `IP_N_MIN_PUC_AT` | not rpm | no |
+| **Program patch: final-stage level from a table** ([[program-zone-plan]] §4) | **yes** — the new `ID_PAT_INH_IV_PUC_3` on the rpm/32 axis picks the steady-state pattern per rpm | the route |
+
+With the patch, the tune is cal-only: `0xBC8B` = `0D 0D 0D 0D 0D <p>`, axis top
+`0x875C` = 109 (3488 rpm; safe — all four tables on that axis are flat with rpm,
+verified), and more retard in the 3500 column of `IP_IGA_PUC_AT__N`. Below 3488
+rpm nothing changes (all six cut, silent, resume at 1248). Above it, `<p>`
+cylinders are cut and the rest fire at the retarded angle: the cut cylinders
+pump air, the firing ones burn late — the classic recipe. Candidates for `<p>`
+from the pattern table: **7** (`010101`, three alternating) or **5**
+(`001010`, two), once the bit-to-cylinder order is confirmed from the
+per-cylinder injection channels on the first patched log. Start with 5.
+
+The **"Threshold decision: keep the stock 2496 rpm breakpoint"** section below is
+**withdrawn** — it assumed the masks were literal and the top cell alone set the
+behaviour. Neither holds.
+
+### 5. Still open after the code read
+
+- Bit-to-cylinder order in the `0xB848` patterns (first patched log settles it).
+- What `[0xF497]` (TPS gradient) and `M_FD1A.6` / `M_FD64.0` (closed-throttle
+  and delay flags) are driven by — the `IP_MAF_INT_DLY_PUC` integrator is the
+  obvious candidate for the delay.
+- Whether a cut "cycle" is one ignition segment (assumed) — sets how long the
+  two stock stages really last.
+
 ## How these addresses were derived
 
 `reference/opengk-simk/XDF/Delta-27/ca652048 2700.xdf` is the only richly-named
@@ -137,6 +278,9 @@ six rpm breakpoints**:
 - `ID_PAT_INH_IV_REAC` @0x99DC = all zeros (nothing inhibited on reactivation)
 - `ID_PAT_CYCNR_REAC` @0x99A6 = all zeros
 
+> **Retracted 2026-09-03:** these are pattern-table *indices* (see the code-verified
+> section at the top), not cylinder masks.
+
 Two distinct non-overlapping patterns covering 3 of 6 cylinders. Exact semantics
 **unconfirmed** — most likely alternating/staged masks for a soft cut rather than
 a single "these cylinders off" set. Worth resolving before relying on it.
@@ -171,6 +315,8 @@ no liquid fuel). The aggressive lever is the injector patterns, which put raw fu
 into the exhaust.
 
 ### Threshold decision: keep the stock 2496 rpm breakpoint
+
+> **Withdrawn 2026-09-03** — see the code-verified section at the top.
 
 **Decided 2026-09-02.** Do not move the axis. Editing only the top breakpoint's
 value gives a ~2496 rpm threshold, which is high enough for normal driving, and

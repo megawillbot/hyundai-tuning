@@ -92,7 +92,8 @@ Fastest path is flashing the stock cal straight back (its checksum is already co
 cd tools\GKFlasher
 $env:PYTHONUTF8=1
 ..\..\.venv\Scripts\python.exe -u gkflasher.py --protocol kline --interface COM7 `
-  --flash-calibration ..\..oms\stock\cal_ca654019_G5J7TS0A_read1.bin
+  --flash-calibration ..\..
+oms\stock\cal_ca654019_G5J7TS0A_read1.bin
 ```
 
 Or rebuild a reverted image with the script (then re-run `--correct-checksum` on it):
@@ -101,3 +102,11 @@ Or rebuild a reverted image with the script (then re-run `--correct-checksum` on
 .venv\Scripts\python.exe tools\apply_xdf_patch.py "defs\ca654019 2700.xdf" `
   "roms\tunes\ghostcam_ca654019_2026-08-31.bin" "roms\tunes\reverted.bin" "Ghost Cams" --revert
 ```
+
+## Status 2026-09-03
+
+Running for several days. **No CEL so far** — the misfire concern above has not
+materialised in practice (the misfire monitor `T_SEG` is active, INC 2 / MAX 20,
+so the lope is simply not being classified as misfire at this level). Still the
+current on-car calibration; the overrun-cut candidate in
+`roms/tunes/puc-final-stage-patch/` is built on top of this cal, not stock.

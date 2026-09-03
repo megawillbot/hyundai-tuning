@@ -15695,32 +15695,32 @@
     <MATH equation="X"><VAR id="X" /></MATH>
   </XDFCONSTANT>
   <XDFCONSTANT uniqueid="0xC021" flags="0x0">
-    <title>C_ABC_INC_NON_IMOB_ECU</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80BD. Constants Immobilizer</description>
+    <title>C_ABC_INC_NL_KNK_DIAG</title>
+    <description>[CONFIRMED] code-paired with MAX @0x80EB; call site in knock-level diag fn (C_N_MIN_KNK_DIAG) (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80BC" mmedelementsizebits="8" />
     <units></units>
     <MATH equation="X"><VAR id="X" /></MATH>
   </XDFCONSTANT>
   <XDFCONSTANT uniqueid="0xC022" flags="0x0">
-    <title>C_ABC_INC_RLY_EFP_DIAG</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80BE. Constants Diagnosis</description>
+    <title>C_ABC_INC_NON_IMOB_ECU</title>
+    <description>[CONFIRMED] code-paired with MAX @0x80EC; call site in immobiliser fn (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80BD" mmedelementsizebits="8" />
     <units></units>
     <MATH equation="X"><VAR id="X" /></MATH>
   </XDFCONSTANT>
   <XDFCONSTANT uniqueid="0xC023" flags="0x0">
-    <title>C_ABC_INC_RLY_FAN_H_DIAG</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80BF. Constants Diagnosis</description>
+    <title>C_ABC_INC_RLY_EFP_DIAG</title>
+    <description>[HIGH] code-paired with MAX @0x80ED (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80BE" mmedelementsizebits="8" />
     <units></units>
     <MATH equation="X"><VAR id="X" /></MATH>
   </XDFCONSTANT>
   <XDFCONSTANT uniqueid="0xC024" flags="0x0">
-    <title>C_ABC_INC_T_DLY_AD_DIAG</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80C4. Constants Fuel Trim and Cat Purge Function</description>
+    <title>C_ABC_INC_SPI_DIAG</title>
+    <description>[HIGH] code-paired with MAX @0x80F2. There is NO T_DLY_AD monitor in this cal (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80C3" mmedelementsizebits="8" />
     <units></units>
@@ -15728,7 +15728,7 @@
   </XDFCONSTANT>
   <XDFCONSTANT uniqueid="0xC025" flags="0x0">
     <title>C_ABC_INC_T_SEG_DIAG</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80C5. Constants Misfire detection</description>
+    <description>[CONFIRMED] code-paired with MAX @0x80F3; call site in misfire fn (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80C4" mmedelementsizebits="8" />
     <units></units>
@@ -15736,15 +15736,71 @@
   </XDFCONSTANT>
   <XDFCONSTANT uniqueid="0xC026" flags="0x0">
     <title>C_ABC_INC_TCO_DIAG</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80C6. Constants Diagnosis</description>
+    <description>[CONFIRMED] code-paired with MAX @0x80F4; call site in coolant diag fn (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80C5" mmedelementsizebits="8" />
     <units></units>
     <MATH equation="X"><VAR id="X" /></MATH>
   </XDFCONSTANT>
-  <XDFCONSTANT uniqueid="0xC027" flags="0x0">
+  <XDFCONSTANT uniqueid="0xC28B" flags="0x0">
+    <title>C_ABC_INC_MIL_DIAG</title>
+    <description>[HIGH] code-paired with C_ABC_MAX_MIL_DIAG @0x80EA (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80BB" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC28C" flags="0x0">
+    <title>C_ABC_INC_RLY_FAN_H_DIAG</title>
+    <description>[HIGH] code-paired with MAX @0x80EE (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80BF" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC28D" flags="0x0">
+    <title>C_ABC_INC_RLY_FAN_L_DIAG</title>
+    <description>[HIGH] code-paired with MAX @0x80EF (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80C0" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC28E" flags="0x0">
+    <title>C_ABC_INC_SOV_DIAG</title>
+    <description>[HIGH] code-paired with MAX @0x80F0 (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80C1" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC28F" flags="0x0">
+    <title>C_ABC_INC_SOV_MECHA</title>
+    <description>[CONFIRMED] code-paired with MAX @0x80F1; call site reads C_V_DTP_MIN_SOV (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80C2" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC290" flags="0x0">
     <title>C_ABC_INC_TCO_GRD_DIAG</title>
-    <description>[HIGH] auto-aligned from ca652048 0x80C7. Constants Diagnosis</description>
+    <description>[HIGH] code-paired with MAX @0x80F5; coolant diag fn (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80C6" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC291" flags="0x0">
+    <title>C_ABC_INC_TIA_?_DIAG</title>
+    <description>[HIGH] not in ca652048; second TIA-family monitor, code-paired with MAX @0x80F7 (2026-09-03)</description>
+    <CATEGORYMEM index="0" category="12" />
+    <EMBEDDEDDATA mmedaddress="0x80C8" mmedelementsizebits="8" />
+    <units></units>
+    <MATH equation="X"><VAR id="X" /></MATH>
+  </XDFCONSTANT>
+  <XDFCONSTANT uniqueid="0xC027" flags="0x0">
+    <title>C_ABC_INC_TIA_DIAG</title>
+    <description>[CONFIRMED] code-paired with MAX @0x80F6; call site in intake-air-temp diag fn (2026-09-03)</description>
     <CATEGORYMEM index="0" category="12" />
     <EMBEDDEDDATA mmedaddress="0x80C7" mmedelementsizebits="8" />
     <units></units>

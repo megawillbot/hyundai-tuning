@@ -1,6 +1,6 @@
 # Code-derived tables — the maps the alignment method missed
 
-Built **2026-09-04** from the program-zone disassembly (see [[ecu-architecture]]
+Built **2026-09-03** from the program-zone disassembly (see [[ecu-architecture]]
 for the method and the table-access library). This is the complementary method
 [[open-threads]] asked for: where [[full-map-ca654019]] names tables by aligning
 our calibration against `ca652048`, this finds tables by watching the code read
@@ -17,7 +17,7 @@ little-endian — omitting it makes TunerPro read every 16-bit table byte-swappe
 
 ---
 
-## Correction (2026-09-04): the fuel maps were already defined
+## Correction (2026-09-03): the fuel maps were already defined
 
 An earlier draft of this file headlined "the main fuel map was not in the
 shipped definition." **That was wrong and is retracted.** The hand-made
@@ -51,7 +51,7 @@ code-derived def's raw values are for exploration only.
 - The **modelled-EGT map `0xCA24`** is in neither def, so it *is* a genuine
   recovery (though [[full-map-ca654019]] §6 discussed it by address).
 
-## Confirmed identities of novel tables (2026-09-04)
+## Confirmed identities of novel tables (2026-09-03)
 
 Two functional clusters among the 152 traced through the code that consumes them.
 
@@ -143,8 +143,9 @@ At file `0x2E5C2` the injection path forks on RAM bit `M_FD14.12`:
 - clear → main map `0xD3A8` (16 × 12, full rpm range)
 - set → alternate map `0xD528` (8 × 8, rpm axis 500–1800 only)
 
-`0xD528`'s restricted low-rpm axis points to a start/crank or limp path. The
-selector is not yet identified. **Anyone tuning fuelling by editing `0xD3A8`
+**Resolved 2026-09-03:** `M_FD14.12` is the engine-state machine's **idle** flag
+([[ecu-architecture]] §5f), so `0xD528` is the idle fuel map — as the hand-made
+def names it. Not start or limp. **Anyone tuning fuelling by editing `0xD3A8`
 alone will not touch `0xD528`** — if it is the cold-start map, that is where
 start richness lives.
 

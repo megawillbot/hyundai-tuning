@@ -1,6 +1,6 @@
 # SIMK43 ca654019 — program-zone architecture
 
-Established **2026-09-03/04** by disassembling the program zone. Everything here is
+Established **2026-09-03** by disassembling the program zone. Everything here is
 derived from the firmware itself, not from another calibration's definitions.
 
 Prior work ([[full-map-ca654019]]) mapped the *data* segment by aligning against
@@ -386,6 +386,29 @@ The K-line serial path is a full KWP2000 stack, readable end to end:
   K-line. Note this is *diagnostic* security only; the immobiliser (SMARTRA) is a
   separate system and is already disabled on this car.
 
+## 5f. The engine-state machine, and what selects the second fuel map
+
+`[0xC20B]` (file `0x1BEE0`–`0x1C6B0`) is a six-state engine-state machine; each
+state owns one flag bit, which is how the rest of the firmware tests it:
+
+| state | flag | meaning | entered when |
+|---|---|---|---|
+| 0 | `M_FD14.8` | stopped | — |
+| 1 | `M_FD16.2` | cranking | `N/32 < C_N_MAX_BOL_ST` from any running state (stall) |
+| 2 | `M_FD14.12` | **idle** | rpm < the idle-exit threshold `[0xCEC0]` (from 3, 4 or 5) |
+| 3 | `M_FD14.14` | throttle transition | `M_FD46.0` or `!M_FD24.13` (throttle flags) from 2, 4, 5 |
+| 4 | `M_FD14.15` | drive | rpm ≥ `[0xCEC0]` from 2, 3 or 5 |
+| 5 | `M_FD16.0` | overrun (PUC) | from 4, on the conditions in [[puc-overrun-map]] |
+
+**This resolves §5a:** `M_FD14.12` is "engine state == idle", so `0xD528` is the
+**idle fuel map** — exactly what the hand-made def calls it — and the fork at
+`0x2E5C2` is the idle/non-idle switch, not start enrichment. Cold-start richness
+is elsewhere (the `IP_TI_CAST*` tables at `0xAB0E`/`0xAB3E`, read at `0x1C76A`).
+
+The overrun state is what the injector-inhibit machinery keys on; the full
+trace, including the discovery that the injector "mask" tables are indices into
+a pattern table at cal `0xB848`, is in [[puc-overrun-map]].
+
 ## 6. An undocumented non-volatile record area at file `0x4000`
 
 The region file `0x4000`–`0x5000` (physical `0x84000`–`0x85000`) is **not**
@@ -450,8 +473,12 @@ fixed:
 ## Open
 
 - The scanner's linear axis tracking (§4) should become a backward-CFG walk.
-- `M_FD14.12` — what selects the second fuel map (§5a).
-- Whether `0x48000` is a live shadow or a programming buffer (§5c).
+- ~~`M_FD14.12` — what selects the second fuel map (§5a).~~ Resolved: idle state (§5f).
+- ~~Whether `0x48000` is a live shadow or a programming buffer (§5c).~~ Resolved in §5c.
 - The `0x4000` record format (§6), and a real read of it from our car.
-- The KWP2000 handler: a serial state machine at `0x44B5E` dispatching through a
-  jump table at file `0x12D84`, `EXTP #0x024`. Not yet examined.
+- The KWP2000 handler beyond the dispatcher (§5e): the SecurityAccess seed→key
+  transform is still not extracted.
+- The DPP1 page is not constant (`MOV DPP1,#0x12` at init, `MOV DPP1,[0x0000]`
+  later); jump tables in the `0x4000`–`0x7FFF` window were found under page
+  `0x24` (file `0x104CA` for the injector-inhibit machine). The address model in
+  §2 should record DPP1 per call site rather than "not calibration".

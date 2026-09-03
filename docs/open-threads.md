@@ -1,7 +1,7 @@
 # Open threads
 
 Index of everything unresolved, and what would resolve it. Written **2026-09-03**,
-top section rewritten **2026-09-04**.
+top section rewritten **2026-09-03**, updated later the same day.
 Individual docs hold the detail; this is the map of what is still owed.
 
 ---
@@ -81,12 +81,15 @@ Detail in [[ecu-architecture]] and [[code-derived-tables]]. Still open:
 | Item | Resolved by |
 |---|---|
 | **Scaling equations** for all tables | Reading the per-table decode routines (the arithmetic around each lookup call) — no longer a hardware gate |
-| **`M_FD14.12`** — selector between main fuel `0xD3A8` and alternate `0xD528` | Trace its writers; or datalog cold-start vs warm |
+| ~~**`M_FD14.12`** — selector between main fuel `0xD3A8` and alternate `0xD528`~~ | **Resolved 2026-09-03** — it is the engine-state **idle** flag; `0xD528` is the idle fuel map ([[ecu-architecture]] §5f) |
 | ~~Is `0x48000` external RAM (live cal shadow)?~~ | **Resolved 2026-09-04** — external SRAM shadow of the cal, header-validated against flash. Base maps read from **flash**, so not a live-tuning lever; but the **adaptive/knock learning system lives there** (pointer tables at cal `0x9F1A`/`26`/`32`, per-cylinder loop). See [[ecu-architecture]] §5c |
 | **Security Access (0x27) seed/key** | Handler at file `0x4219E`, per-subfunction param table; the compute path past the `0x3812` memcpy is not yet read. The legitimate full-unlock path for an owned ECU |
 | The `0x4000` NVM record format (fault log?) | A real read of file `0x4000`-`0x5000` from our car (it is inside program-read range) |
 | Scanner's linear axis tracking | Backward-CFG walk in `tools/c166/tables.py` |
 | ~240 diagnostic tables named | A second same-family named def, or per-table decode |
+| **Monitor names in the constants map** | **Corrected 2026-09-03** for `0x80BB`–`0x80C8` by code-pairing INC/MAX ([[diagnostics-and-levers]] §1). The same pairing trick should be run over every other paired constant family (`C_*_MIN`/`_MAX`, `_ST`/`_AT` twins) before their names are trusted |
+| **Program-zone flash path** on a 5WY17 over K-line | Never exercised here; see [[program-zone-plan]] §2 — ask chase / OpenGK first |
+| Bit-to-cylinder order of the injector pattern table `0xB848` | First patched log, per-cylinder injection channels |
 
 ## Open by area
 
@@ -107,10 +110,10 @@ The equation problem is not hypothetical — it has already produced one real er
 | Item | Resolved by |
 |---|---|
 | **Whole map unvalidated against running hardware** | The capture run |
-| Semantics of the two `PAT_INH_IV_PUC` masks (3-of-6 or 6-of-6?) | Per-cylinder injection times during a real fuel cut |
-| Absolute ignition datum for the PUC tables | ADX `Ignition Angle Idle/Decel` on a coastdown |
-| Are the six tables sharing `sstm_n_3_4` rpm-flat? | Desk check, not yet done |
-| Nine unresolved PUC tables | More anchors |
+| ~~Semantics of the two `PAT_INH_IV_PUC` masks (3-of-6 or 6-of-6?)~~ | **Resolved 2026-09-03** — indices into the `0xB848` pattern table; staged 1 → 4 → 6 cylinders ([[puc-overrun-map]] code-verified §1) |
+| ~~Absolute ignition datum for the PUC tables~~ | **Resolved 2026-09-03** — relative corrections, `0.375 × (X − 128)` deg added to the base angle ([[puc-overrun-map]] code-verified §3) |
+| ~~Are the six tables sharing `sstm_n_3_4` rpm-flat?~~ | **Checked 2026-09-03** — no (only `IP_IGA_MAX_PUC` is flat); the pop tune does not need to move that axis. The four tables on `0x8757` **are** all flat |
+| Nine unresolved PUC tables | Three placed by the code (`IP_IGA_ACCIN_PUC(_AT)` `0x9FE4`/`0x9FE8`, `IP_CDN_REAC_CYCNR` `0x9BC8`); the rest still want anchors |
 | 2496 rpm threshold margin at motorway cruise | Depends on road-speed scale below |
 
 ### Logger — [[logger-remap-ca654019]]
@@ -160,8 +163,9 @@ Both bank a table family each and need nothing but an idling engine.
 
 ## Decisions pending (not technical)
 
-- **The pop & bang tune itself** is gated on the capture run. If injectors never cut,
-  the route is dead — see the pass/fail table in [[next-capture-script]].
+- **The pop & bang tune itself** is gated on the capture run, and now on the
+  program-zone patch in [[program-zone-plan]] §4 — a cal-only version cannot be
+  rpm-windowed ([[puc-overrun-map]] code-verified §4).
 - **The fork.** `https://github.com/megawillbot/opengk-simk`, branch
   `derived-symbol-maps`, is **committed locally and not pushed**. Push is a
   one-liner when wanted.

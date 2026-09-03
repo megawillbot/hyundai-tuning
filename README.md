@@ -14,6 +14,11 @@ OpenGK ecosystem over K-line with an FTDI KKL cable.
 
 - [GKFlasher](https://github.com/Dante383/GKFlasher) — cloned at `tools/GKFlasher/` (gitignored; `git pull` it for updates)
 - Python venv at `.venv/` with GKFlasher requirements installed
+  (**rebuilt 2026-09-03** from `C:\Python313`; the original base interpreter under
+  `AppData` had vanished and every `.venv\Scripts\python.exe` call failed). If it
+  breaks again: `C:\Python313\python -m venv --clear .venv` then
+  `.venv\Scripts\python -m pip install -r tools\GKFlasherequirements.txt`.
+  OneDrive will ask about the mass delete; that is the venv, say yes.
 - [TunerPro](https://tunerpro.net/) + XDF definitions from [opengk-simk](https://github.com/opengk-org) for map editing
 - [opengk.org](https://opengk.org) — wiki: K-line protocol docs, pinouts, GKFlasher instructions
 - [Chase's GK 2.7 chiptuning writeup](https://chase.cc/blog/chiptuning-the-gk-2-7-ecm/) — background on the ECM internals
@@ -51,6 +56,8 @@ zone holds all the tunable maps.
 
 ```
 roms/stock/   Untouched factory dumps. Read-only — never edit these files.
+              FULL_ca654019_stock_merged.bin = program read + cal read in one 512 KiB
+              image; passes --correct-checksum unchanged in both regions.
 roms/tunes/   Modified bins, one subfolder per tune with a notes.md changelog.
 defs/         TunerPro XDF definition files matching our calibration version.
 logs/         Datalogs (before/after each change).
