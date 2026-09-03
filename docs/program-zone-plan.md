@@ -60,9 +60,30 @@ Still not established:
 
 1. That `KR77035202` behaves like `KR77035402` here. Almost certainly, but the
    one way to remove "almost" is someone who has done `--flash-program` on a
-   5WY17 — **ask chase / OpenGK**.
+   5WY17 over K-line. **chase's own car does not answer this** (checked
+   2026-09-03): his writeup car is a **2006 GK 2.7 = 5WY18 v2** (ca654024/025),
+   and his documented method is **bench flashing** — chip desolder + Willem
+   GQ-4X — not the K-line bootloader path at all. So his experience covers
+   neither our revision nor our flash channel. Still worth asking whether anyone
+   in OpenGK has K-line `--flash-program`'d a 5WY17; until then this remains the
+   one genuinely open item.
 2. Whether verify routine `0x02` checks anything beyond the four checksum zones.
    Irrelevant while patches stay inside them, which is the rule.
+
+**Bench flash is the documented fallback.** chase's chip-pull + Willem GQ-4X
+method writes the whole 4Mbit AM29F400 regardless of the K-line bootloader, so
+even if a K-line `--flash-program` on this 5WY17 fails in a way KWP recovery
+can't fix, the recovery of last resort — desolder, write
+`roms/stock/FULL_ca654019_stock_merged.bin`, resolder — is a known, documented
+procedure, not a hope. That bounds the worst case of the whole program-zone plan.
+
+**Do not apply the shipped IOCLID patch to our bin.** The `KWP IOCLID Privilege
+Escalation` patch in `defs/ca654019 2700.xdf` was authored against a different
+program image: its hook at file `0x3CEF4` expects basedata `E7FC3100`, but our
+(OpenGK-verified) image has `22308A2B` there — that reject-stub sits at a
+different address in our program. Applying it blind would corrupt `0x3CEF4`. We
+do not need it anyway: our program reads fine, and `--flash-program` needs only
+the Hyundai-level security GKFlasher already performs (§2).
 
 ## 2b. Runbook for the first program flash
 

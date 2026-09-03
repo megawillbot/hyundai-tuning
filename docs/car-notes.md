@@ -109,6 +109,19 @@ Wiki pages for both revisions are mirrored at
 `reference/opengk-wiki/Siemens_5WY17_PCB_Components.wiki` and
 `Siemens_5WY18_V2_PCB_Components.wiki`.
 
+> **Corroborated 2026-09-03** by a sixth, independent source: the OpenGK
+> `5WY_ECM_Identification` wiki maps calibrations to revisions directly —
+> **ca654011/012/014/015/016/019 = 5WY17** (2003–2004, 4Mbit AM29F400),
+> **ca654020/021 = 5WY18 v1** (2005), **ca654024/025 = 5WY18 v2** (2006). ca654019
+> is 5WY17, unambiguously. (This also adds ca654016 to the 5WY17 set, which the
+> archived-bin survey missed.)
+>
+> **And it explains chase's 5WY18 prior.** chase's own writeup car is a **2006**
+> GK 2.7 — which the same table places at **ca654024/025 / 5WY18 v2**. His daily
+> and his newest OEM samples were genuinely 5WY18; ours (a late-2004 build) is the
+> last 5WY17 calibration, one step earlier. Nobody was wrong about a part number;
+> the two cars are simply a model year apart across the 5WY17→5WY18 boundary.
+
 ## Memory regions (from ecu_definitions.py, this ECU)
 
 | Region | ECU address | Size | File offset (bin_offset −0x80000) |
