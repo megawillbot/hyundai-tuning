@@ -120,7 +120,7 @@ indistinguishable from today. Only after that, the cal-only pop tune.
 - Read back both zones after flashing (`--read-program`, `--read-calibration`)
   and compare to the candidate byte-for-byte before starting the engine.
 
-## 4. Patch 1 — overrun-cut final stage from a table (prepared)
+## 4. Patch 1 — latched, rpm-windowed overrun pattern (prepared)
 
 Why: the stock cut sequence is `ID_PAT_INH_IV_PUC_1` (rpm-indexed) for 11
 cycles, then `ID_PAT_INH_IV_PUC_2` for 11, then a **hard-coded pattern index
@@ -128,15 +128,26 @@ cycles, then `ID_PAT_INH_IV_PUC_2` for 11, then a **hard-coded pattern index
 too short to matter; the steady state is the only stage that can carry an rpm
 window, and it is not in the calibration. Full mechanism in [[puc-overrun-map]].
 
-What: replace the constant with a stepped 1-D lookup of a **new table
-`ID_PAT_INH_IV_PUC_3__N_32` at cal `0xBC8B`** (a 24-byte FF hole no def or
-operand references) on the existing `0x8757` rpm/32 axis. 26-byte stub at
-`0x11000`, 32-byte handler rewrite at `0x14574` preserving both entry points.
-Candidate image, byte accounting and flash order:
-`roms/tunes/puc-final-stage-patch/notes.md`.
+What (two stubs, 89 program bytes, two new cal bytes):
 
-With the new table set to `0D ×6` the candidate is **functionally identical to
-the car as it is** — a rehearsal of the flash path with no behaviour change.
+- **Stub B** (`0x11000`): the final stage reads a new table
+  `ID_PAT_INH_IV_PUC_3__N_32` at cal `0xBC8B` on the existing `0x8757` rpm/32
+  axis — but only while a **latch bit** is set; otherwise the stock `0x0D`.
+- **Stub A** (`0x11040`), hooked at the entry of the injector-inhibit task
+  (`0x144BA`): clears the latch while cranking, sets it once rpm/32 reaches
+  `C_N_ARM_POP` (cal `0xBC91`). So pops are only possible after a deliberate
+  excursion past the arm rpm, and every start disarms them — the "latching"
+  behaviour, without depending on how RAM is initialised.
+- Latch bit `M_FD40.15`: unreferenced anywhere in the stock program (the word
+  has no whole-word or bitfield access). The hooked task runs in every engine
+  state except 0 (stopped), so the crank-clear always executes.
+
+Two images in `roms/tunes/puc-final-stage-patch/` (`notes.md` has the byte
+accounting): a **rehearsal** whose new cal bytes are inert (`0x0D` pattern, arm
+never) — behaviourally identical to the car today — and a **pop tune** that
+differs from it by six cal bytes: arm at 4000 rpm, active above 3008 rpm,
+pattern 6 (three injectors cut, uneven), −33° in the 3500 cell of
+`IP_IGA_PUC_AT`.
 
 ## 5. Sequence
 
@@ -144,17 +155,17 @@ the car as it is** — a rehearsal of the flash path with no behaviour change.
    overrun model on hardware and now has a sharper prediction: on a warm 4000+
    lift, per-cylinder injection (logger pos 43–54) drops **one cylinder first,
    then four, then all six** within a few engine cycles, and returns at ~1248 rpm.
-   Also settles which logger channel is engine state, if any.
-2. **Confirm the flash path** with chase / OpenGK (§2: the bootloader ignores the download address and fixes the write pointer itself, so the only open point is the `KR77035202` revision).
+   Which injector drops first is the bit-to-cylinder order for the pattern table.
+2. **Confirm the flash path** with chase / OpenGK (§2: the bootloader ignores the
+   download address and fixes the write pointer itself, so the only open point
+   is the `KR77035202` revision). Asked 2026-09-03, awaiting reply.
 3. Battery on a charger, laptop on mains, stock merged image and the ghost-cam
-   cal at hand. Flash the candidate **cal first, then program**, read both back,
-   compare, start, idle, drive — behaviour must be indistinguishable from today.
-4. **The pop tune itself is then cal-only:** `0xBC8B` = `0D 0D 0D 0D 0D <p>`,
-   move the top breakpoint of the `0x8757` axis (`0x875C`, currently 78 = 2496
-   rpm) to 109 = 3488 rpm — safe, all four tables on that axis are flat with
-   rpm — and add retard in the 3500-rpm column of `IP_IGA_PUC_AT__N` (`0xA198`,
-   already the top breakpoint of its axis, so no axis move). Pattern `<p>`
-   choice and the datum for the retard are in [[puc-overrun-map]].
+   cal at hand. Flash the **rehearsal** image **cal first, then program** (§2b
+   runbook), read both back, compare, start, idle, drive — behaviour must be
+   indistinguishable from today.
+4. Flash the **pop-tune** cal (`--flash-calibration` only), read back, drive:
+   rev past 4000 once, then lift from above 3000. Adjust to taste via three cal
+   bytes (`0xBC91` arm, `0x875C` window, `0xBC90` pattern; `0xA19B` retard).
 5. One change at a time, datalog each, commit each bin.
 
 ## 6. Later program-zone candidates (not started)

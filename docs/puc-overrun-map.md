@@ -127,15 +127,30 @@ neither above 1248 rpm (all six cut after ~22 cycles). The levers, honestly:
 | Coolant / gear columns of `IP_N_MIN_PUC_AT` | not rpm | no |
 | **Program patch: final-stage level from a table** ([[program-zone-plan]] §4) | **yes** — the new `ID_PAT_INH_IV_PUC_3` on the rpm/32 axis picks the steady-state pattern per rpm | the route |
 
-With the patch, the tune is cal-only: `0xBC8B` = `0D 0D 0D 0D 0D <p>`, axis top
-`0x875C` = 109 (3488 rpm; safe — all four tables on that axis are flat with rpm,
-verified), and more retard in the 3500 column of `IP_IGA_PUC_AT__N`. Below 3488
-rpm nothing changes (all six cut, silent, resume at 1248). Above it, `<p>`
-cylinders are cut and the rest fire at the retarded angle: the cut cylinders
-pump air, the firing ones burn late — the classic recipe. Candidates for `<p>`
-from the pattern table: **7** (`010101`, three alternating) or **5**
-(`001010`, two), once the bit-to-cylinder order is confirmed from the
-per-cylinder injection channels on the first patched log. Start with 5.
+**Latched version (decided 2026-09-03).** Rather than a bare rpm window, the
+patch carries a latch: a free RAM bit (`M_FD40.15`) is set once rpm/32 reaches
+`C_N_ARM_POP` (new cal byte `0xBC91`) and cleared on every crank. The
+rpm-windowed pattern applies only while latched. Net behaviour: pops are
+impossible until the engine has been taken past the arm rpm since the last
+start, and a restart disarms them. That lets the active window sit lower than
+the arm point without turning every commute lift into a pop.
+
+The tune is then cal-only on top of the patch: `0xBC8B` = `0D 0D 0D 0D 0D <p>`,
+axis top `0x875C` = 94 (**3008 rpm**; safe — all four tables on that axis are
+flat with rpm, verified), `0xBC91` = 125 (**arm at 4000 rpm**), and more retard
+in the 3500 column of `IP_IGA_PUC_AT__N` (`0xA19B` 61 → 40, −25° → −33°; the
+stock `ACCIN` variant already commands −33.8°). Below 3008 rpm, or unarmed,
+nothing changes (all six cut, silent, resume at 1248). Above it when armed, `<p>`
+cylinders are cut and the rest fire late: the cut cylinders pump air, the
+firing ones burn in the exhaust — the classic recipe.
+
+Pattern choice: **6** (`101100`, three cut, three firing, *unevenly* spaced).
+Even spacing (7 = `010101`, alternate cylinders) reads as a smooth tone; the
+uneven set is what people hear as crackle, and three firing cylinders give
+three late burns per cycle rather than two. Bit-to-cylinder order is still
+unverified (the first patched log settles it); an uneven pattern stays uneven
+whichever way the bits map, so the choice does not depend on it. Both images
+are built and unflashed: `roms/tunes/puc-final-stage-patch/notes.md`.
 
 The **"Threshold decision: keep the stock 2496 rpm breakpoint"** section below is
 **withdrawn** — it assumed the masks were literal and the top cell alone set the
