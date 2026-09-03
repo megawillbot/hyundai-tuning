@@ -129,11 +129,16 @@ neither above 1248 rpm (all six cut after ~22 cycles). The levers, honestly:
 
 **Latched version (decided 2026-09-03).** Rather than a bare rpm window, the
 patch carries a latch: a free RAM bit (`M_FD40.15`) is set once rpm/32 reaches
-`C_N_ARM_POP` (new cal byte `0xBC91`) and cleared on every crank. The
-rpm-windowed pattern applies only while latched. Net behaviour: pops are
-impossible until the engine has been taken past the arm rpm since the last
-start, and a restart disarms them. That lets the active window sit lower than
-the arm point without turning every commute lift into a pop.
+`C_N_ARM_POP` (cal `0xBC91`) and cleared once rpm/32 falls below `C_N_DISARM_POP`
+(cal `0xBC92`, default ~1024 rpm). The rpm-windowed pattern applies only while
+latched. Net behaviour: no pops until the engine has been revved past the arm
+point, then pops on overrun until rpm next returns to idle; and since rpm passes
+through the disarm band on shutdown, key-off disarms for free. Both thresholds
+are cal bytes. The latch bit is self-contained (a bit no stock code touches), and
+the arm/disarm test is hooked by **redirecting the inhibit task's single caller**
+(`0x3AC00`) through a stub that tail-calls the unmodified task — the task's
+register-save prologue is left stock (an earlier prologue-displacement design had
+a stack bug, caught in review; see `roms/tunes/puc-final-stage-patch/notes.md`).
 
 The tune is then cal-only on top of the patch: `0xBC8B` = `0D 0D 0D 0D 0D <p>`,
 axis top `0x875C` = 94 (**3008 rpm**; safe — all four tables on that axis are

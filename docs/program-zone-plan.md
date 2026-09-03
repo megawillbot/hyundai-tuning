@@ -241,14 +241,15 @@ What (two stubs, 89 program bytes, two new cal bytes):
 - **Stub B** (`0x11000`): the final stage reads a new table
   `ID_PAT_INH_IV_PUC_3__N_32` at cal `0xBC8B` on the existing `0x8757` rpm/32
   axis — but only while a **latch bit** is set; otherwise the stock `0x0D`.
-- **Stub A** (`0x11040`), hooked at the entry of the injector-inhibit task
-  (`0x144BA`): clears the latch while cranking, sets it once rpm/32 reaches
-  `C_N_ARM_POP` (cal `0xBC91`). So pops are only possible after a deliberate
-  excursion past the arm rpm, and every start disarms them — the "latching"
-  behaviour, without depending on how RAM is initialised.
+- **Stub A** (`0x11040`): self-contained arm/disarm on rpm/32 — sets the latch
+  once rpm/32 ≥ `C_N_ARM_POP` (cal `0xBC91`), clears it once rpm/32 <
+  `C_N_DISARM_POP` (cal `0xBC92`, ~1024 rpm) — then tail-calls the real inhibit
+  task. Hooked by **redirecting the task's single caller** (`0x3AC00`), leaving
+  the task prologue stock; a first design that displaced the prologue had a
+  stack bug and was replaced (notes.md). Both thresholds are cal bytes; the
+  disarm-on-rpm-dip also covers key-off, with no dependency on RAM init.
 - Latch bit `M_FD40.15`: unreferenced anywhere in the stock program (the word
-  has no whole-word or bitfield access). The hooked task runs in every engine
-  state except 0 (stopped), so the crank-clear always executes.
+  has no whole-word or bitfield access).
 
 Two images in `roms/tunes/puc-final-stage-patch/` (`notes.md` has the byte
 accounting): a **rehearsal** whose new cal bytes are inert (`0x0D` pattern, arm
