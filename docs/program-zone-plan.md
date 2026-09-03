@@ -251,6 +251,15 @@ What (two stubs, 89 program bytes, two new cal bytes):
 - Latch bit `M_FD40.15`: unreferenced anywhere in the stock program (the word
   has no whole-word or bitfield access).
 
+**Runtime dependency found in review (2026-09-03).** The mask applier the final
+stage feeds (`0x4436`) gates on `M_FD12.7` and outputs `pattern_table[max` of
+five sources incl. our `[0xC1AB]`]. So the patch is **safe in all cases** (output
+is always between our pattern and all-six, overrun-only) but only **pops** if
+`M_FD12.7` is set and the other sources are low during the final stage — which is
+not proven statically. **Gate: do not flash the pattern patch until the capture
+run shows the stock cut staging as 1 → 4 → 6** (that proves the mechanism is
+live). Full analysis and the direct-`[0xF9BA]` contingency in [[puc-overrun-map]].
+
 Two images in `roms/tunes/puc-final-stage-patch/` (`notes.md` has the byte
 accounting): a **rehearsal** whose new cal bytes are inert (`0x0D` pattern, arm
 never) — behaviourally identical to the car today — and a **pop tune** that

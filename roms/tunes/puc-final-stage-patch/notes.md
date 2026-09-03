@@ -111,3 +111,27 @@ at 1248. Four cal bytes to taste: `0xBC91` arm, `0xBC92` disarm, `0x875C` window
 5. `--flash-calibration` the **pop tune** (cal-only); read back (`d24a75a1…`). Rev
    past 4000 once, then lift from above 3000.
 6. Never program-before-cal.
+
+## Review addendum (2026-09-03, Fable 5.1) — the apply gate/max
+
+Verified the mask applier (`0x14436`, called `0x4436`) that consumes our
+`[0xC1AB]` level. It **gates on `M_FD12.7`** (clear ⇒ forces index `0x0D` = all
+six, ignoring us) and outputs `pattern_table[max([0xC19A],[0xC5A0],[0xC57D],
+[0xC1AB],[0xC1AD])]`. Implications:
+
+- **Safe in every case** — output is always between our pattern and all-six, only
+  during a closed-throttle overrun. Worst case the patch is inert.
+- **Pops only if `M_FD12.7` is set and the other four sources are ≤6 at the final
+  stage** — a runtime fact, unproven statically.
+- **Capture-run gate:** flash the pattern patch only after the capture shows the
+  stock cut staging 1 → 4 → 6 (proves the mechanism is live). If the stock cut is
+  all-six from frame one, the patch is inert; contingency is to write `[0xF9BA]`
+  directly from the state-4 handler. See [[puc-overrun-map]] and [[next-capture-script]].
+- Nominal cut with our index 6 goes 1 → 4 → **3** cylinders (last stage drops 4→3;
+  momentary, harmless).
+
+Also re-verified this pass: the state dispatch (jump table entry `state 4 →
+0x14574`, plus the state-3-expiry fall-through and the `>4` reset at `0x14580`) is
+preserved by the patch; `M_FD16.12` is still set only on the `0x14574` entry, not
+the `0x14580` entry, matching stock; both stubs' register use (RL4/R12/R13) is
+scratch here and clobbers nothing the caller or the real task relies on.

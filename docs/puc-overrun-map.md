@@ -149,6 +149,45 @@ nothing changes (all six cut, silent, resume at 1248). Above it when armed, `<p>
 cylinders are cut and the rest fire late: the cut cylinders pump air, the
 firing ones burn in the exhaust — the classic recipe.
 
+**Patch caveat found in review (2026-09-03) — the apply routine gates and maxes.**
+Writing the pattern index to `[0xC1AB]` is *not* sufficient on its own. The mask
+applier at `0x14436` (called `0x4436`):
+
+- **Gates on `M_FD12.7`.** If `M_FD12.7` is **clear** when apply runs, it ignores
+  every source and forces the index to `0x0D` (all six). Our patched final stage
+  would then be **inert** — stock all-six, no pops. `M_FD12.7` is set/cleared by a
+  temperature-like threshold routine at `0x40000`+ (compares `[0xF970]`/`[0xF972]`
+  scaled, against `0x62`/`0x93`), not obviously tied to overrun; its state during
+  the final cut stage is **not settled statically**.
+- **Takes the max**, not our value: `[0xC1AA] = max([0xC19A], [0xC5A0], [0xC57D],
+  [0xC1AB], [0xC1AD])`, then outputs `pattern_table[[0xC1AA]]`. Our index 6 only
+  wins if the other four sources are ≤6 at that moment. (During a clean coasting
+  overrun they are expected to be ~0, but that is unconfirmed.)
+
+Consequences, stated honestly:
+
+- **Safety is unaffected in every case.** The output is always
+  `pattern_table[max(...)]`, i.e. somewhere between our pattern and all-six — never
+  fewer injectors than intended, never an invalid state, never anything outside a
+  closed-throttle overrun. Worst case the patch does nothing.
+- **Whether it actually pops depends on `M_FD12.7` being set and the other sources
+  low during the final stage** — a runtime fact, not proven here.
+- **The capture run settles it empirically** ([[next-capture-script]]): if the
+  *stock* overrun shows the staged **1 → 4 → 6** cylinder cut, then `M_FD12.7` is
+  set through overrun and the other sources are ≤4 then ≤9 at stages 0/2 — so
+  index 6 will be honored at the final stage and the patch works. If the stock cut
+  shows **all six from the first frame**, the pattern mechanism is gated off and
+  the patch would be inert. **Do not flash the pattern patch until the capture
+  confirms real staging.**
+- **Contingency if inert:** have the state-4 handler write the injector mask word
+  `[0xF9BA]` directly (bit 15 set, cut mask in bits 0-5) and skip apply, rather
+  than routing through `[0xC1AB]`. Bigger stub, but bypasses both the gate and the
+  max. Only pursue if the capture shows the gated-off case.
+
+With our index 6 at the final stage the nominal cut sequence becomes 1 → 4 → **3**
+cylinders (the last stage drops from four to three); the 4→3 step is momentary and
+harmless.
+
 Pattern choice: **6** (`101100`, three cut, three firing, *unevenly* spaced).
 Even spacing (7 = `010101`, alternate cylinders) reads as a smooth tone; the
 uneven set is what people hear as crackle, and three firing cylinders give
