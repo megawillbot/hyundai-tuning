@@ -409,6 +409,16 @@ The overrun state is what the injector-inhibit machinery keys on; the full
 trace, including the discovery that the injector "mask" tables are indices into
 a pattern table at cal `0xB848`, is in [[puc-overrun-map]].
 
+## 5g. The bootloader (from a sibling dump)
+
+Our reads never include file `0x0000`–`0x8000` (bootloader `KR77035202`), but
+three OpenGK dumps carry theirs (`KR77035401`/`02`). Disassembling the EF Sonata
+one gave the reprogramming mechanism: erase routine sets a fixed write pointer
+(`0x90010` program / `0x88000` cal), `TransferData` appends, the download
+address in the request is ignored, and the ECU writes the zone-valid flag
+itself after verify. Detail and consequences in [[program-zone-plan]] §2. The
+bootloader's SecurityAccess key table is at boot `0x3E1A`.
+
 ## 6. An undocumented non-volatile record area at file `0x4000`
 
 The region file `0x4000`–`0x5000` (physical `0x84000`–`0x85000`) is **not**

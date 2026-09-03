@@ -83,11 +83,13 @@ Explicit predictions, so this is falsifiable rather than a fishing trip:
 |---|---|---|
 | A | On the 4000+ coastdowns, injection-time pairs at **pos 43-54** all drop to **0** | No cut at all -> map is wrong, or PUC is inactive on this cal. Either way the pop tune route is dead and we stop. |
 | B | They return to non-zero at **~1248 rpm** | A different resume rpm means `IP_N_MIN_PUC_AT` @0xA91F is mislocated |
-| C | **All six** pairs zero together (staged masks) **or only three** (literal cylinder masks) | Settles `PAT_INH_IV_PUC_1/2` semantics — currently the biggest open question |
+| C | The pairs drop in **stages: one injector, then four, then all six**, within a few engine cycles of the cut starting (code-verified sequence, [[puc-overrun-map]]) | Which injector goes first settles the bit-to-cylinder order of the `0xB848` pattern table; if all six drop at once the cycle counter is faster than a segment |
 | D | Cruise at 100 km/h is **~2250 rpm** | Recomputes the margin under the 2496 threshold |
 | E | Speed byte at 50/80/100 tracks **1:1 with km/h** | Last unverified link in the threshold reasoning |
 
-A and C are the ones that decide whether this goes any further.
+A and C are the ones that decide whether this goes any further. C now also feeds
+the program patch in [[program-zone-plan]] §4 (which injectors a partial pattern
+will leave firing).
 
 ## Quick reference
 

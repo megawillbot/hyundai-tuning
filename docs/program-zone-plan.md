@@ -16,26 +16,83 @@ flashed yet.** The first candidate is built and verified offline
 | GKFlasher's `v6 (5WY17)` checksum type covers Boot (skipped, we never read it), Calibration and Program | `flasher/checksum.py` |
 | **Free space inside the checksummed zones:** `0x10FFE`–`0x11F02` (3844 bytes, zone 1), `0x100EA` (294 bytes), `0x12D94` (366 bytes, right after the KWP jump table — avoid) | scan of FF runs in the code region |
 | Free space **outside** the zones: `0x4A6A6`–`0x80000` (erased flash) — flashable, but unverified by the checksum; don't use it | zone table |
-| `--flash-program` exists in GKFlasher: routine `0x00` erase, write from `program.write.address + 16` to the last non-FF byte, then routine `0x02` verify/mark-executable | `gkflasher.py` `cli_flash_eeprom` |
+| `--flash-program` exists in GKFlasher: routine `0x00` erase, `RequestDownload`, `TransferData` in 254-byte packets from `program.write.address + 16` to the last non-FF byte, then routine `0x02` verify/mark-executable | `gkflasher.py` `cli_flash_eeprom`, `flasher/memory.py` |
 | The Boot region (`0x0000`–`0x8000`, bootloader) is **not** written by either flash path | same |
 | Program-zone flashing needs only the Hyundai-level security access GKFlasher already does for the cal. The IOCLID escalation is for *reading* the boot/NVM areas | [[car-notes]] |
 
-## 2. What is *not* established — verify before the first flash
+## 2. How the bootloader actually writes — the "offset math" question
 
-1. **The write-offset arithmetic for the program zone.** `flash_start =
-   program.write.size + 16` (= `0x70010` for our definition) is generic upstream
-   code; the cal path uses a different formula with a "don't know why" comment.
-   Nobody in our records has run `--flash-program` on a 5WY17 over K-line. **Ask
-   chase / the OpenGK channel whether anyone has, and on which ECU.** If not, the
-   candidate should be the first, with the recovery plan below in place.
-2. **Recovery after a failed verify.** GKFlasher prints "soft-bricked, flash a
-   valid file" — i.e. the bootloader still answers KWP after a bad program image.
-   Plausible (the boot region is separate and untouched) but untested by us.
-   Worst case is a BSL bench flash; the wiki mirror has the SIMK BSL docs
-   (`reference/opengk-wiki/`).
-3. **Whether routine `0x02` checks anything beyond the four zones** (e.g. that
-   bytes after `0x4A6A6` are erased). Irrelevant as long as patches stay inside
-   the zones — which is the rule.
+Three OpenGK dumps carry the boot region (`ca654019_E5N7SB1B` and the two
+`ca65402x` files, bootloader `KR77035402`; the EU car has `KR77035401`). Ours
+reports `KR77035202`, a different revision we have never read, so the reading
+below is **from a sibling bootloader**, disassembled from the EF Sonata dump at
+file `0x0000`–`0x4000`. The mechanism is unlikely to differ in shape.
+
+- **The flash write pointer is set by the erase routine, not by the download
+  address.** The `StartRoutine` handler (boot `0x146E`) sets the internal
+  pointer `[0xF30C]:[0xF30E]` to a **constant**: routine `0x00` → physical
+  `0x09:0010` (program, 16 bytes past the start), routine `0x01` → `0x08:8000`
+  (calibration). `TransferData` (boot `0x2DEC`) writes each packet at that
+  pointer and advances it. Nothing in the bootloader assembles a 24-bit address
+  from a request (no `SHL #8`/`#16` sites at all).
+- So **GKFlasher's `RequestDownload` address is ignored** on this family. That is
+  why the "magic" calibration formulas in its history (`(offset-0x7000)<<4`,
+  then `(0x80000<<4)+offset`) all worked, and why the odd program value
+  (`write.size + 16` = `0x70010`) is harmless. The `+16` in GKFlasher's payload
+  start matches the ECU's own `0x90010` starting point.
+- **Range classifier** (boot `0x2FC2`): pointer and pointer+length must stay in
+  one zone — program `0x090010`–`0x0FFFFF`, calibration `0x088000`–`0x08DFEF`,
+  NVM `0x083E00`+ — with the 16-byte flag windows `0x08DFF0`–`0x08DFFF` and
+  `0x090000`–`0x09000F` explicitly rejected. The download *length* therefore
+  matters: GKFlasher sends the payload length to the last non-FF byte, which
+  fits.
+- **The flags GKFlasher cannot write are written by the ECU itself.** After the
+  verify routine (`0x02`) the bootloader writes 4 bytes at `0x08DFF0` (cal) or
+  `0x090000` (program) (boot `0x2C1C`/`0x2C88`) — the "this zone is valid" marker.
+  A failed verify leaves the flag unwritten, the ECU boots into the bootloader
+  again, and a fresh flash fixes it. That is the whole basis of GKFlasher's
+  "soft-bricked, flash a valid file" message, and it is structural, not luck.
+- Program-zone flashing needs only the Hyundai-level security access GKFlasher
+  already performs for the cal. The bootloader's own key table sits at boot
+  `0x3E1A`; the IOCLID escalation is for *reading* boot/NVM, not for writing.
+
+Still not established:
+
+1. That `KR77035202` behaves like `KR77035402` here. Almost certainly, but the
+   one way to remove "almost" is someone who has done `--flash-program` on a
+   5WY17 — **ask chase / OpenGK**.
+2. Whether verify routine `0x02` checks anything beyond the four checksum zones.
+   Irrelevant while patches stay inside them, which is the rule.
+
+## 2b. Runbook for the first program flash
+
+Battery on a charger, laptop on mains, both stock images at hand. Everything
+below is from `tools\GKFlasher` with `$env:PYTHONUTF8=1` and the venv python.
+
+```powershell
+# 0. identity + fresh backups of what is on the car right now
+python -u gkflasher.py --protocol kline --interface COM7 --id
+python -u gkflasher.py --protocol kline --interface COM7 --read-calibration -o ..\..\roms\stock\cal_before_program_flash.bin
+python -u gkflasher.py --protocol kline --interface COM7 --read-program     -o ..\..\roms\stock\program_before_program_flash.bin
+#    cal must hash 65DA7B7F… (ghost cams), program code region d024e1d1… (stock)
+
+# 1. calibration first (adds the unused PUC_3 table; stock program ignores it)
+python -u gkflasher.py --protocol kline --interface COM7 --flash-calibration ..\..\roms\tunes\puc-final-stage-patch\FULL_ca654019_ghostcam_pucstage_UNFLASHED.bin
+python -u gkflasher.py --protocol kline --interface COM7 --read-calibration -o ..\..\roms\tunes\puc-final-stage-patch\readback_cal.bin
+#    cal zone must hash e4638e99bf2b30d6…
+
+# 2. program (the real step). Ignition on, engine off, do not touch anything until it says Done.
+python -u gkflasher.py --protocol kline --interface COM7 --flash-program ..\..\roms\tunes\puc-final-stage-patch\FULL_ca654019_ghostcam_pucstage_UNFLASHED.bin
+python -u gkflasher.py --protocol kline --interface COM7 --read-program -o ..\..\roms\tunes\puc-final-stage-patch\readback_program.bin
+#    file 0x10000-0x4A6A6 must equal the candidate's (50 bytes differ from stock, listed in notes.md)
+
+# 3. if step 2 fails at verify: power-cycle the ECM (ignition off 20 s), re-run step 2
+#    with the same file; if it fails twice, flash roms\stock\FULL_ca654019_stock_merged.bin
+#    --flash-program to go back to stock program (the cal with PUC_3 is harmless).
+```
+
+Then start, idle, short drive with the logger running: behaviour must be
+indistinguishable from today. Only after that, the cal-only pop tune.
 
 ## 3. Toolchain and rules for a patch
 
@@ -88,7 +145,7 @@ the car as it is** — a rehearsal of the flash path with no behaviour change.
    lift, per-cylinder injection (logger pos 43–54) drops **one cylinder first,
    then four, then all six** within a few engine cycles, and returns at ~1248 rpm.
    Also settles which logger channel is engine state, if any.
-2. **Confirm the flash path** (§2 item 1) with chase / OpenGK.
+2. **Confirm the flash path** with chase / OpenGK (§2: the bootloader ignores the download address and fixes the write pointer itself, so the only open point is the `KR77035202` revision).
 3. Battery on a charger, laptop on mains, stock merged image and the ghost-cam
    cal at hand. Flash the candidate **cal first, then program**, read both back,
    compare, start, idle, drive — behaviour must be indistinguishable from today.
