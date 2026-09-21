@@ -56,12 +56,12 @@ Each step needs only ~15 s. Order does not matter except that #1 comes first.
 | 2 | Hold **exactly 50 km/h** ~15 s, then **80 km/h** ~15 s | road-speed byte -> km/h scale (2 points) |
 | 3 | Hold **100 km/h** (open-road) ~15 s | cruise rpm — the 2496 threshold margin |
 | 4 | **One clean pull**, low gear, ~1500 rpm to as high as is safe | MAF + injection at max; O2 rich |
-| 5 | **2-3 full lifts from 4000+ rpm**, throttle fully released, coast to idle in gear | **the main event** — fuel cut and resume |
+| 5 | **2-3 full lifts from ~3500 rpm** (4000+ ideal, ~3000 the floor — the mask axis tops at 2496, so the whole mechanism lives below that; keep margin above it), **foot completely off the pedal**, **gearbox held in 2 / manual** so engine braking keeps rpm up through the coast (in D the converter unhooks and rpm free-falls to ~1500 in ~2 s — see the 2026-09-03 run below) | **the main event** — fuel cut and resume |
 | 6 | **One gentle lift from ~2000 rpm**, coasting | contrast case: should show *no* cut region |
 | 7 | Back to idle, stop logger | — |
 
-**Step 5 is the one that matters.** Both existing logs miss it entirely — neither
-contains a single frame with the engine turning and all six injectors off, so the
+**Step 5 is the one that matters.** All three existing logs miss it entirely — none
+contain a single frame with the engine turning and all six injectors off, so the
 map is still unvalidated. Throttle must come **fully** off; a trailing throttle
 keeps fuel flowing and produces another useless log.
 
@@ -137,3 +137,33 @@ is open:
 - **You may not need it:** the gate is open in normal warm overrun by construction
   (stock staged indices require it), so the capture's staging observation already
   confirms the mechanism. The direct read is for curiosity / edge-case confidence.
+
+## Run 2026-09-03 (`log_raw_2026-09-03_1433.csv`, 4369 frames, ~16 min, city)
+
+**Result: inconclusive — no fuel cut occurred anywhere in the log, and the log
+shows why.** Predictions A/B/C are untested, not falsified. Coolant was 85-86 C
+through the relevant part, so temperature was fine.
+
+- **Foot-off while moving reads TPS raw 34-36** — the same as parked-closed.
+  Verified on the roll to a stop at t~750 s (35 -> 4 km/h, TPS 45 -> 34-36).
+  So the TPS byte is a reliable closed-throttle indicator on the move.
+- **The big lift (3776 rpm peak, t~795 s) never had a closed throttle.** TPS
+  bottomed at 57-63 during the decel — partial pedal, not sensor drift. Across
+  the whole drive there is **no frame** with wheels turning, rpm > 1500 and
+  TPS <= 45. The ECU never saw the entry condition.
+- **The automatic collapses the window.** On that lift, rpm fell 3582 -> 2073
+  in ~2.3 s while road speed stayed 33-36 km/h: in D the converter unhooks and
+  the engine drops toward idle regardless of road speed. Even a perfect release
+  in D gives ~2 s in the cut band. Hold 2 / manual for the coast.
+- The one truly foot-off window (t~750 s) was already at 1185 rpm and falling
+  — below the predicted 1248 resume — so no cut is expected there, and none
+  was seen (injectors 510-780). Consistent, but not a test.
+- Borderline near-miss at t~688 s: TPS 42-45 (not clearly closed), rpm
+  1278 -> 1190 over ~4 s at 40 -> 36 km/h, injectors stayed ~470-520. Sits
+  right on the resume threshold, so not diagnostic either way.
+- Speed holds captured (raw byte, ~8 s+ each): 57, 60, 45, 38, 33. Speedo
+  readings not noted — ask before using for prediction E.
+
+**Next attempt:** a stationary pre-check first (rev to ~3500 in P, snap fully
+off; if cut works at all, injector zeros should appear even there), then the
+road lift in 2 with foot fully off.

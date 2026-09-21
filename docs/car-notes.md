@@ -172,3 +172,19 @@ installed via BSL/bench). Not needed for map tuning — all maps are in the cali
 
 Ignition ON, engine off. If a read ever starts failing with security-access errors,
 power-cycle the ECM: ignition OFF, wait ~15–20 s for the main relay to drop, ignition ON.
+
+## Owner modifications (hardware)
+
+- **Intake resonator removed** (reported 2026-09-19) — the stock airbox now
+  draws cold air from the fender. MAF-metered, so fuelling follows it; no cal
+  change needed. No header or exhaust work.
+- **Fuel: 91 RON** as of 2026-09-19. The cal is a 95 RON calibration (above),
+  and the WOT logs of 2026-09-08 and 2026-09-19 both show knock control pulling
+  3-6 deg on individual cylinders above 2500 rpm. First power step is 95/98 in
+  the tank, then re-log; no ignition advance before knock control is quiet.
+
+- **IACV restrictor plate** fitted (confirmed 2026-09-03). Idle air is
+  throttled, so the throttle stop is set open: closed-throttle TPS reads ~31-36
+  raw (~11 deg) instead of ~0. Handled by the ECU's learned closed position
+  ([[closed-throttle-recognition]]); the problem seen on 2026-09-03 is a
+  bistable TPS reading (31-36 vs 47-51), not the offset itself.

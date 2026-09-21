@@ -396,14 +396,22 @@ state owns one flag bit, which is how the rest of the firmware tests it:
 | 0 | `M_FD14.8` | stopped | — |
 | 1 | `M_FD16.2` | cranking | `N/32 < C_N_MAX_BOL_ST` from any running state (stall) |
 | 2 | `M_FD14.12` | **idle** | rpm < the idle-exit threshold `[0xCEC0]` (from 3, 4 or 5) |
-| 3 | `M_FD14.14` | throttle transition | `M_FD46.0` or `!M_FD24.13` (throttle flags) from 2, 4, 5 |
-| 4 | `M_FD14.15` | drive | rpm ≥ `[0xCEC0]` from 2, 3 or 5 |
+| 3 | `M_FD14.14` | **throttle open** (on-throttle driving) | `M_FD46.0` or `M_FD24.13` (external torque demand, set at `0x30484`) from 2, 4, 5; leaves only when both clear (`0x1C2D2`) |
+| 4 | `M_FD14.15` | **throttle closed above idle, no cut** (PU) | throttle closed (`M_FD46.0` clear **and `M_FD24.13` clear** — polarity corrected 2026-09-07) and rpm ≥ `[0xCEC0]` from 2, 3 or 5 |
 | 5 | `M_FD16.0` | overrun (PUC) | from 4, on the conditions in [[puc-overrun-map]] |
 
 **This resolves §5a:** `M_FD14.12` is "engine state == idle", so `0xD528` is the
 **idle fuel map** — exactly what the hand-made def calls it — and the fork at
 `0x2E5C2` is the idle/non-idle switch, not start enrichment. Cold-start richness
 is elsewhere (the `IP_TI_CAST*` tables at `0xAB0E`/`0xAB3E`, read at `0x1C76A`).
+
+**Correction 2026-09-07:** states 3 and 4 were previously labelled "throttle
+transition" and "drive". The handlers show the opposite split: state 3 stays
+put while `M_FD46.0` (throttle open) is set, state 4 is entered only with the
+throttle closed, and the ignition routine (`0x20CB4`) zeroes the PU/PUC
+correction in state 3 and applies `IP_IGA_PU_AT` in state 4. So a closed-
+throttle coast below the cut threshold *is* state 4, and that is where a
+cal-only burble lives (`roms/tunes/burble/notes.md`).
 
 The overrun state is what the injector-inhibit machinery keys on; the full
 trace, including the discovery that the injector "mask" tables are indices into

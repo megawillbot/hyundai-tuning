@@ -77,9 +77,10 @@ on coolant > `C_TCO_PAT_REAC_MIN`, a snap-lift test using the
 `IP_CDN_REAC_CYCNR` — i.e. stock reactivates everything at once.
 
 The **engine-state machine** `[0xC20B]` (file `0x1BEE0`–`0x1C6B0`) is what
-decides overrun. States: 0 stop, 1 crank, **2 idle** (`M_FD14.12`), 3
-(`M_FD14.14`), 4 drive (`M_FD14.15`), **5 overrun** (`M_FD16.0`). From drive
-(`0x1C3CE`+), the cut engages when all of:
+decides overrun. States: 0 stop, 1 crank, **2 idle** (`M_FD14.12`), 3 throttle
+open (`M_FD14.14`), 4 throttle closed above idle / PU (`M_FD14.15`; labels for
+3 and 4 corrected 2026-09-07, see [[ecu-architecture]] §5f), **5 overrun cut**
+(`M_FD16.0`). From state 4 (`0x1C3CE`+), the cut engages when all of:
 
 - rpm ≥ the idle-exit threshold `[0xCEC0]` (RAM);
 - `N/32 ≥ [0xC20F] + [0xC20C]` where `[0xC20F]` is the coolant×gear lookup of
@@ -111,7 +112,10 @@ So the `0.375X − 48` form this document worried about is exactly
 units around 128, applied on top of the base angle**. Stock `IP_IGA_PUC_AT` =
 `75, 61, 61, 61` → **−19.9° at 1200 rpm, −25.1° from 1600 rpm up**; the
 `ACCIN` variant `65, 46, 38, 57` → −23.6 / −30.8 / −33.8 / −26.6°; `IGA_PU_AT`
-row 0 `86, 83, 80, 75` → −15.8 … −19.9°. Absolute angles are base map plus
+is **rpm-major** (`0x448B6`: `base + rpm_idx*4 + tco_idx`, corrected 2026-09-07),
+so its first 4 bytes `86, 83, 80, 75` are the **1200 rpm row across coolant**;
+the warm (69.75 C) column is `75, 61, 67, 85` → −19.9 / −25.1 / −22.9 / −16.1°
+at 1200/1600/2400/3500. Absolute angles are base map plus
 these; no logger channel is needed to fix the datum any more.
 
 ### 4. Answer to "pops only when winding down from 3500+"
@@ -126,6 +130,15 @@ neither above 1248 rpm (all six cut after ~22 cycles). The levers, honestly:
 | Use `C_N_MAX_INF` / gradient test as an upper bound | it is a stall guard *below* 1536 rpm, not an upper cap | no |
 | Coolant / gear columns of `IP_N_MIN_PUC_AT` | not rpm | no |
 | **Program patch: final-stage level from a table** ([[program-zone-plan]] §4) | **yes** — the new `ID_PAT_INH_IV_PUC_3` on the rpm/32 axis picks the steady-state pattern per rpm | the route |
+
+**Cal-only burble (built 2026-09-07, unflashed).** The lever table above
+rejects raising `IP_N_MIN_PUC_AT` *for the rpm-windowed goal*; for a plain,
+every-lift burble it is the right tool. Resume tables `0xA91F`/`0xA8C4` -> 255
+(cut unreachable), `IP_IGA_PU_AT__N__TCO` `0xA184` -> rpm rows `80/48/32/32`
+(-18/-30/-36/-36 deg in state 4, closed-throttle coasting; stock warm is
+-20/-25/-23/-16). Details, the state
+labels this corrects, and caveats (TPS dependence, no fuel lever, cat heat):
+`roms/tunes/burble/notes.md`.
 
 **Latched version (decided 2026-09-03).** Rather than a bare rpm window, the
 patch carries a latch: a free RAM bit (`M_FD40.15`) is set once rpm/32 reaches

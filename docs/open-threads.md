@@ -150,6 +150,16 @@ No hardware access, no risk:
   ca654019 bins and the full ca654012/014/015 sets are there, and more siblings
   pin more tables.
 - Re-decode `drive_2026-08-28.csv` with the correct channel map.
+- **newtiburon.com is readable and mined (2026-09-08).** The forum sits behind a
+  plain proof-of-work interstitial, not a real bot wall; `tools/newtiburon/fetch.py`
+  (Playwright Chromium) dumps threads. TollBit (`tools/Tollbit/`) is abandoned.
+  ~110 threads and a 21k-title index are in `reference/newtiburon/`; the digest is
+  [[forum-digest-newtiburon]]. Net: chase's NA reflash recipe is public (advance for
+  98 RON, WOT AFR 12.5:1, open-loop TPS threshold 50 %, limiter ~7300), the OpenGK
+  group ships a "crackle" option and a "ghost IACV restrictor" rev-hang patch that
+  overlap our [[puc-overrun-map]] work — ask chase what they edit before flashing
+  the program patch. Blower market: MP62 kits only, stage 0/1 on the OEM tune, stage
+  2 needs a reflash we can now write ourselves.
 
 One session with the cable, no driving:
 
@@ -174,3 +184,84 @@ Both bank a table family each and need nothing but an idling engine.
   this look sound?" rather than a large diff.
 - **Sequencing vs the supercharger.** Overrun airflow changes completely under
   boost, so any overrun work either waits or gets redone.
+
+## From the 2026-09-08 drive log (`log_raw_2026-09-08_1134.csv`) — added 2026-09-08
+
+- **Per-cylinder ignition divergence under load.** The six ignition bytes
+  (37-42) are equal on overrun/idle/cruise but split by 9-19 counts (3-7 deg)
+  on individual cylinders during the WOT pull (t=203-205 s, cyl 5 and 6 most)
+  and by a steady ~12 counts at part throttle (TPS 150-160, 2300 rpm). This is
+  knock control (live retard and/or the per-cylinder adaptive maps in the
+  `0x48000` shadow) actively pulling timing on today's fuel. **Implication: no
+  ignition headroom to add; the question is why it pulls.** Check fuel grade,
+  IAT, and whether the pattern is stable across drives (adaptive) or eventful
+  (live knock).
+- **Load byte (pos 8) sits flat at 203 from 2500 to 5300 rpm at WOT.** 203 ×
+  2.71 = 550 mg/stroke = `C_MAF_MAX` (`0x81B8`, raw 101 × 5.447). So pos 8 is
+  load in ~2.7 mg/stroke units and the NA engine already reaches the clamp at
+  WOT — every WOT lookup above 2500 rpm uses the clamped load, and the only
+  rpm-resolved WOT fuelling is `IP_TI_FL__N`. Confirms the clamp is the first
+  thing to move for the blower, and that NA WOT AFR work needs a wideband.
+
+## Pop-on-upshift (idea, 2026-09-19)
+
+Owner wants an Audi-style soft pop on automatic upshifts. The ECU already has a
+gear-shift torque-reduction path: `IP_IGA_DIF_MAX_TQR_GS__N_32__MAF` (cal
+`0xA0C0`, 8x8, up to 107 = 40 deg of retard allowed during a shift; lookup at
+`0x3020A`), the request-to-efficiency curves `IP_FAC_IGA_TQR` (`0x9E27`) /
+`IP_FAC_TQR` (`0x9FCA`), `C_TCO_MAX_IGA_GS` (`0x82DE` = 254, always allowed) and
+a **single-cylinder cut during gear shift that is disabled by temperature**
+(`C_TCO_MIN_SCC_GS` `0x82EF` = 254 -> 142 C). Not yet known: whether/how hard
+the TCU requests torque reduction on this car, how long the event lasts, what
+the SCC_GS pattern is. First step = a fast (>=5 Hz) RAM log of the final
+ignition angle + the torque-request cells through a few part- and full-throttle
+upshifts, then trace `0x301FE`-`0x3020A` and the SCC_GS code. Levers, in order:
+deeper GS retard (curve/limit), then enabling SCC_GS (cut cylinders pump air
+while the rest burn late = the pops recipe, on throttle, with real charge).
+More torque reduction is gearbox-friendly; heat is brief.
+
+### First measurement, 2026-09-19 21:50 (`log_shift_2026-09-19_215054.csv`, 3 Hz, 356 s, `tools/ram_logger.py shift`)
+
+- `[0xC592]` is **not a timer** (first reading of `0x301BC` was wrong): at
+  `0x30550`-`0x30568` it is loaded as `0x100 - f([0xC584])` while `M_FD26.2`
+  (gear shift in progress, from the TCU) is set = the **gear-shift torque
+  reduction request**; `[0xC591]` is the sibling request, `[0xC597]` =
+  max(requests, `[0xC1B0]`) = the value that goes on to the ignition path.
+- Seen non-zero twice: **82** (~32 %) in the sample right at a full-throttle
+  6464 rpm upshift, and **78** at ~930 rpm (t=257 s, during the owner's
+  manual-gate shifts / low-speed gear engagement). ~14 part-throttle upshift
+  candidates (rpm steps at steady spark) showed **no** request and no spark dip
+  (22-31 deg BTDC throughout), so the TCU asks for reduction only on hard
+  shifts, or for < 0.3 s.
+- The one WOT shift was followed immediately by a lift (pops cut), so the depth
+  and duration of the stock retard are still unmeasured. Next: a single-block
+  fast log (`0xC584..0xC59F` alone is ~5 Hz) over several full-throttle upshifts
+  held through the shift, final angle from a second pass.
+
+## Knock retard is readable from the `drive` log — first table, 2026-09-19 (91 RON)
+
+No new RAM cells needed. In the `0xC320` block: `[0xC335]` = base angle X,
+`[0xC337]` = X after the global correction (`[0xC332]` − 128), and the final
+per-cylinder bytes `[0xC325..2A]` are `255 − X_cyl`. So **per-cylinder retard =
+`([0xC325+i] − (255 − [0xC337])) × 0.375` deg**. Steps arrive as ~9 counts
+(3.4 deg) on one cylinder and decay 1-2 counts per sample = knock control.
+A uniform offset on all six (seen at part load, 2000-2500 rpm) may be another
+global term, not knock; only the per-cylinder differences are certain.
+
+Evening drives 2026-09-19 (`log_drive_2026-09-19_2*.csv`, 1 Hz, owner on
+**91 RON**, stock WOT ignition columns), load byte >= 190:
+
+| rpm | n | base deg | mean retard | max |
+|---|---|---|---|---|
+| 2500-2999 | 1 | 26.2 | 4.3 | 7.1 |
+| 3000-3499 | 3 | 24.6 | 3.9 | 7.5 |
+| 3500-3999 | 3 | 18.5 | 3.2 | 6.4 |
+| 4000-4499 | 2 | 18.6 | 3.4 | 6.0 |
+| 4500-4999 | 1 | 20.2 | 1.6 | 3.4 |
+| 5500-5999 | 2 | 24.8 | 1.3 | 4.5 |
+| 6500+ | 2 | 29.2 | 1.2 | 3.8 |
+
+Too few samples to cut a map from (1-3 per bin). Next: held-gear WOT pulls
+2500-6000 with a fast single-block log (`0xC320` alone, ~5 Hz) + rpm from
+`[0xC59E]`; then a 91 RON map = WOT columns minus the measured mean + ~1 deg,
+mostly 2500-4500 rpm. See [[car-notes]] (fuel) .

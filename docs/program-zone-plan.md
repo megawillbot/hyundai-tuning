@@ -3,9 +3,10 @@
 Written **2026-09-03**. Everything the calibration cannot do lives in the
 program zone: the hard-coded "all six injectors" final stage of the overrun cut,
 the SecurityAccess seed/key, the rev-limit clamp chain, launch/2-step, and so on.
-This is the plan for touching it safely. **Nothing in the program zone has been
-flashed yet.** The first candidate is built and verified offline
-(`roms/tunes/puc-final-stage-patch/`).
+This is the plan for touching it safely. **Test 0 (byte-identical stock program)
+was flashed over K-line on 2026-09-18** — see §2e for what it took. The first
+patch candidate is built and verified offline (`roms/tunes/puc-final-stage-patch/`,
+carried into `roms/tunes/paddock-pops/`).
 
 ## 1. What is established
 
@@ -35,11 +36,30 @@ file `0x0000`–`0x4000`. The mechanism is unlikely to differ in shape.
   (calibration). `TransferData` (boot `0x2DEC`) writes each packet at that
   pointer and advances it. Nothing in the bootloader assembles a 24-bit address
   from a request (no `SHL #8`/`#16` sites at all).
-- So **GKFlasher's `RequestDownload` address is ignored** on this family. That is
-  why the "magic" calibration formulas in its history (`(offset-0x7000)<<4`,
-  then `(0x80000<<4)+offset`) all worked, and why the odd program value
-  (`write.size + 16` = `0x70010`) is harmless. The `+16` in GKFlasher's payload
-  start matches the ECU's own `0x90010` starting point.
+- ~~So **GKFlasher's `RequestDownload` address is ignored** on this family.~~
+  **Wrong — corrected 2026-09-18 after Test 0 failed with `0x40 download not
+  accepted`.** The write *pointer* is fixed by the erase routine, but the
+  `RequestDownload` handler (boot `0x0F42`+) still parses the request: the top
+  address byte is masked `AND 0x1F` into `[0xF30E]` (segment), the other two
+  bytes into `[0xF30D]/[0xF30C]`, the 3-byte length into `[0xF310]`-`[0xF312]`,
+  the format byte must be 0, and the check routine `0x2D2C` runs the range
+  classifier over exactly those values: segment 9 with offset ≥ `0x0010` for the
+  program, segment 8 for the calibration. GKFlasher's calibration address
+  `(0x80000<<4)+0x88000` = `0x888000` masks to `08:8000` — that is why it always
+  worked — but its program address `write.size + 16` = `0x070010` masks to
+  segment 7 and is rejected. Upstream GKFlasher has the same line (checked
+  against `origin` the same day), so `--flash-program` had never worked on this
+  family over K-line. **Local fix** in `tools/GKFlasher/gkflasher.py` (the
+  directory is gitignored, so the diff is recorded here):
+
+  ```diff
+  -		flash_start = ecu.get_region('program').write.size + 16
+  +		# same addressing as the calibration path: ECU-style address of the zone, +16 past the flag window
+  +		flash_start = ecu.calculate_memory_write_offset(ecu.get_region('program').write.address) + 16
+  ```
+
+  i.e. `0x890010`, which masks to `09:0010`. With it the stock program flashed
+  and verified on 2026-09-18 (see §2e).
 - **Range classifier** (boot `0x2FC2`): pointer and pointer+length must stay in
   one zone — program `0x090010`–`0x0FFFFF`, calibration `0x088000`–`0x08DFEF`,
   NVM `0x083E00`+ — with the 16-byte flag windows `0x08DFF0`–`0x08DFFF` and
@@ -144,6 +164,25 @@ Decoding the status word (routine `0x03`, `ReprogrammingStatus` in
 | 8 | `ecu_reprogramming_successfully_completed` | the all-clear; 1 = done |
 | 11 | `calibration_data_does_not_fit_to_ecu_sw` | cal/program coherence mismatch (wrong pair) |
 | 12 | `ecu_sw_does_not_fit_to_boot_sw` | **flashed a program from the wrong boot family** — see the coherence rule above |
+
+## 2e. Test 0 as it actually happened (2026-09-18)
+
+1. First attempt (unpatched GKFlasher): erase routine `0x00` **completed**, then
+   `RequestDownload` was refused with `0x40`. The car sat with an erased program
+   zone: the bootloader kept answering, exactly as §2c predicts. Reads were then
+   denied (`0x33`) even after a correct seed/key handshake — the bootloader does
+   not serve `ReadMemoryByAddress` while there is no valid program — so GKFlasher
+   cannot auto-identify the ECU in this state. Pick it from the menu (`2` =
+   5WY17) and answer `y` to "calibration not found, continue?". When piping
+   answers, that is **three** lines: `printf '2
+y
+y
+'`.
+2. After an ignition cycle (a failed session leaves the ECU handing out a zero
+   seed, which GKFlasher misreads as "already unlocked"), the patched flasher
+   erased again, wrote 239,268 bytes in 5 min 52 s at 10400 baud, verify routine
+   `0x02` passed, ECU reset. A read-back within seconds of the reset gets `0x37`
+   (time delay not expired); wait ~10 s.
 
 ## 2d. Baud rate — shrink the exposure window
 
