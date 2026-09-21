@@ -183,7 +183,7 @@ and a longer loaded drive for the knock table.
 Cable: on both drives the FTDI adapter dropped off USB within minutes of moving
 (Windows shows both devices `CM_PROB_PHANTOM`; no sleep/wake events; it held for
 25 min of flashing while parked) -> intermittent USB connection. Owner will try
-another adapter. USB selective suspend is enabled (AC+DC) and worth disabling
-before the next logged drive. **Owner's report for the whole run, incl. the pull
+another adapter. USB selective suspend was enabled (AC+DC); **disabled 2026-09-21** on the laptop's
+current power plan (`powercfg` index 0 on both). **Owner's report for the whole run, incl. the pull
 past 6500: "everything seemed fine".** Arm/disarm and the staged cut remain
 unconfirmed by data.
