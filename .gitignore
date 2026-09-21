@@ -8,6 +8,11 @@ __pycache__/
 # git cannot re-include anything inside an excluded *directory*.
 tools/*
 !tools/c166/
+!tools/newtiburon/
+!tools/raw_logger.py
+!tools/ram_logger.py
 
 # GKFlasher default read output if accidentally dumped in root
 output_*.bin
+# solved PoW cookie for newtiburon.com (per-machine, 1 h)
+tools/newtiburon/state.json

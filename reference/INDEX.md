@@ -209,6 +209,17 @@ is a complete path to a definitive `ca654019` channel map.
 
 ---
 
+## newtiburon (`newtiburon/`, forum threads, added 2026-09-08)
+
+~110 threads from newtiburon.com's Engine Management / V6 NA / V6 FI sections, as
+Markdown, plus `index.tsv` with every thread title in those sections (21 321 rows) so
+future title searches need no crawl. Fetched with `tools/newtiburon/fetch.py` (the
+site sits behind a proof-of-work interstitial; TollBit was a dead end). The digest of
+what matters for this ECU is `docs/forum-digest-newtiburon.md`; see `newtiburon/README.md`
+for how to pull more.
+
+---
+
 ## Deliberately not mirrored
 
 | What | Size | Why / how to get it |
