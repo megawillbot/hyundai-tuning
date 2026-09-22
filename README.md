@@ -3,6 +3,33 @@
 Diagnostics and ECU tuning workspace for the Siemens SIMK ECM, using the
 OpenGK ecosystem over K-line with an FTDI KKL cable.
 
+## Warning: the program-zone patches are lightly tested
+
+This repo contains **modified ECU program code** (not just calibration maps) for
+the Siemens SIMK43 5WY17, calibration ca654019 / G5J7TS0A, automatic. As of
+2026-09-22 the whole of the evidence that it works is:
+
+- one car, one calibration, one ECU hardware revision;
+- the first patch (`roms/tunes/puc-final-stage-patch/`, 89 bytes from stock)
+  flashed 2026-09-18 and driven for three days including one paddock event;
+- the second, larger patch (`roms/tunes/daily-latch-91/`, several table-lookup
+  sites redirected to stubs) flashed 2026-09-21 and driven for about a day.
+
+Nothing here has months of road time, a second car, or a bench recovery that we
+have actually had to perform. The patches were reviewed on paper (one stack bug
+was caught before flashing, see the notes), and every image passes GKFlasher's
+checksum check, but "it ran fine for a few days" is the strongest claim anyone
+can make. Long-term effects on the catalyst, the engine and the ECU are unknown.
+The pops-and-bangs behaviour in particular runs the exhaust hot on purpose.
+
+If you use any of it on your own car: read `docs/program-zone-plan.md` first
+(mechanism, risk case, recovery ladder), read the `notes.md` in the tune folder,
+check the calibration version matches exactly, keep two verified stock reads off
+the car, and do not flash the program zone with upstream GKFlasher; the
+`--flash-program` start-address fix is only in
+[megawillbot/GKFlasher](https://github.com/megawillbot/GKFlasher). Everything
+here is offered as-is, with no warranty of any kind.
+
 ## Hardware
 
 - **Cable:** FTDI FT232R KKL (genuine FTDI, VID 0403 / PID 6001) — enumerates as **COM7**
@@ -12,12 +39,16 @@ OpenGK ecosystem over K-line with an FTDI KKL cable.
 
 ## Software
 
-- [GKFlasher](https://github.com/Dante383/GKFlasher) — cloned at `tools/GKFlasher/` (gitignored; `git pull` it for updates)
+- [GKFlasher](https://github.com/Dante383/GKFlasher) — cloned at `tools/GKFlasher/` (gitignored). Our fixes
+  (program-zone read range, `--flash-program` start address, logger conversions) are on
+  [megawillbot/GKFlasher](https://github.com/megawillbot/GKFlasher), branch
+  `fix/read-program-range-and-logger-conversions`; the clone tracks it as remote `fork`.
 - Python venv at `.venv/` with GKFlasher requirements installed
   (**rebuilt 2026-09-03** from `C:\Python313`; the original base interpreter under
   `AppData` had vanished and every `.venv\Scripts\python.exe` call failed). If it
   breaks again: `C:\Python313\python -m venv --clear .venv` then
-  `.venv\Scripts\python -m pip install -r tools\GKFlasherequirements.txt`.
+  `.venv\Scripts\python -m pip install -r tools\GKFlasher
+equirements.txt`.
   OneDrive will ask about the mass delete; that is the venv, say yes.
 - [TunerPro](https://tunerpro.net/) + XDF definitions from [opengk-simk](https://github.com/opengk-org) for map editing
 - [opengk.org](https://opengk.org) — wiki: K-line protocol docs, pinouts, GKFlasher instructions
