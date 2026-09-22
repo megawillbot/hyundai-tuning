@@ -176,9 +176,16 @@ Both bank a table family each and need nothing but an idling engine.
 - **The pop & bang tune itself** is gated on the capture run, and now on the
   program-zone patch in [[program-zone-plan]] §4 — a cal-only version cannot be
   rpm-windowed ([[puc-overrun-map]] code-verified §4).
-- **The fork.** `https://github.com/megawillbot/opengk-simk`, branch
-  `derived-symbol-maps`, is **committed locally and not pushed**. Push is a
-  one-liner when wanted.
+- **The forks (pushed 2026-09-22).**
+  `https://github.com/megawillbot/opengk-simk` branch `derived-symbol-maps`
+  carries our two derived XDFs from `defs/` on top of upstream `master`. It is
+  a copy, not a checkout: `reference/opengk-simk/` stays upstream-identical, and
+  updating the branch means re-copying `defs/*.xdf` into `XDF/Delta-27/` (a
+  scratch clone is enough). `https://github.com/megawillbot/GKFlasher` branch
+  `fix/read-program-range-and-logger-conversions` holds the three GKFlasher
+  fixes (`--read-program` end of chip, logger conversions, `--flash-program`
+  start address); `tools/GKFlasher` tracks it as remote `fork`, upstream stays
+  `origin`.
 - **Whether to offer any of it upstream.** Nothing has been proposed to the OpenGK
   maintainers. The stronger opening is "here is a method and its validation, does
   this look sound?" rather than a large diff.
