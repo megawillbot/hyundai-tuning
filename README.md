@@ -47,7 +47,7 @@ here is offered as-is, with no warranty of any kind.
   (**rebuilt 2026-09-03** from `C:\Python313`; the original base interpreter under
   `AppData` had vanished and every `.venv\Scripts\python.exe` call failed). If it
   breaks again: `C:\Python313\python -m venv --clear .venv` then
-  `.venv\Scripts\python -m pip install -r tools\GKFlasherequirements.txt`.
+  `.venv\Scripts\python -m pip install -r tools\GKFlasher\requirements.txt`.
   OneDrive will ask about the mass delete; that is the venv, say yes.
 - [TunerPro](https://tunerpro.net/) + XDF definitions from [opengk-simk](https://github.com/opengk-org) for map editing
 - [opengk.org](https://opengk.org) — wiki: K-line protocol docs, pinouts, GKFlasher instructions
