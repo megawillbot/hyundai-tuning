@@ -1,0 +1,66 @@
+LICENSE
+
+This repository mixes original work with mirrored third-party material and
+manufacturer firmware. The terms depend on the path. Nothing here grants
+broader rights to third-party material than its upstream terms already give.
+
+1. Original work: MIT
+
+   Everything not listed in sections 2-5, including tools/c166/, docs/, logs/,
+   README.md, reference/INDEX.md, and the notes.md and build scripts under
+   roms/tunes/ (except roms/tunes/paddock-pops/build.py).
+
+   Copyright (c) 2026 megawillbot
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to
+   deal in the Software without restriction, including without limitation the
+   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+   sell copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   IN THE SOFTWARE.
+
+2. Scripts that import GKFlasher: GPL-3.0-or-later
+
+   tools/raw_logger.py, tools/ram_logger.py and roms/tunes/paddock-pops/build.py
+   import modules from GKFlasher (https://github.com/Dante383/GKFlasher,
+   GPL-3.0). They are licensed under the GNU General Public License, version 3
+   or (at your option) any later version. Full text:
+   https://www.gnu.org/licenses/gpl-3.0.txt
+
+3. TunerPro definitions: Apache-2.0
+
+   defs/ and backups/ca654019 2700.xdf. The upstream "ca654019 2700.xdf" is
+   from OpenGK-org/opengk-simk (Apache-2.0). "ca654019 2700 extended.xdf" is a
+   derivative of it. "ca654019 2700 code-derived.xdf" is original work, licensed
+   the same way so the set stays consistent with upstream. Full text:
+   https://www.apache.org/licenses/LICENSE-2.0
+
+4. Mirrored reference material: upstream terms only
+
+   reference/opengk-simk/     OpenGK-org/opengk-simk, Apache-2.0.
+   reference/opengk-wiki/     Pages from https://opengk.org, copyright their
+                              contributors. No license is stated upstream.
+                              Mirrored here for offline reference only; no
+                              license is granted by this repository.
+   reference/ghidra_scripts/  OpenGK-org/ghidra_scripts, copyright its
+                              authors. No license is stated upstream; same
+                              position as the wiki.
+
+5. ECU firmware and calibration data: not licensed
+
+   roms/ (stock dumps, tune images, readbacks) and the .bin files under
+   backups/ contain Siemens and Hyundai firmware and calibration data. The
+   copyright in that material remains with its owners. It is included so that
+   the analysis and patches can be reproduced on a matching vehicle; no license
+   is granted or implied, and the disclaimer in section 1 applies to any use.

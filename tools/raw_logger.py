@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Imports GKFlasher (GPL-3.0) modules, so this file is GPL-3.0-or-later; see LICENSE.
 """Drive-safe RAW datalogger.
 Reuses GKFlasher's exact connect/security/identify, but runs logger_raw instead
 of logger -- capturing the full untranslated ReadDataByLocalIdentifier(0x01)

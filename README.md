@@ -149,3 +149,11 @@ gh api repos/OpenGK-org/opengk-simk/commits --jq '.[0:5][] | "\(.commit.author.d
 5. **Calibration versions must match.** A bin built for a different calibration
    (e.g. 652048 vs 654012) is not safe to flash even if it "loads fine".
 6. Commit every bin that ever touches the car, with a message saying what changed.
+
+## License
+
+Mixed, by path; see [`LICENSE`](LICENSE). In short: our own code and docs are MIT,
+the two loggers and the paddock-pops build script import GKFlasher and are
+GPL-3.0-or-later, the XDFs in `defs/` follow opengk-simk's Apache-2.0, the
+`reference/` mirror keeps its upstream terms, and the ECU firmware in `roms/`
+and `backups/` is Siemens/Hyundai copyright with no license from us.

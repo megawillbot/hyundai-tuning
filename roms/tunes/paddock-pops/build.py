@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Imports GKFlasher (GPL-3.0) modules, so this file is GPL-3.0-or-later; see LICENSE.
 r"""Build the paddock pops & bangs images (see notes.md in this folder).
 
 Both images share the reviewed program zone of

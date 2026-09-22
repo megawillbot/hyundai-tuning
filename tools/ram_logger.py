@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Imports GKFlasher (GPL-3.0) modules, so this file is GPL-3.0-or-later; see LICENSE.
 """Read-only RAM + raw-frame logger (KWP 0x23 ReadMemoryByAddress alongside the
 RDBLI 0x01 block). Same connect path as raw_logger.py. Built 2026-09-19 to read
 the ECU's own TPS cells ([[closed-throttle-recognition]]):
